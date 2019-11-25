@@ -1,0 +1,18 @@
+<parameter display="LIGKA PARAMETERS">
+
+ <modus>5</modus> 
+ <min_n_tor>20</min_n_tor>
+ <max_n_tor>20</max_n_tor>
+ <min_m>20</min_m>
+ <max_m>22</max_m>
+ <sidebands>5</sidebands>
+ <mode_type>1</mode_type>
+ <even>0</even>
+ <start_pos>1</start_pos>
+ <force_m>.false.</force_m>
+ <offset_d>0.0</offset_d>
+ <npsi_out>128</npsi_out>
+ <kr_read>0.0</kr_read>
+ <q0>0.99</q0>
+
+</parameter>

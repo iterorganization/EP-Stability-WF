@@ -1,0 +1,23 @@
+<root>
+  <workflow_parameters display="WORKFLOW PARAMETERS (STANDALONE)">
+    <machine>ITER</machine>
+    <shot_nr>131025</shot_nr>
+    <run_in>0</run_in>
+    <run_out>301</run_out>
+    <user>public</user>
+    <machine_out>ligka_python</machine_out>
+    <tbegin>200</tbegin>
+    <tend>203</tend>
+    <dt_required>2</dt_required>
+    <run_simpletrans>False</run_simpletrans>
+  </workflow_parameters>
+
+  <further_settings display="FURTHER SETTINGS">
+    <fokker_flag>0</fokker_flag>
+    <nmarker>10000</nmarker>
+    <nbi_markers_in>32</nbi_markers_in>
+    <ic_wave_nr_toroidal_modes>1</ic_wave_nr_toroidal_modes> 
+
+  </further_settings>
+
+</root>
