@@ -1,11 +1,11 @@
 # --------------------------------------------
-# PYTHON WRAPPER TO CALL CHEASE
+# PYTHON WRAPPER TO CALL HELENA+LIGKA
 # --------------------------------------------
 
 # HCD
 shot    = 100001
 run_in  = 1
-run_out = 4
+run_out = 11
 user_in = 'public'
 tokamakname = 'ITER'
 tokamakname_out = 'helena_test_loop'
@@ -20,7 +20,7 @@ import os,imas,sys,pdb
 
 # IMPORT MODULE(S) FOR SPECIFIC PHYSICS CODE(S)
 actor_path = os.path.join(os.getenv('KEPLER'), 'imas/src/org/iter/imas/python')
-list_of_actors = ['helena_imas']
+list_of_actors = ['helena_imas','ligka']
 for name in list_of_actors:
   sys.path[:0] = [os.path.join(actor_path,name)]
   globals()[name] = getattr(__import__(name), name)
@@ -45,20 +45,21 @@ input_total.close()
 input = imas.ids(shot,run_in,0,0)
 input.open_env(user_in,tokamakname,'3')
 idx_in = input.equilibrium.getPulseCtx()
-
+idx_in= input.core_profiles.getPulseCtx()
 # OPEN OUTPUT OBJECT, IN VIEW OF SAVING RESULTS TO LOCAL DB
 print('=> Create output datafile')
 output = imas.ids(shot,run_out,0,0)
 
 # CREATE OUTPUT DATAFILE
 output.create_env(user,tokamakname_out,version)
-idx_out = output.equilibrium.getPulseCtx()
+idx_out = output.mhd_linear.getPulseCtx()
+
 
 #ntime = 1
 #iftime = 53
 #ntime = 107;
 
-for itime in range(ntime):
+for itime in range(55,57):
 
     #iftime = itime
 
@@ -66,20 +67,28 @@ for itime in range(ntime):
     print('Time = ',time[itime],' s, itime = ',itime,'/',ntime)
     input.equilibrium.setPulseCtx(idx_in)
     input.equilibrium.getSlice(time[itime],1)
+    input.core_profiles.setPulseCtx(idx_in)
+    input.core_profiles.getSlice(time[itime],1)
     #try:
     output.equilibrium = helena_imas(input.equilibrium)
-    output.equilibrium.setPulseCtx(idx_out)
+    print('FINISHED HELENA ---------- STARTING LIGKA')
+    
+    #output.mhd_linear.time[0] = time[itime]
+    output.mhd_linear = ligka(output.equilibrium,input.core_profiles,output.mhd_linear,'input/z_ligka.xml')
 
+   
     if itime == 0:
-      output.equilibrium.put()
+      output.mhd_linear.put()
     else:
-      output.equilibrium.putSlice()
+      output.mhd_linear.putSlice()
+
+
     #output.equilibrium.time[0] = time[itime]
     #print(input.equilibrium.time_slice[0].profiles_2d[0].grid_type.index)
     #print(output.equilibrium.time_slice[0].profiles_2d[0].grid_type.index)
     #pdb.set_trace()
     print('*************************************')
-    print('Output time = ',output.equilibrium.time[0])
+    print('Output time = ',output.mhd_linear.time[0])
     print('*************************************')
     #except:
     #    print('!!!! Equilibrium calculation failed !!!!')

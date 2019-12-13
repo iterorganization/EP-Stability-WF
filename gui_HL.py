@@ -2,6 +2,7 @@ import os, sys
 import subprocess
 sys.path.append('workflow')
 sys.path.append('interface')
+sys.path.append('workflow/input')
 sys.path.append(os.getcwd())
 
 from tkinter import * 
@@ -31,7 +32,7 @@ root1 = etree.parse('input_workflow_default.xml').getroot()
 os.makedirs(run_config_folder_path)
 
 copy2('input_workflow_default.xml', run_config_folder_path+'/input_workflow.xml', follow_symlinks=True)
-
+copy2('input/z_ligka.xml', run_config_folder_path+'/z_ligka.xml', follow_symlinks=True)
 #=====================A FEW COLOR SCHEMES======================
 c1 = 'white'
 c2 = 'white smoke'
@@ -41,7 +42,7 @@ c5 = 'azure4'
 cb = 'LavenderBlush3'
 
 default_workflow_param_path = 'input_workflow_default.xml'
-default_ligka_param_path = 'z_ligka.xml'
+default_ligka_param_path = 'input/z_ligka.xml'
 window = Tk()
 ## create mainwindow
       
@@ -59,10 +60,13 @@ def open_gui(input_filepath):
         window.geometry("+%d+%d" %(wx, wy))
         
     except: 
-
+     if not os.path.exists(run_config_folder_path):
+        for systemname in maindict[list(maindict.keys())[0]]:
+            os.makedirs(run_config_folder_path+'/'+systemname)
+            copy2(input_filepath, run_workflow_param_path, follow_symlinks=True)
         pass
     workflow_param = create_workflow_param_from_file(input_filepath)
-    ligka_param = create_ligka_param_from_file('z_ligka.xml')
+    ligka_param = create_ligka_param_from_file('input/z_ligka.xml')
 
     fr_wfp = Frame(window, width = 300, height = 500, background = c3)
     fr_wfp.grid(row = 0, column = 0, rowspan = 2,  sticky = 'nwes', padx = 3, pady = 3)
