@@ -1,7 +1,6 @@
 module purge
 module load libcerf
-module load IMAS/3.25.0-4.3.1
-#module load IMAS/3.25.0-4.4.0
+module load IMAS/3.25.0-4.4.0
 module load netCDF-Fortran/4.4.4-intel-2018a
 module load netCDF-Fortran/4.4.4-intel-2018a
 module load PSPLINE/20181008-intel-2018a
@@ -9,9 +8,9 @@ module load MUMPS/5.1.2-intel-2018a-metis/
 module load NAG
 module load SLATEC
 module load ppplib
-module load FC2K/4.6.5-PyAL
-module load Kepler/2.5p4-3.0.5
-kepler_load my_python_kepler
+module load FC2K/4.6.6
+module load Kepler/2.5p4-3.0.6
+kepler_load ligka_kep
 module load XMLlib/3.2.0-intel-2018a
-module load PyAL/1.1.1-intel-2018a-Python-3.6.4
+module load PyAL/1.1.2-intel-2018a-Python-3.6.4
 module load lxml/4.2.0-intel-2018a-Python-3.6.4
