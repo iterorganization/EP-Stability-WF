@@ -99,7 +99,7 @@ if param['modus'] == 5:
       idx_out = output.equilibrium.getPulseCtx()
       output.equilibrium = helena_imas(input.equilibrium)
       print('FINISHED HELENA ---------- STARTING LIGKA')
-      output.equilibrium.setExpIdx(idx_out)
+
       output.mhd_linear = ligka(output.equilibrium,input.core_profiles,input.mhd_linear,'input/z_ligka.xml','mpi_local')
    
       output.equilibrium.setPulseCtx(idx_out)

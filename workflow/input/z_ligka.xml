@@ -1,5 +1,5 @@
 <parameter display="LIGKA PARAMETERS">
-<modus> 4</modus>
+<modus> 5</modus>
 <min_n_tor> 10 </min_n_tor>
 <max_n_tor> 20 </max_n_tor>
 <min_m> 10 </min_m>
