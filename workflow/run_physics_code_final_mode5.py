@@ -43,6 +43,10 @@ for name in list_of_actors:
   sys.path[:0] = [os.path.join(actor_path,name)]
   globals()[name] = getattr(__import__(name), name)
 
+#TIME SETTINGS FOR RUNS
+begin_time = 7 # initial begin time for mode 5
+end_time = 8 #end time for mode 5 (steps from transport code)
+time_runs = end_time - begin_time # runs for mode 4,1,...
 
 
 
@@ -83,7 +87,7 @@ if param['modus'] == 5:
   
  
 
-  for itime in range(7,9):
+  for itime in range(begin_time,end_time + 1):
 
       # EXECUTE PHYSICS CODE
       print('Time = ',time[itime],' s, itime = ',itime,'/',ntime)
@@ -95,16 +99,15 @@ if param['modus'] == 5:
       idx_out = output.equilibrium.getPulseCtx()
       output.equilibrium = helena_imas(input.equilibrium)
       print('FINISHED HELENA ---------- STARTING LIGKA')
-    
-      output.mhd_linear = ligka(output.equilibrium,input.core_profiles,input.mhd_linear,'input/z_ligka.xml')
-      #output.mhd_linear = ligka(output.equilibrium,input.core_profiles,'input/z_ligka.xml')
+      output.equilibrium.setExpIdx(idx_out)
+      output.mhd_linear = ligka(output.equilibrium,input.core_profiles,input.mhd_linear,'input/z_ligka.xml','mpi_local')
    
       output.equilibrium.setPulseCtx(idx_out)
       output.mhd_linear.setExpIdx(idx_out)
       output.core_profiles = copy.deepcopy(input.core_profiles)
       output.core_profiles.setExpIdx(idx_out)
 
-      if itime == 7:
+      if itime == begin_time:
        output.mhd_linear.put()
        output.equilibrium.put()
        output.core_profiles.put()
@@ -156,14 +159,15 @@ if param['modus'] == 4:
   output.create_env(user,tokamakname_out,version)
 
 
-  for itime in range(0,2):
+  for itime in range(0,time_runs + 1):
 
       # EXECUTE PHYSICS CODE
       print('Time = ',time[itime],' s, itime = ',itime,'/',ntime)
-      input.equilibrium.setPulseCtx(idx_in)
-      input.equilibrium.getSlice(time[itime],1)
+      #idx_in = input.mhd_linear.getPulseCtx()
       input.mhd_linear.setPulseCtx(idx_in)
       input.mhd_linear.getSlice(time[itime],1)
+      input.equilibrium.setPulseCtx(idx_in)
+      input.equilibrium.getSlice(time[itime],1)
       input.core_profiles.setPulseCtx(idx_in)
       input.core_profiles.getSlice(time[itime],1)
       idx_out = output.mhd_linear.getPulseCtx()
@@ -171,17 +175,90 @@ if param['modus'] == 4:
       #NEED TO TAKE FROM THE PROF PARAMETER TO CHECK HELENA RAN OR NOT
       print('==========ENDING HELENA OR ALREADY RUN ------STARTING LIGKA===========')
     
-      output.mhd_linear = ligka(input.equilibrium,input.core_profiles,input.mhd_linear,'input/z_ligka.xml')
-      output.mhd_linear.setPulseCtx(idx_out)
+      output.mhd_linear = ligka(input.equilibrium,input.core_profiles,input.mhd_linear,'input/z_ligka.xml','mpi_local',mpi_processes=4)
+      input.mhd_linear = copy.deepcopy(output.mhd_linear)
+      input.mhd_linear.setPulseCtx(idx_in)
+      
    
       if itime == 0:
-        output.mhd_linear.put()
+        input.mhd_linear.put(1)
       else:
-        output.mhd_linear.putSlice()
+        input.mhd_linear.putSlice(1)
 
       print('*************************************')
-      print('Output time = ',output.mhd_linear.time[0])
-      print('Saved mhd_linear mode 4 under oc 0 needs to be 1')
+      print('Output time = ',input.mhd_linear.time[0])
+      print('OUTPUT ITIME = ',itime)
+      print('Saved mhd_linear mode 4 under oc 1')
+      print('*************************************')
+
+  input.close()
+  output.close()
+  print('Done.')
+
+if param['modus'] == 1:
+  print('MODE 1 START')
+  # SETTINGS
+  shot    = 130012
+  run_in  = 5
+  run_out = 1
+  tokamakname_out = 'ligka_modes'
+  # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
+  # AND READ FULL TIME VECTOR OF EQUILIBRIUM IDS TO GET THE TIME BASE
+  print('=> Open input datafile and read total equilibrium IDS for time.')
+  input_total = imas.ids(shot,run_in)
+  input_total.open_env(user,tokamakname_out,version)
+  input_total.equilibrium.get()
+  ntime = len(input_total.equilibrium.time)
+  time = input_total.equilibrium.time
+  input_total.close()
+
+  # OPEN INPUT IDS'S AGAIN TO PROCEED WITH GETSLICE
+  # NOTE: WE CANNOT USE THE SAME INPUT STRUCTURE FOR BOTH GET AND GETSLICE!!!
+  # IF WE DO SO: GETSLICE ALWAYS GET THE FIRST TIME SLICE WHATEVER IS ASKED
+  input = imas.ids(shot,run_in,0,0)
+  input.open_env(user,tokamakname_out,'3')
+  idx_in = input.mhd_linear.getPulseCtx()
+  
+
+
+  # OPEN OUTPUT OBJECT, IN VIEW OF SAVING RESULTS TO LOCAL DB
+  print('=> Create output datafile')
+  output = imas.ids(shot,run_out)
+
+  # CREATE OUTPUT DATAFILE
+  output.create_env(user,tokamakname_out,version)
+
+
+  for itime in range(0,time_runs + 1):
+
+      # EXECUTE PHYSICS CODE
+      print('Time = ',time[itime],' s, itime = ',itime,'/',ntime)
+      #idx_in = input.mhd_linear.getPulseCtx()
+      input.mhd_linear.setPulseCtx(idx_in)
+      input.mhd_linear.getSlice(time[itime],1,1)
+      input.equilibrium.setPulseCtx(idx_in)
+      input.equilibrium.getSlice(time[itime],1)
+      input.core_profiles.setPulseCtx(idx_in)
+      input.core_profiles.getSlice(time[itime],1)
+      idx_out = output.mhd_linear.getPulseCtx()
+    
+      #NEED TO TAKE FROM THE PROF PARAMETER TO CHECK HELENA RAN OR NOT
+      print('==========ENDING HELENA OR ALREADY RUN ------STARTING LIGKA===========')
+    
+      output.mhd_linear = ligka(input.equilibrium,input.core_profiles,input.mhd_linear,'input/z_ligka.xml','mpi_local',mpi_processes=4)
+      input.mhd_linear = copy.deepcopy(output.mhd_linear)
+      input.mhd_linear.setPulseCtx(idx_in)
+      
+   
+      if itime == 0:
+        input.mhd_linear.put(2)
+      else:
+        input.mhd_linear.putSlice(2)
+
+      print('*************************************')
+      print('Output time = ',input.mhd_linear.time[0])
+      print('OUTPUT ITIME = ',itime)
+      print('Saved mhd_linear mode 1 under oc 2')
       print('*************************************')
 
   input.close()
