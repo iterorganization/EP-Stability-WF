@@ -40,8 +40,8 @@ for name in list_of_actors:
   globals()[name] = getattr(__import__(name), name)
 
 #TIME SETTINGS FOR RUNS
-begin_time = 7 # initial begin time for mode 5
-end_time = 15 #end time for mode 5 (steps from transport code)
+begin_time = 12 # initial begin time for mode 5
+end_time = 14 #end time for mode 5 (steps from transport code)
 time_runs = end_time - begin_time # runs for mode 4,1,...
 
 
@@ -98,7 +98,7 @@ if param['modus'] == 10:
  
       idx_out = output.equilibrium.getPulseCtx()
       output.equilibrium = helena_imas(input.equilibrium)
-      print('FINISHED HELENA ---------- STARTING LIGKA')
+      #print('FINISHED HELENA ---------- STARTING LIGKA')
 
       #output.mhd_linear = ligka(output.equilibrium,input.core_profiles,input.mhd_linear,'input/z_ligka.xml','mpi_local',mpi_processes=2)
    
@@ -158,7 +158,7 @@ if param['modus'] == 5:
 
   # CREATE OUTPUT DATAFILE
   #output.create_env(user,tokamakname_out,version)
-
+  input.mhd_linear.ids_properties.homogeneous_time = 1
 
   for itime in range(0,time_runs + 1):
 
@@ -169,6 +169,8 @@ if param['modus'] == 5:
       input.equilibrium.getSlice(time[itime],1)
       input.core_profiles.setPulseCtx(idx_in)
       input.core_profiles.getSlice(time[itime],1)
+      #input.mhd_linear.ids_properties.homogeneous_time = 1
+      input.mhd_linear.time = input.equilibrium.time
       idx_out = input.mhd_linear.getPulseCtx()
     
       #NEED TO TAKE FROM THE PROF PARAMETER TO CHECK HELENA RAN OR NOT
