@@ -10,29 +10,23 @@ from tkinter import filedialog, ttk
 from lxml import etree
 from datetime import datetime
 from shutil import copy2, copytree, rmtree
-from run_physics_code import not_timed_HL
+from run_physics_code_final_no_kep import run_HL_noKEP
 from create_workflow_param import create_workflow_param_from_file
 from create_workflow_param import create_ligka_param_from_file
 
-#======================CHECK IF LOCAL KEPLER IS LOADED===============
-
-if (os.getenv('KEPLER') is None)  or ('/work/imas/extra' in os.getenv('KEPLER')):
-    print('ERROR: the local version of Kepler is not loaded')
-    sys.exit()
-    
-    
 # set the path to the folders where the configuration and codeparameters are stored
     
-run_config_folder_path = os.path.join(os.getcwd(), 'run_configurations/run_'+datetime.now().strftime('%m%d_%H%M%S'))
+run_config_folder_path = os.path.join(os.getcwd(), 'workflow/input')
 
 run_workflow_param_path = run_config_folder_path+ '/input_workflow.xml'
+run_ligka_param_path = run_config_folder_path+ '/z_ligka.xml'
 
-root1 = etree.parse('input_workflow_default.xml').getroot()
+root1 = etree.parse(run_config_folder_path+ '/input_workflow.xml').getroot()
 
-os.makedirs(run_config_folder_path)
+#os.makedirs(run_config_folder_path)
 
-copy2('input_workflow_default.xml', run_config_folder_path+'/input_workflow.xml', follow_symlinks=True)
-copy2('input/z_ligka.xml', run_config_folder_path+'/z_ligka.xml', follow_symlinks=True)
+copy2(run_config_folder_path+ '/input_workflow_default.xml', run_config_folder_path+ '/input_workflow.xml', follow_symlinks=True)
+#copy2('workflow/input/z_ligka.xml', '/z_ligka.xml', follow_symlinks=True)
 #=====================A FEW COLOR SCHEMES======================
 c1 = 'white'
 c2 = 'white smoke'
@@ -41,8 +35,8 @@ c4 = 'ghost white'
 c5 = 'azure4'
 cb = 'LavenderBlush3'
 
-default_workflow_param_path = 'input_workflow_default.xml'
-default_ligka_param_path = 'input/z_ligka.xml'
+default_workflow_param_path = run_config_folder_path+ '/input_workflow_default.xml'
+default_ligka_param_path = run_config_folder_path+ '/z_ligka.xml'
 window = Tk()
 ## create mainwindow
       
@@ -50,7 +44,7 @@ window.title('H-L WORKFLOW')
 window.configure(bg = c1)
 
 
-def open_gui(input_filepath):
+def open_gui(default_workflow_param_path):
 
     try:
         wh = window.winfo_reqheight()
@@ -58,15 +52,12 @@ def open_gui(input_filepath):
         wx = window.winfo_x()
         wy = window.winfo_y()
         window.geometry("+%d+%d" %(wx, wy))
-        
     except: 
-     if not os.path.exists(run_config_folder_path):
-        for systemname in maindict[list(maindict.keys())[0]]:
-            os.makedirs(run_config_folder_path+'/'+systemname)
-            copy2(input_filepath, run_workflow_param_path, follow_symlinks=True)
-        pass
-    workflow_param = create_workflow_param_from_file(input_filepath)
-    ligka_param = create_ligka_param_from_file('input/z_ligka.xml')
+
+        pass   
+    
+    workflow_param = create_workflow_param_from_file(default_workflow_param_path)
+    ligka_param = create_ligka_param_from_file('workflow/input/z_ligka.xml')
 
     fr_wfp = Frame(window, width = 300, height = 500, background = c3)
     fr_wfp.grid(row = 0, column = 0, rowspan = 2,  sticky = 'nwes', padx = 3, pady = 3)
@@ -130,15 +121,10 @@ def open_gui(input_filepath):
     button_saveconfig = Button(fr_wfp, text = 'Save Configuration', bg = c2)
     button_saveconfig.grid(row = 52, column = 0, padx = 5, pady = 5, sticky = 'ew')
     button_saveconfig.configure(command = lambda: save_workflow_param_to_file(run_workflow_param_path))
-    # save xml to the run folder
-    button_loadconfig = Button(fr_wfp, text = 'Load Configuration', bg = c2)
-    button_loadconfig.grid(row = 52, column = 1, padx = 5, pady = 5, sticky = 'ew')
-    button_loadconfig.configure(command = lambda: load_configuration_from_file(filedialog.askopenfilename(initialdir =  os.path.join(os.getcwd(), 'run_configurations'))))
 
     button_saveandrun = Button(fr_wfp, text = 'Save and Run', bg = c2)
     button_saveandrun.grid(row = 51, column = 0, padx = 5, pady = 5, sticky = 'ew')
     button_saveandrun.configure(command = lambda: save_and_run(run_workflow_param_path, True))
-
 
     button_run_nosave = Button(fr_wfp, text = 'Run (without Saving)', bg = c2)
     button_run_nosave.grid(row = 51, column = 1, padx = 5, pady = 5, sticky = 'ew')
@@ -146,11 +132,7 @@ def open_gui(input_filepath):
 
     button_save_asdef = Button(fr_wfp, text = 'Save Configuration as Default', bg = c2)
     button_save_asdef.grid(row = 53, column = 0, padx = 5, pady = 5, sticky = 'ew')
-    button_save_asdef.configure(command = lambda: save_workflow_param_to_file('input_workflow_default.xml'))
-
-    button_restore_def = Button(fr_wfp, text = 'Restore Default', bg =c2)
-    button_restore_def.grid(row = 53, column = 1, padx = 5, pady = 5, sticky = 'ew')
-    button_restore_def.configure(command = lambda: open_gui('input_workflow_default.xml'))
+    button_save_asdef.configure(command = lambda: save_workflow_param_to_file('workflow/input/input_workflow_default.xml'))
 
     button_exit = Button(fr_wfp, text = 'Exit', bg = 'light grey')
     button_exit.grid(row = 54, column = 0, padx = 5, pady = 5, sticky = 'w')
@@ -158,7 +140,7 @@ def open_gui(input_filepath):
     
     button_saveconfig = Button(fr_as, text = 'Save LIGKA Configuration', bg = c2)
     button_saveconfig.grid(row = 52, column = 0, padx = 5, pady = 5, sticky = 'ew')
-    button_saveconfig.configure(command = lambda: save_ligka_param_to_file('input/z_ligka.xml'))
+    button_saveconfig.configure(command = lambda: save_ligka_param_to_file('workflow/input/z_ligka.xml'))
 
      ## FUNCTIONS - SAVING & UPDATING
 
@@ -200,44 +182,11 @@ def open_gui(input_filepath):
 
     def save_and_run(filepath, save_yn):
         
-        save_workflow_param_to_file(filepath)
+        if save_yn == True:
+          save_workflow_param_to_file(filepath)
 
-        #window.destroy()
-        not_timed_HL(run_config_folder_path)
+        run_HL_noKEP()
 
-        if save_yn == 0:
-            rmtree(run_config_folder_path)
-
-    def load_configuration_from_file(filepath):
-        if 'input_workflow_default.xml' in filepath:
-            print('if you want to load the default configuration please choose load default')
-            filepath = ()
-        elif 'input_workflow.xml' not in filepath: 
-            print('please choose an input_workflow.xml file')
-            filepath = ()
-       
-
-        if filepath is not (): 
-            source_folder = filepath[:-19]
-
-            #    rmtree(run_config_folder_path)
-            if source_folder.find(run_config_folder_path) is -1:
-                try:
-                    copytree(source_folder, run_config_folder_path)
-                except:
-                    rmtree(run_config_folder_path)
-                    copytree(source_folder, run_config_folder_path)
-
-                    
-
-                open_gui(run_config_folder_path+ '/input_workflow.xml')
-
-            else:
-                print('this folder is the current folder. it is not possible to load the current configuration')
-
-
-        else:
-            print('no file selected')
 
         
 

@@ -1,6 +1,7 @@
 import os, sys
 sys.path.append('interface')
 sys.path.append('workflow')
+sys.path.append('workflow/input')
 sys.path.append(os.getcwd())
 from lxml import etree
 

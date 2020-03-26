@@ -1,0 +1,18 @@
+<root>
+  <workflow_parameters display="WORKFLOW PARAMETERS (STANDALONE)">
+    <user>public</user>
+    <machine>ITER</machine>
+    <shot_nr>130012</shot_nr>
+    <run_in>1</run_in>
+    <machine_out>ligka_modes</machine_out>
+    <run_out>5</run_out>
+    <itbegin>70</itbegin>
+    <itend>72</itend>
+  </workflow_parameters>
+
+  <further_settings display="FURTHER SETTINGS">
+    <other_settings>0</other_settings>
+
+  </further_settings>
+
+</root>
