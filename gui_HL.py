@@ -13,6 +13,7 @@ from shutil import copy2, copytree, rmtree
 from run_physics_code_final_no_kep import run_HL_noKEP
 from create_workflow_param import create_workflow_param_from_file
 from create_workflow_param import create_ligka_param_from_file
+from analysis_modes import analysis_ligka_mode5
 
 # set the path to the folders where the configuration and codeparameters are stored
     
@@ -129,6 +130,10 @@ def open_gui(default_workflow_param_path):
     button_run_nosave = Button(fr_wfp, text = 'Run (without Saving)', bg = c2)
     button_run_nosave.grid(row = 51, column = 1, padx = 5, pady = 5, sticky = 'ew')
     button_run_nosave.configure(command = lambda: save_and_run(run_workflow_param_path, False))
+    
+    button_analysis = Button(fr_wfp, text = 'LIGKA Analysis', bg = c2)
+    button_analysis.grid(row = 52, column = 1, padx = 5, pady = 5, sticky = 'ew')
+    button_analysis.configure(command = lambda: analysis_window())
 
     button_save_asdef = Button(fr_wfp, text = 'Save Configuration as Default', bg = c2)
     button_save_asdef.grid(row = 53, column = 0, padx = 5, pady = 5, sticky = 'ew')
@@ -141,6 +146,33 @@ def open_gui(default_workflow_param_path):
     button_saveconfig = Button(fr_as, text = 'Save LIGKA Configuration', bg = c2)
     button_saveconfig.grid(row = 52, column = 0, padx = 5, pady = 5, sticky = 'ew')
     button_saveconfig.configure(command = lambda: save_ligka_param_to_file('workflow/input/z_ligka.xml'))
+
+     ## FUNCTION NEW ANALYSIS WINDOW
+     
+    def analysis_window():
+      #create analysis directory if none exists
+      analysis_dir = ('workflow/Analysis')
+      analysis_dir_check = os.path.isdir(analysis_dir)
+      
+      if not analysis_dir_check:
+        os.makedirs(analysis_dir)
+        print('Analysis folder was created')
+      
+      window_a = Tk()
+      window_a.title('LIGKA Analysis')
+      window_a.configure(bg = c1)
+      window_a.geometry('300x500')
+      
+      fr_ana = Frame(window_a, width = 300, height = 500, background = c2)
+      fr_ana.grid(row = 0, column = 0, rowspan = 2,  sticky = 'nwes', padx = 3, pady = 3)
+      
+      button_analysis = Button(fr_ana, text = 'Mode 5', bg = c2)
+      button_analysis.grid(row = 5, column = 0, padx = 5, pady = 5, sticky = 'ew')
+      button_analysis.configure(command = lambda: analysis_mode5())
+      
+    def analysis_mode5():
+      analysis_ligka_mode5()
+      
 
      ## FUNCTIONS - SAVING & UPDATING
 

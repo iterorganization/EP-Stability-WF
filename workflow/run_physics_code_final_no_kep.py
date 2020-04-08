@@ -17,7 +17,7 @@ sys.path.append('input')
 
 def run_HL_noKEP():
   
-  # IMPORT PARAMETERS FROM LIGKA XML --------------------------------------
+  # IMPORT PARAMETERS FROM WORKFLOW AND LIGKA XML --------------------------------------
   def parameters_workflow(input_file,l):  
     tree = ET.parse(input_file)
     root = tree.getroot()
@@ -63,8 +63,6 @@ def run_HL_noKEP():
     
     
   #TIME SETTINGS FOR RUNS
-  #begin_time = 12 # initial begin time for mode 5
-  #end_time = 14 #end time for mode 5 (steps from transport code)
   time_runs = param['itend'] - param['itbegin'] # runs for mode 4,1,...
 
 
@@ -72,19 +70,13 @@ def run_HL_noKEP():
 
   # PUBLIC and LOCAL DATABASE ENVIRONMENT
   # SETTINGS
-  #user_in = 'public'
-  #tokamakname = 'ITER'
   user = os.getenv('USER')
   version = os.getenv('IMAS_VERSION')[0]
 
 
   if param_ligka['modus'] == 10:
     print('MODE 10 START')
-    # SETTINGS
-    #shot    = 130012
-    #run_in  = 1
-    #run_out = 5
-    #tokamakname_out = 'ligka_modes'
+ 
     # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
     # AND READ FULL TIME VECTOR OF EQUILIBRIUM IDS TO GET THE TIME BASE
     print('=> Open input datafile and read total equilibrium IDS for time.')
@@ -108,8 +100,7 @@ def run_HL_noKEP():
     output = imas.ids(param['shot_nr'],param['run_out'])
     output.create_env(user,param['machine_out'],version)
     
-     # SETUP ENVIRONMENT FOR TEMPORARY FILE
-    #tmp_ids_storage()
+
     
 
     for itime in range(param['itbegin'],param['itend'] + 1):
@@ -150,11 +141,7 @@ def run_HL_noKEP():
 
   if param_ligka['modus'] == 5:
     print('MODE 5 START')
-    # SETTINGS
-    #shot    = 130012
-    #run_in  = 5
-    #run_out = 4
-    #tokamakname_out = 'ligka_modes'
+
     # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
     # AND READ FULL TIME VECTOR OF EQUILIBRIUM IDS TO GET THE TIME BASE
     print('=> Open input datafile and read total equilibrium IDS for time.')
@@ -176,27 +163,21 @@ def run_HL_noKEP():
 
     # OPEN OUTPUT OBJECT, IN VIEW OF SAVING RESULTS TO LOCAL DB
     print('=> Create output datafile')
-    #output = imas.ids(shot,run_out)
     
     
-    # SETUP ENVIRONMENT FOR TEMPORARY FILE
-    #tmp_ids_storage()
     
-    
-    # CREATE OUTPUT DATAFILE
-    #output.create_env(user,tokamakname_out,version)
     input.mhd_linear.ids_properties.homogeneous_time = 1
 
     for itime in range(0,time_runs + 1):
 
         # EXECUTE PHYSICS CODE
         print('Time = ',time[itime],' s, itime = ',itime,'/',ntime)
-        #idx_in = input.mhd_linear.getPulseCtx()
+
         input.equilibrium.setPulseCtx(idx_in)
         input.equilibrium.getSlice(time[itime],1)
         input.core_profiles.setPulseCtx(idx_in)
         input.core_profiles.getSlice(time[itime],1)
-        #input.mhd_linear.ids_properties.homogeneous_time = 1
+
         input.mhd_linear.time = input.equilibrium.time
         idx_out = input.mhd_linear.getPulseCtx()
       
@@ -204,7 +185,7 @@ def run_HL_noKEP():
         print('==========ENDING HELENA OR ALREADY RUN ------STARTING LIGKA===========')
       
         input.mhd_linear = ligka_actor(input.equilibrium,input.core_profiles,input.mhd_linear,'workflow/input/z_ligka.xml','mpi_local')
-        #input.mhd_linear = copy.deepcopy(output.mhd_linear)
+
         input.mhd_linear.setPulseCtx(idx_in)
         
     
@@ -220,7 +201,6 @@ def run_HL_noKEP():
         print('*************************************')
 
     input.close()
-    #output.close()
     print('Done.')
 
 
@@ -228,10 +208,8 @@ def run_HL_noKEP():
   if param_ligka['modus'] == 4:
     print('MODE 4 START')
     # SETTINGS
-    #shot    = 130012
-    #run_in  = 5
     run_out = 4
-    #tokamakname_out = 'ligka_modes'
+
     # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
     # AND READ FULL TIME VECTOR OF EQUILIBRIUM IDS TO GET THE TIME BASE
     print('=> Open input datafile and read total equilibrium IDS for time.')
@@ -258,14 +236,13 @@ def run_HL_noKEP():
     # CREATE OUTPUT DATAFILE
     output.create_env(user,param['machine_out'],version)
     
-    # SETUP ENVIRONMENT FOR TEMPORARY FILE
-    #tmp_ids_storage()
+
 
     for itime in range(0,time_runs + 1):
 
         # EXECUTE PHYSICS CODE
         print('Time = ',time[itime],' s, itime = ',itime,'/',ntime)
-        #idx_in = input.mhd_linear.getPulseCtx()
+        
         input.mhd_linear.setPulseCtx(idx_in)
         input.mhd_linear.getSlice(time[itime],1)
         input.equilibrium.setPulseCtx(idx_in)
@@ -300,10 +277,8 @@ def run_HL_noKEP():
   if param_ligka['modus'] == 1:
     print('MODE 1 START')
     # SETTINGS
-    #shot    = 130012
-    #run_in  = 5
     run_out = 1
-    #tokamakname_out = 'ligka_modes'
+    
     # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
     # AND READ FULL TIME VECTOR OF EQUILIBRIUM IDS TO GET THE TIME BASE
     print('=> Open input datafile and read total equilibrium IDS for time.')
@@ -329,8 +304,7 @@ def run_HL_noKEP():
 
     # CREATE OUTPUT DATAFILE
     output.create_env(user,param['machine_out'],version)
-    # SETUP ENVIRONMENT FOR TEMPORARY FILE
-    #tmp_ids_storage()
+
 
     for itime in range(0,time_runs + 1):
 
