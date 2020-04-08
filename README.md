@@ -17,7 +17,7 @@ for HELENA
 $ git checkout EP_LIGKA
 ```
 
-1. In EP Stabiliy WF file **module_start_python.sh** contains all the necessary modules to run the workflow and compile LIGKA and HELENA. It also contains the location of the **ACTOR_FOLDER** where the actors will be stored after running FC2K.
+2. In EP Stabiliy WF file **module_start_python.sh** contains all the necessary modules to run the workflow and compile LIGKA and HELENA. It also contains the location of the **ACTOR_FOLDER** where the actors will be stored after running FC2K.
 
 ```bash
 $ source module_start_python.sh

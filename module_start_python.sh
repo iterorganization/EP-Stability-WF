@@ -11,7 +11,7 @@ module load FC2K/4.8.0
 module load XMLlib/3.2.0-intel-2018a
 module load PyAL/1.2.0-intel-2018a-Python-3.6.4
 module load lxml/4.2.0-intel-2018a-Python-3.6.4
-module load TensorFlow/1.8.0-intel-2018a-Python-3.6.4
+#module load TensorFlow/1.8.0-intel-2018a-Python-3.6.4
 
 # CREATE FOLDER FOR ACTOR POOL
 export ACTOR_FOLDER=~/develop/imas_actors #edit this line to best suit your needs
