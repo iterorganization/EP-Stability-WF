@@ -9,6 +9,7 @@ from lxml import etree
 import xml.etree.ElementTree as ET
 from helena_imas.wrapper import helena_imas_actor
 from ligka.wrapper import ligka_actor
+from chease.wrapper import chease_actor
 from tmp_ids_storage import tmp_ids_storage
 sys.path.append(os.getcwd())
 sys.path.append('input')
@@ -106,18 +107,22 @@ def run_HL_noKEP():
     for itime in range(param['itbegin'],param['itend'] + 1):
 
         # EXECUTE PHYSICS CODE
-        print('Time = ',time[itime],' s, itime = ',itime,'/',ntime)
+        print('Time = ',time[itime],' s, itime = ',itime,'/',ntime-1)
         input.equilibrium.setPulseCtx(idx_in)
         input.equilibrium.getSlice(time[itime],1)
         input.core_profiles.setPulseCtx(idx_in)
         input.core_profiles.getSlice(time[itime],1)
 
         idx_out = output.equilibrium.getPulseCtx()
-        output.equilibrium = helena_imas_actor(input.equilibrium)
+        
+        if param['Equilibrium_code'] == 'Helena':
+          output.equilibrium = helena_imas_actor(input.equilibrium)
+        else:
+          output.equilibrium = chease_actor(input.equilibrium,'workflow/input/chease_input_choices_default.xml')
 
         output.equilibrium.setPulseCtx(idx_out)
-
-        output.core_profiles = copy.deepcopy(input.core_profiles)
+        output.core_profiles.copyValues(input.core_profiles)
+        #output.core_profiles = copy.deepcopy(input.core_profiles)
         output.core_profiles.setExpIdx(idx_out)
 
         if itime == param['itbegin']:
@@ -171,12 +176,12 @@ def run_HL_noKEP():
     for itime in range(0,time_runs + 1):
 
         # EXECUTE PHYSICS CODE
-        print('Time = ',time[itime],' s, itime = ',itime,'/',ntime)
+        print('Time = ',time[itime],' s, itime = ',itime,'/',ntime-1)
 
         input.equilibrium.setPulseCtx(idx_in)
-        input.equilibrium.getSlice(time[itime],1)
+        input.equilibrium.getSlice(time[itime],2)
         input.core_profiles.setPulseCtx(idx_in)
-        input.core_profiles.getSlice(time[itime],1)
+        input.core_profiles.getSlice(time[itime],2)
 
         input.mhd_linear.time = input.equilibrium.time
         idx_out = input.mhd_linear.getPulseCtx()
@@ -241,21 +246,22 @@ def run_HL_noKEP():
     for itime in range(0,time_runs + 1):
 
         # EXECUTE PHYSICS CODE
-        print('Time = ',time[itime],' s, itime = ',itime,'/',ntime)
+        print('Time = ',time[itime],' s, itime = ',itime,'/',ntime-1)
         
         input.mhd_linear.setPulseCtx(idx_in)
-        input.mhd_linear.getSlice(time[itime],1)
+        input.mhd_linear.getSlice(time[itime],2)
         input.equilibrium.setPulseCtx(idx_in)
-        input.equilibrium.getSlice(time[itime],1)
+        input.equilibrium.getSlice(time[itime],2)
         input.core_profiles.setPulseCtx(idx_in)
-        input.core_profiles.getSlice(time[itime],1)
+        input.core_profiles.getSlice(time[itime],2)
         idx_out = output.mhd_linear.getPulseCtx()
       
         #NEED TO TAKE FROM THE PROF PARAMETER TO CHECK HELENA RAN OR NOT
         print('==========ENDING HELENA OR ALREADY RUN ------STARTING LIGKA===========')
       
         output.mhd_linear = ligka_actor(input.equilibrium,input.core_profiles,input.mhd_linear,'workflow/input/z_ligka.xml','mpi_local',mpi_processes=1)
-        input.mhd_linear = copy.deepcopy(output.mhd_linear)
+        #input.mhd_linear = copy.deepcopy(output.mhd_linear)
+        input.mhd_linear.copyValues(output.mhd_linear)
         input.mhd_linear.setPulseCtx(idx_in)
         
     
@@ -309,21 +315,22 @@ def run_HL_noKEP():
     for itime in range(0,time_runs + 1):
 
         # EXECUTE PHYSICS CODE
-        print('Time = ',time[itime],' s, itime = ',itime,'/',ntime)
+        print('Time = ',time[itime],' s, itime = ',itime,'/',ntime-1)
         #idx_in = input.mhd_linear.getPulseCtx()
         input.mhd_linear.setPulseCtx(idx_in)
-        input.mhd_linear.getSlice(time[itime],1,1)
+        input.mhd_linear.getSlice(time[itime],2,1)
         input.equilibrium.setPulseCtx(idx_in)
-        input.equilibrium.getSlice(time[itime],1)
+        input.equilibrium.getSlice(time[itime],2)
         input.core_profiles.setPulseCtx(idx_in)
-        input.core_profiles.getSlice(time[itime],1)
+        input.core_profiles.getSlice(time[itime],2)
         idx_out = output.mhd_linear.getPulseCtx()
       
         #NEED TO TAKE FROM THE PROF PARAMETER TO CHECK HELENA RAN OR NOT
         print('==========ENDING HELENA OR ALREADY RUN ------STARTING LIGKA===========')
       
         output.mhd_linear = ligka_actor(input.equilibrium,input.core_profiles,input.mhd_linear,'workflow/input/z_ligka.xml','mpi_local',mpi_processes=4)
-        input.mhd_linear = copy.deepcopy(output.mhd_linear)
+        #input.mhd_linear = copy.deepcopy(output.mhd_linear)
+        input.mhd_linear.copyValues(output.mhd_linear)
         input.mhd_linear.setPulseCtx(idx_in)
         
     

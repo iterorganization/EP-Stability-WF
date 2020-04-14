@@ -24,10 +24,9 @@ run_ligka_param_path = run_config_folder_path+ '/z_ligka.xml'
 
 root1 = etree.parse(run_config_folder_path+ '/input_workflow.xml').getroot()
 
-#os.makedirs(run_config_folder_path)
 
 copy2(run_config_folder_path+ '/input_workflow_default.xml', run_config_folder_path+ '/input_workflow.xml', follow_symlinks=True)
-#copy2('workflow/input/z_ligka.xml', '/z_ligka.xml', follow_symlinks=True)
+
 #=====================A FEW COLOR SCHEMES======================
 c1 = 'white'
 c2 = 'white smoke'
@@ -87,7 +86,9 @@ def open_gui(default_workflow_param_path):
         Label(fr_wfp, text = ref, bg = c3, font = '15').grid(row = irow, column = 0, columnspan = 3, pady = 10, padx = 5, sticky = 'we')
         irow += 1
 
-        for elem in workflow_param[ref]:        
+        for elem in workflow_param[ref]:  
+            if elem == 'Equilibrium_code':
+              continue
             
             Label(fr_wfp, text = elem, bg = c3).grid(row = irow,  column = 0, padx = 3, pady = 2, sticky = 'w')
 
@@ -116,6 +117,20 @@ def open_gui(default_workflow_param_path):
     
                 
                 
+    ## CONFIGURE EQUILIBRIUM CODE SELECTBOX
+    
+    equilibrium = StringVar()
+    #equilibrium.trace('w', lambda name, index, mode, elem = 'Equilibrium_code', entrystring = equilibrium, ref = fur_ref: update_workflow_param(ref, elem, entrystring.get())
+    equilibrium.set(workflow_param[fur_ref]['Equilibrium_code'])
+    Label(fr_wfp, text = 'Equilibrium code:', bg = c3).grid(row = 50, column = 0, padx = 3, pady = 2, sticky = 'w')
+    combobox = ttk.Combobox(fr_wfp, textvariable = equilibrium)
+    combobox.grid(row = 50, column = 1, padx = 3, pady = 2, sticky = 'e')
+    combobox.config(values = ('Helena', 'Chease'))
+    equilibrium.trace('w', lambda name, index, mode, elem = 'Equilibrium_code', entrystring = equilibrium, ref = fur_ref: update_workflow_param(ref, elem, entrystring.get()))
+    
+    
+    #workflow_param[fur_ref]['Equilibrium_code'] = str(text_equi)
+    
     ## BUTTONS 
     
     # left: 
@@ -146,6 +161,8 @@ def open_gui(default_workflow_param_path):
     button_saveconfig = Button(fr_as, text = 'Save LIGKA Configuration', bg = c2)
     button_saveconfig.grid(row = 52, column = 0, padx = 5, pady = 5, sticky = 'ew')
     button_saveconfig.configure(command = lambda: save_ligka_param_to_file('workflow/input/z_ligka.xml'))
+
+    
 
      ## FUNCTION NEW ANALYSIS WINDOW
      
