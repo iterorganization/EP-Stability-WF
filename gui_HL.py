@@ -14,6 +14,8 @@ from run_physics_code_final_no_kep import run_HL_noKEP
 from create_workflow_param import create_workflow_param_from_file
 from create_workflow_param import create_ligka_param_from_file
 from analysis_modes import analysis_ligka_mode5
+from analysis_modes import analysis_ligka_mode1
+from analysis_modes import analysis_ligka_mode2
 
 # set the path to the folders where the configuration and codeparameters are stored
     
@@ -128,8 +130,7 @@ def open_gui(default_workflow_param_path):
     combobox.config(values = ('Helena', 'Chease'))
     equilibrium.trace('w', lambda name, index, mode, elem = 'Equilibrium_code', entrystring = equilibrium, ref = fur_ref: update_workflow_param(ref, elem, entrystring.get()))
     
-    
-    #workflow_param[fur_ref]['Equilibrium_code'] = str(text_equi)
+   
     
     ## BUTTONS 
     
@@ -187,8 +188,20 @@ def open_gui(default_workflow_param_path):
       button_analysis.grid(row = 5, column = 0, padx = 5, pady = 5, sticky = 'ew')
       button_analysis.configure(command = lambda: analysis_mode5())
       
+      button_analysis = Button(fr_ana, text = 'Mode 1', bg = c2)
+      button_analysis.grid(row = 6, column = 0, padx = 5, pady = 5, sticky = 'ew')
+      button_analysis.configure(command = lambda: analysis_mode1())
+      
+      button_analysis = Button(fr_ana, text = 'Mode 2', bg = c2)
+      button_analysis.grid(row = 7, column = 0, padx = 5, pady = 5, sticky = 'ew')
+      button_analysis.configure(command = lambda: analysis_mode2())
+      
     def analysis_mode5():
       analysis_ligka_mode5()
+    def analysis_mode1():
+      analysis_ligka_mode1()
+    def analysis_mode2():
+      analysis_ligka_mode2()
       
 
      ## FUNCTIONS - SAVING & UPDATING

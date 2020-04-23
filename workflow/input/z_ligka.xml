@@ -1,16 +1,16 @@
 <parameter display="LIGKA PARAMETERS">
 <modus>5</modus>
-<min_n_tor>10</min_n_tor>
-<max_n_tor>10</max_n_tor>
-<min_m>11</min_m>
-<max_m>11</max_m>
+<min_n_tor>8</min_n_tor>
+<max_n_tor>8</max_n_tor>
+<min_m>9</min_m>
+<max_m>9</max_m>
 <sidebands>6</sidebands>
 <mode_type>1</mode_type>
 <even>0</even>
 <start_pos>1</start_pos>
 <force_m>false</force_m>
 <offset_d>0.0</offset_d>
-<npsi_out>128</npsi_out>
+<npsi_out>256</npsi_out>
 <kr_read>0.0</kr_read>
 <q0>0.0d0</q0>
 
