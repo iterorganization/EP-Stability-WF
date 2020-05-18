@@ -26,7 +26,7 @@ $ source module_start_python.sh
 
 4. Compile and run FC2K for LIGKA:
 ```bash
-$ gmake LIGKA_KEP OPTS=IMAS,KEP,MPI,MUMS
+$ gmake LIGKA_KEP OPTS=IMAS,KEP,MPI,MUMPS
 ```
 5. Compile and run FC2K for HELENA:
 ```bash
