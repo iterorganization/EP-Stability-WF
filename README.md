@@ -22,17 +22,16 @@ $ git checkout EP_LIGKA
 ```bash
 $ source module_start_python.sh
 ```
-3. Both **LIGKA/ligka_kepler.xml** and **HELENA/helena_imas_0.1.xml** you must modify the paths according to your specific case.
 
-4. Compile and run FC2K for LIGKA:
+3. Compile and run FC2K for LIGKA:
 ```bash
 $ gmake LIGKA_KEP OPTS=IMAS,KEP,MPI,MUMPS
 ```
-5. Compile and run FC2K for HELENA:
+4. Compile and run FC2K for HELENA:
 ```bash
 $ gmake all
 ```
-6. After the creation of the actors you should be able to go to **EP Stabiliy WF** and run:
+7. After the creation of the actors you should be able to go to **EP Stabiliy WF** and run:
 ```bash
 $ python gui_HL.py
 ```
