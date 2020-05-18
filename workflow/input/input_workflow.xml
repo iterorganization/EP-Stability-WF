@@ -5,7 +5,7 @@
     <shot_nr>130012</shot_nr>
     <run_in>1</run_in>
     <machine_out>ligka_modes</machine_out>
-    <run_out>88</run_out>
+    <run_out>89</run_out>
     <itbegin>24</itbegin>
     <itend>27</itend>
   </workflow_parameters>

@@ -14,7 +14,7 @@ module load lxml/4.2.0-intel-2018a-Python-3.6.4
 #module load TensorFlow/1.8.0-intel-2018a-Python-3.6.4
 
 # CREATE FOLDER FOR ACTOR POOL
-export ACTOR_FOLDER=~/develop/imas_actors #edit this line to best suit your needs
+export ACTOR_FOLDER=~/public/imas_actors #edit this line to best suit your needs
 mkdir -p $ACTOR_FOLDER
 
 # EXTEND PYTHON PATH AND AVOID DOUBLONS (where the actors are under the form: "/actor_name/version(if any)"

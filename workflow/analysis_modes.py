@@ -77,8 +77,6 @@ def analysis_ligka_mode5():
   
   # LISTS WITH DATA DECLARATION AND FILLING:
 
-  #radius = []
-  #radius.append(input.mhd_linear.time_slice[1].toroidal_mode[0].plasma.grid.dim1)
   radius = input.mhd_linear.time_slice[0].toroidal_mode[0].plasma.grid.dim1
   np.set_printoptions(threshold=sys.maxsize)
   
@@ -99,14 +97,15 @@ def analysis_ligka_mode5():
       
     
       # naming the x axis 
-      plt.xlabel('x - radius')
       plt.axis([0.55,0.85,0,1])
+      # naming the x axis 
+      plt.xlabel('s') 
       
       # naming the y axis 
-      plt.ylabel('y - freq') 
+      plt.ylabel('Electrostatic Potential') 
     
       # giving a title to my graph 
-      plt.title('test_'+str(input.mhd_linear.time[i])) 
+      plt.title('EF_ANA_n'+str(input.mhd_linear.time_slice[i].toroidal_mode[j].n_tor)+'_'+str(input.mhd_linear.time[i]))  
       
       
 
@@ -191,7 +190,7 @@ def analysis_ligka_mode1():
     for j in range(param_ligka['max_n_tor']-param_ligka['min_n_tor']+1):
 
       freq = input.mhd_linear.time_slice[i].toroidal_mode[j].plasma.phi_potential_perturbed.real
-      freq_list = []
+      #freq_list = []
       if len(freq) == 0:
         print('List for timepoint '+str(input.mhd_linear.time[i])+' is empty, skipping this timepoint.')
         continue
@@ -203,17 +202,16 @@ def analysis_ligka_mode1():
       #plt.plot(radius, freq_list) 
       plt.plot(radius, freq)
       
-      plt.axis([0,2,-10,20])
+      #plt.axis([0,2,-10,20])
     
       # naming the x axis 
-      plt.xlabel('x - radius') 
+      plt.xlabel('s') 
       
       # naming the y axis 
-      plt.ylabel('y - freq') 
+      plt.ylabel('Electrostatic Potential')  
     
       # giving a title to my graph 
-      plt.title('test_'+str(input.mhd_linear.time[i])) 
-      
+      plt.title('EF_phi_n'+str(input.mhd_linear.time_slice[i].toroidal_mode[j].n_tor)+'_'+str(input.mhd_linear.time[i]))  
       
 
       # function to save/show the plot 
@@ -311,13 +309,13 @@ def analysis_ligka_mode2():
       #plt.axis([0,2,-10,20])
     
       # naming the x axis 
-      plt.xlabel('x - radius') 
+      plt.xlabel('s') 
       
       # naming the y axis 
-      plt.ylabel('y - freq') 
+      plt.ylabel('Electrostatic Potential') 
     
       # giving a title to my graph 
-      plt.title('test_'+str(input.mhd_linear.time[i])) 
+      plt.title('EF_phi_n'+str(input.mhd_linear.time_slice[i].toroidal_mode[j].n_tor)+'_'+str(input.mhd_linear.time[i])) 
       
       
 

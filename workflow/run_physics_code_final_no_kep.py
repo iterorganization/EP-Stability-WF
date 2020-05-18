@@ -82,9 +82,8 @@ def run_HL_noKEP():
     print('=> Open input datafile and read total equilibrium IDS for time.')
     input_total = imas.ids(param['shot_nr'],param['run_in'],0,0)
     input_total.open_env(param['user'],param['machine'],version)
-    input_total.equilibrium.get()
-    ntime = len(input_total.equilibrium.time)
-    time = input_total.equilibrium.time
+    time = input_total.equilibrium.partialGet('time')
+    ntime = len(time)
     input_total.close()
 
     # OPEN INPUT IDS'S AGAIN TO PROCEED WITH GETSLICE
@@ -151,9 +150,8 @@ def run_HL_noKEP():
     print('=> Open input datafile and read total equilibrium IDS for time.')
     input_total = imas.ids(param['shot_nr'],param['run_out'],0,0)
     input_total.open_env(user,param['machine_out'],version)
-    input_total.equilibrium.get()
-    ntime = len(input_total.equilibrium.time)
-    time = input_total.equilibrium.time
+    time = input_total.equilibrium.partialGet('time')
+    ntime = len(time)
     input_total.close()
 
     # OPEN INPUT IDS'S AGAIN TO PROCEED WITH GETSLICE
@@ -219,9 +217,8 @@ def run_HL_noKEP():
     print('=> Open input datafile and read total equilibrium IDS for time.')
     input_total = imas.ids(param['shot_nr'],param['run_out'],0,0)
     input_total.open_env(user,param['machine_out'],version)
-    input_total.equilibrium.get()
-    ntime = len(input_total.equilibrium.time)
-    time = input_total.equilibrium.time
+    time = input_total.equilibrium.partialGet('time')
+    ntime = len(time)
     input_total.close()
 
     # OPEN INPUT IDS'S AGAIN TO PROCEED WITH GETSLICE
@@ -289,9 +286,8 @@ def run_HL_noKEP():
     print('=> Open input datafile and read total equilibrium IDS for time.')
     input_total = imas.ids(param['shot_nr'],param['run_out'],0,0)
     input_total.open_env(user,param['machine_out'],version)
-    input_total.equilibrium.get()
-    ntime = len(input_total.equilibrium.time)
-    time = input_total.equilibrium.time
+    time = input_total.equilibrium.partialGet('time')
+    ntime = len(time)
     input_total.close()
 
     # OPEN INPUT IDS'S AGAIN TO PROCEED WITH GETSLICE
@@ -358,9 +354,8 @@ def run_HL_noKEP():
     print('=> Open input datafile and read total equilibrium IDS for time.')
     input_total = imas.ids(param['shot_nr'],param['run_out'],0,0)
     input_total.open_env(user,param['machine_out'],version)
-    input_total.equilibrium.get()
-    ntime = len(input_total.equilibrium.time)
-    time = input_total.equilibrium.time
+    time = input_total.equilibrium.partialGet('time')
+    ntime = len(time)
     input_total.close()
 
     # OPEN INPUT IDS'S AGAIN TO PROCEED WITH GETSLICE
