@@ -1,0 +1,28 @@
+#!/bin/tcsh
+
+echo ''
+echo 'Compiles of actors needed for the EP workflow (Python)'
+echo ''
+
+set ACTOR_RELEASE_DIRECTORY=/tmp/${USER}/actor_release/
+mkdir -p ${ACTOR_RELEASE_DIRECTORY}
+
+if ( $# > 0 ) then
+  if ( "$1" == "-h" ) then
+    exit 0
+  else
+    set ACTOR_RELEASE_DIRECTORY=$1
+  endif
+endif
+
+set PWD=`pwd`
+cp actor_install.py *.yml ${ACTOR_RELEASE_DIRECTORY}
+cd ${ACTOR_RELEASE_DIRECTORY}
+
+set actor_list=( helena ligka )
+
+foreach actor ($actor_list)
+  python actor_install.py --skipModules $actor.yml
+end
+
+cd ${PWD}

@@ -1,0 +1,16 @@
+<parameter>
+ 
+<force_co_Bt_n>true</force_co_Bt_n>
+<force_pos_freq>true</force_pos_freq>
+<geneq>true</geneq>
+<genpet>false</genpet>
+<genf0>false</genf0>
+<ideal>false</ideal>
+
+<shot_number> 130012  </shot_number>
+ <run> 11 </run>
+ <itime> 25  </itime>
+ <ids_time> 100.0d0 </ids_time>
+<user>lauberp</user>
+ <machine>helena_test</machine>
+</parameter>

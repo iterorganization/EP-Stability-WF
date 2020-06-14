@@ -1,0 +1,20 @@
+#example
+---
+SOURCES:
+  - VCS:  git
+    REPO: ssh://git@git.iter.org/eq/helena.git
+    VERSION: EP_LIGKA
+    DIR: helena
+
+MODULES: [ppplib, libcerf]
+
+BUILDS: 
+  - DIR: helena
+    CMD: gmake imas
+
+ACTORS: 
+  - DIR: helena
+    XML: helena_imas_0.1.xml
+
+#COMMENTS:  
+...
