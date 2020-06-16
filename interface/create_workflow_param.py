@@ -13,9 +13,10 @@ def create_workflow_param_from_file(filepath):
 
     name0 = root[0].attrib['display']
     name1 = root[1].attrib['display']
+    name2 = root[2].attrib['display']
 
     workflow_param = {}
-    workflow_param = {name0: {}, name1: {}}
+    workflow_param = {name0: {}, name1: {}, name2: {}}
 
 
     
@@ -25,26 +26,46 @@ def create_workflow_param_from_file(filepath):
 
     for elem in root[1].iter():
         if len(elem) == 0 and elem.tag is not etree.Comment:
-            workflow_param[name1][elem.tag] = elem.text     
+            workflow_param[name1][elem.tag] = elem.text
+
+    for elem in root[2].iter():
+        if len(elem) == 0 and elem.tag is not etree.Comment:
+            workflow_param[name2][elem.tag] = elem.text       
 
 
     return(workflow_param)
     
-def create_ligka_param_from_file(filepath):
+def create_xml_param_from_file(filepath):
     tree = etree.parse(filepath)
     root = tree.getroot()
 
     name0 = root.attrib['display']
    
 
-    ligka_param = {}
-    ligka_param = {name0: {}}
+    param = {}
+    param = {name0: {}}
 
 
     
     for elem in root.iter():
         if len(elem) == 0 and elem.tag is not etree.Comment:
-            ligka_param[name0][elem.tag] = elem.text
+            param[name0][elem.tag] = elem.text.strip()
 
 
-    return(ligka_param)
+    return(param)
+
+def save_xml_param_to_file(ligka_param, filepath):
+
+        tree = etree.parse(filepath)
+        root = tree.getroot()
+        
+        name0 = root.attrib['display']
+        for elem in root.iter():
+          if((elem.tag is not etree.Comment) and (len(elem) == 0)):
+
+            elem.text = ligka_param[name0][elem.tag]
+                   
+        tree.write(filepath)
+
+def update_xml_param(ligka_param, ref, elem, newvalue):
+        ligka_param[ref][elem] = newvalue
