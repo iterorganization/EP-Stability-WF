@@ -57,7 +57,7 @@ def analysis_ligka_mode5():
           print(elem.tag, ' = ', param_ligka[elem.tag])
       return(param_ligka)
 
-  param = parameters_workflow('workflow/input/input_workflow.xml',0)
+  param = parameters_workflow('workflow/input/input_workflow_default.xml',0)
   param_ligka = parameters_workflow('workflow/input/z_ligka.xml',1)
   
   #CREATE DIRECTORY IF IS NOT THERE:
@@ -160,7 +160,7 @@ def analysis_ligka_mode1():
           print(elem.tag, ' = ', param_ligka[elem.tag])
       return(param_ligka)
 
-  param = parameters_workflow('workflow/input/input_workflow.xml',0)
+  param = parameters_workflow('workflow/input/input_workflow_default.xml',0)
   param_ligka = parameters_workflow('workflow/input/z_ligka.xml',1)
   
   #CREATE DIRECTORY IF IS NOT THERE:
@@ -264,7 +264,7 @@ def analysis_ligka_mode2():
           print(elem.tag, ' = ', param_ligka[elem.tag])
       return(param_ligka)
 
-  param = parameters_workflow('workflow/input/input_workflow.xml',0)
+  param = parameters_workflow('workflow/input/input_workflow_default.xml',0)
   param_ligka = parameters_workflow('workflow/input/z_ligka.xml',1)
   
   #CREATE DIRECTORY IF IS NOT THERE:

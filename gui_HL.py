@@ -21,13 +21,6 @@ import interface.colour_definitions as col
     
 run_config_folder_path = os.path.join(os.getcwd(), 'workflow/input')
 
-run_workflow_param_path = run_config_folder_path+ '/input_workflow.xml'
-run_ligka_param_path = run_config_folder_path+ '/z_ligka.xml'
-
-root1 = etree.parse(run_config_folder_path+ '/input_workflow.xml').getroot()
-
-
-copy2(run_config_folder_path+ '/input_workflow_default.xml', run_config_folder_path+ '/input_workflow.xml', follow_symlinks=True)
 
 #=====================A FEW COLOR SCHEMES======================
 col.c1 = 'white'
@@ -135,15 +128,15 @@ def open_gui(default_workflow_param_path):
     # left: 
     button_saveconfig = Button(fr_wfp, text = 'Save Configuration', bg = col.c2)
     button_saveconfig.grid(row = 52, column = 0, padx = 5, pady = 5, sticky = 'ew')
-    button_saveconfig.configure(command = lambda: save_workflow_param_to_file(run_workflow_param_path))
+    button_saveconfig.configure(command = lambda: save_workflow_param_to_file(default_workflow_param_path))
 
     button_saveandrun = Button(fr_wfp, text = 'Save and Run', bg = col.c2)
     button_saveandrun.grid(row = 51, column = 0, padx = 5, pady = 5, sticky = 'ew')
-    button_saveandrun.configure(command = lambda: save_and_run(run_workflow_param_path, True))
+    button_saveandrun.configure(command = lambda: save_and_run(default_workflow_param_path, True))
 
     button_run_nosave = Button(fr_wfp, text = 'Run (without Saving)', bg = col.c2)
     button_run_nosave.grid(row = 51, column = 1, padx = 5, pady = 5, sticky = 'ew')
-    button_run_nosave.configure(command = lambda: save_and_run(run_workflow_param_path, False))
+    button_run_nosave.configure(command = lambda: save_and_run(default_workflow_param_path, False))
     
     button_analysis = Button(fr_wfp, text = 'LIGKA Analysis', bg = col.c2)
     button_analysis.grid(row = 52, column = 1, padx = 5, pady = 5, sticky = 'ew')
@@ -174,9 +167,9 @@ def open_gui(default_workflow_param_path):
         tree = etree.parse(filepath)
         root = tree.getroot()
         
-        rl = [wfp_ref, fur_ref]
+        rl = [wfp_ref, fur_ref, act_ref]
         
-        for iroot in range(2):
+        for iroot in range(3):
             for elem in root[iroot].iter():
                 if((elem.tag is not etree.Comment) and (len(elem) == 0)):
 

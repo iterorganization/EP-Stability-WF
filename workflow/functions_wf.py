@@ -25,7 +25,7 @@ def parameters_workflow(input_file):
     
 # WF RUNNING FUNCTIONS
 def read_timestep(user, database, run):
-    param = parameters_workflow('workflow/input/input_workflow.xml')
+    param = parameters_workflow('workflow/input/input_workflow_default.xml')
     print('=> Open input datafile and read total equilibrium IDS for timesteps.')
     input_total = imas.ids(param['shot_nr'], run, 0, 0)
     input_total.open_env(user, database, '3')

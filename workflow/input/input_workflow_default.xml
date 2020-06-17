@@ -17,7 +17,7 @@
   </further_settings>
 
   <actor_selection display="ACTOR SELECTION">
-    <Equilibrium_code>Helena</Equilibrium_code> <!-- 0:NONE, 1:HELENA, 2:CHEASE-->
+    <Equilibrium_code>0</Equilibrium_code> <!-- 0:NONE, 1:HELENA, 2:CHEASE-->
     <Distributions_1>Hagis_1</Distributions_1> <!-- 0:NONE, 1:HAGIS1-->
     <Distributions_2>Hagis_2</Distributions_2> <!-- 0:NONE, 1:HAGIS2-->
     <Stability_code>Ligka_m1</Stability_code> <!-- 0:NONE, 1:Ligka mode 5, 2: LIGKA mode 4, 3: LIGKA mode 1-->
