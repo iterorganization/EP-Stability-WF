@@ -117,7 +117,7 @@ def open_gui(default_workflow_param_path):
           if elem == 'Equilibrium_code':
             combobox.config(values = ('0', 'Helena', 'Chease'))
           elif elem == 'Stability_code':
-            combobox.config(values = ('0', 'Ligka_m5', 'Ligka_m4', 'Ligka_m1'))
+            combobox.config(values = ('0', 'Ligka_m5', 'Ligka_m4', 'Ligka_m1', 'Ligka_m2'))
           else:
             combobox.config(values = ('0', workflow_param[ref][elem]))
           entrystring.trace('w', lambda name, index, mode, elem = elem, entrystring = entrystring, ref = act_ref: update_xml_param(workflow_param, ref, elem, entrystring.get()))

@@ -9,7 +9,7 @@ from lxml import etree
 import xml.etree.ElementTree as ET
 from workflow.functions_wf import parameters_workflow
 from interface.create_workflow_param import save_xml_param_to_file_on_run, update_xml_param_on_run
-from workflow_components import helena, hagis_1, ligka_mode_1, ligka_mode_4, ligka_mode_5
+from workflow_components import helena, hagis_1, ligka_mode_1, ligka_mode_4, ligka_mode_5, ligka_mode_2
 sys.path.append(os.getcwd())
 sys.path.append('input')
 
@@ -101,3 +101,10 @@ def run_HL_noKEP():
             param_ligka = parameters_workflow('workflow/input/z_ligka.xml')
             print('=====================STARTING LIGKA MODE 5===================')
             ligka_mode_5(param, user, time_runs)
+        
+        if param['Stability_code'] == 'Ligka_m2':
+            update_xml_param_on_run(param_ligka, 'modus', '2')
+            save_xml_param_to_file_on_run('workflow/input/z_ligka.xml', 'modus', '2')
+            param_ligka = parameters_workflow('workflow/input/z_ligka.xml')
+            print('=====================STARTING LIGKA MODE 2===================')
+            ligka_mode_2(param, user, time_runs)
