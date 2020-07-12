@@ -9,7 +9,7 @@ from lxml import etree
 import xml.etree.ElementTree as ET
 from workflow.functions_wf import parameters_workflow
 from interface.create_workflow_param import save_xml_param_to_file_on_run, update_xml_param_on_run
-from workflow_components import helena, hagis_1, ligka_mode_1, ligka_mode_4, ligka_mode_5, ligka_mode_2
+from workflow.workflow_components import helena, hagis_1, ligka_mode_1, ligka_mode_4, ligka_mode_5, ligka_mode_2
 sys.path.append(os.getcwd())
 sys.path.append('input')
 

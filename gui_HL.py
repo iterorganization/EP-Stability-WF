@@ -13,22 +13,13 @@ from shutil import copy2, copytree, rmtree
 from workflow.run_physics_code_final_no_kep import run_HL_noKEP
 from workflow.functions_wf import read_timestep
 from interface.create_workflow_param import create_workflow_param_from_file, create_xml_param_from_file, save_xml_param_to_file, update_xml_param
-from interface.extra_functions import actor_window,analysis_window
+from interface.extra_functions import actor_window,analysis_window,scenario_window
 from workflow.analysis_modes import analysis_ligka_mode5,analysis_ligka_mode2,analysis_ligka_mode1
 import interface.colour_definitions as col
 
 # set the path to the folders where the configuration and codeparameters are stored
     
 run_config_folder_path = os.path.join(os.getcwd(), 'workflow/input')
-
-
-#=====================A FEW COLOR SCHEMES======================
-col.c1 = 'white'
-col.c2 = 'white smoke'
-col.c3 = 'azure2'
-col.c4 = 'ghost white'
-col.c5 = 'azure4'
-cb = 'LavenderBlush3'
 
 default_workflow_param_path = run_config_folder_path+ '/input_workflow_default.xml'
 default_ligka_param_path = run_config_folder_path+ '/z_ligka.xml'
@@ -146,6 +137,11 @@ def open_gui(default_workflow_param_path):
     button_save_asdef.grid(row = 53, column = 0, padx = 5, pady = 5, sticky = 'ew')
     button_save_asdef.configure(command = lambda: save_workflow_param_to_file('workflow/input/input_workflow_default.xml'))
 
+    button_scenario = Button(fr_wfp, text = 'Scenario Summary Choice', bg = 'light grey')
+    button_scenario.grid(row = 53, column = 1, padx = 5, pady = 5, sticky = 'w')
+    button_scenario.configure(command = lambda: scenario_window())
+
+
     button_exit = Button(fr_wfp, text = 'Exit', bg = 'light grey')
     button_exit.grid(row = 55, column = 0, padx = 5, pady = 5, sticky = 'w')
     button_exit.configure(command = lambda: sys.exit())
@@ -188,4 +184,3 @@ def open_gui(default_workflow_param_path):
 
 
 open_gui(default_workflow_param_path)
-    

@@ -5,7 +5,9 @@ import os, sys
 import interface.colour_definitions as col
 from interface.create_workflow_param import update_xml_param, save_xml_param_to_file
 from workflow.analysis_modes import analysis_ligka_mode5,analysis_ligka_mode2,analysis_ligka_mode1
-
+import os, sys, glob, yaml, argparse, re
+from operator import itemgetter
+from stat import *
 
 
 
@@ -84,3 +86,87 @@ def analysis_window():
   button_analysis = Button(fr_ana, text = 'Mode 2', bg = col.c2)
   button_analysis.grid(row = 7, column = 0, padx = 5, pady = 5, sticky = 'ew')
   button_analysis.configure(command = lambda: analysis_ligka_mode2())
+
+
+def scenario_window():
+
+  window_a = Toplevel()
+  window_a.title('Scenario Selector')
+  window_a.configure(bg = col.c1)
+  
+  try:
+    wh = window_a.winfo_reqheight()
+    ww = window_a.winfo_reqwidth()
+    wx = window_a.winfo_x()
+    wy = window_a.winfo_y()
+    window_a.geometry("+%d+%d" %(wx, wy))
+  except: 
+    pass   
+  
+  #fr_l = Frame(window_a, width = 500, height = 500, background = col.c2)
+  #fr_l.grid(column=0, row=0, sticky="nsew")
+  tv = ttk.Treeview(window_a)
+  tv['columns'] = ('run', 'database', 'reference', 'ip', 'b0', 'fuelling', 'confinement', 'workflow')
+  tv.heading("#0", text='Pulse', anchor='w')
+  tv.column("#0", anchor="w", width=100)
+  tv.heading('run', text='Run')
+  tv.column('run', anchor='center', width=100)
+  tv.heading('database', text='Database')
+  tv.column('database', anchor='center', width=100)
+  tv.heading('reference', text='Reference')
+  tv.column('reference', anchor='center', width=300)
+  tv.heading('ip', text='Ip[MA]')
+  tv.column('ip', anchor='center', width=100)
+  tv.heading('b0', text='B0[T]')
+  tv.column('b0', anchor='center', width=100)
+  tv.heading('fuelling', text='Fuelling')
+  tv.column('fuelling', anchor='center', width=100)
+  tv.heading('confinement', text='Confinement')
+  tv.column('confinement', anchor='center', width=100)
+  tv.heading('workflow', text='Workflow')
+  tv.column('workflow', anchor='center', width=100)
+  tv.grid(sticky = 'nsew')
+  treeview = tv
+  tv.pack(fill ='y', expand = True)
+  tv.grid_rowconfigure(0, weight = 1)
+  tv.grid_columnconfigure(0, weight = 1)
+
+
+  #RETRIEVE AND SELECT DATA
+  trunc_number = 50
+  extension = '.yaml'
+  path = '/work/imas/shared/imasdb/ITER/3/0'
+  files = glob.glob(path + "/*")
+  data = {}
+  # Fill data dictionary with yaml input files describing simulations
+  j = -1
+  for i in range(len(files)):
+    if files[i].endswith(extension): # Work on all YAML files
+      try:
+        j = j + 1
+        file = open(files[i], 'r')
+        data[j] = yaml.load(file,Loader=yaml.CLoader)
+        data[j]['location'] = files[i]
+        file.close()
+      except:
+        print('Error reading yaml '+files[i], file=sys.stderr)
+  # Sort data as a function of shot and run numbers
+  sorted_indices = sorted(data, key = lambda x: data[x]['characteristics']['shot']+data[x]['characteristics']['run'])
+  sdata = {}
+  for i in range(len(data)):
+    sdata[i] = data[sorted_indices[i]]
+  #FILL WITH DATA
+  j = 2
+  for i in range(len(sdata)):
+    if sdata[i]['status'] == 'active':
+      j = j + 1
+      shot          = sdata[i].get('characteristics').get('shot')
+      run           = sdata[i].get('characteristics').get('run')
+      database      = sdata[i].get('characteristics').get('machine')
+      ref_name      = sdata[i].get('reference_name')[0:trunc_number]
+      ip            = sdata[i].get('scenario_key_parameters').get('plasma_current')
+      b0            = sdata[i].get('scenario_key_parameters').get('magnetic_field')
+      fuelling      = sdata[i].get('scenario_key_parameters').get('main_species')
+      confinement   = sdata[i].get('scenario_key_parameters').get('confinement_regime')
+      workflow      = sdata[i].get('characteristics').get('workflow')
+      tv.insert('','end', text = shot, values = (run, database, ref_name, ip, b0, fuelling, confinement, workflow))
