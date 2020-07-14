@@ -78,7 +78,7 @@ def open_gui(default_workflow_param_path):
         for elem in workflow_param[ref]:  
             
           Label(fr_wfp, text = elem, bg = col.c3).grid(row = irow,  column = 0, padx = 3, pady = 2, sticky = 'w')
-          if elem == 'ligka_541':
+          if elem == 'ligka_541' or elem == 'pulse_list':
             entrystring = StringVar()
             entrystring.set(workflow_param[ref][elem])
             c = Checkbutton(fr_wfp, variable = entrystring)

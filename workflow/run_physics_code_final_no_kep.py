@@ -27,8 +27,12 @@ def run_HL_noKEP():
     wfp_ref_l = list(param_ligka.keys())
     print('----- HAGIS 1 PARAMETERS ----')
     param_hagis1 = parameters_workflow('workflow/input/hagis1.xml')
-
-
+    if param['pulse_list'] == 1:
+      with open("shots.dat") as f:
+        pulse_list = eval(f.read())
+    else:
+        pulse_list = [(param['shot_nr'],param['run_in'])]
+    
     # TIME SETTINGS FOR RUNS
     time_runs = param['itend'] - param['itbegin']  # runs for all other than the first one that takes data from public
 
@@ -36,75 +40,86 @@ def run_HL_noKEP():
     # SETTINGS
     user = os.getenv('USER')
     version = os.getenv('IMAS_VERSION')[0]
-
-    if param['ligka_541'] == 1:
-        if param['Equilibrium_code'] == 'Helena':
-            print('=================Starting HELENA and LIGKA mode 5 - 4 - 1=================')
-            
-            helena(param, user)
-
-            print(param['Equilibrium_code'],' done. STARTING LIGKA MODE 5')
+    for i in pulse_list:
+        print('=======================TEST ============= ',pulse_list)
+        if len(pulse_list) == 1:
+            print('The workflow will now run with one shot/run as input.')
         else:
-            print('Equilibrium code was not selected, skip and run LIGKA MODE 5.')
+            print('The Workflow will run with the same settings (and update the required ones) for all selected shots/runs as input.')
+            update_xml_param_on_run(param, 'shot_nr', i[0])
+            save_xml_param_to_file_on_run('workflow/input/input_workflow_default.xml', 'shot_nr', str(i[0]))
+            update_xml_param_on_run(param, 'run_in', i[1])
+            save_xml_param_to_file_on_run('workflow/input/input_workflow_default.xml', 'run_in', str(i[1]))
+            param = parameters_workflow('workflow/input/input_workflow_default.xml')
 
-        
-        update_xml_param_on_run(param_ligka, 'modus', '5')
-        save_xml_param_to_file_on_run('workflow/input/z_ligka.xml', 'modus', '5')
-        param_ligka = parameters_workflow('workflow/input/z_ligka.xml')
-        if param_ligka['modus'] == 5:
-            ligka_mode_5(param, user, time_runs)
-            print('Done LIGKA mode 5, starting MODE 4')
+        if param['ligka_541'] == 1:
+            if param['Equilibrium_code'] == 'Helena':
+                print('=================Starting HELENA and LIGKA mode 5 - 4 - 1=================')
+                
+                helena(param, user)
 
-        update_xml_param_on_run(param_ligka, 'modus', '4')
-        save_xml_param_to_file_on_run('workflow/input/z_ligka.xml', 'modus', '4')
-        param_ligka = parameters_workflow('workflow/input/z_ligka.xml')
-        if param_ligka['modus'] == 4:
-            ligka_mode_4(param, user, time_runs)
-            print('Done LIGKA mode 4, starting MODE 1')
+                print(param['Equilibrium_code'],' done. STARTING LIGKA MODE 5')
+            else:
+                print('Equilibrium code was not selected, skip and run LIGKA MODE 5.')
 
-        
-        update_xml_param_on_run(param_ligka, 'modus', '1')
-        save_xml_param_to_file_on_run('workflow/input/z_ligka.xml', 'modus', '1')
-        param_ligka = parameters_workflow('workflow/input/z_ligka.xml')
-        if param_ligka['modus'] == 1:
-            ligka_mode_1(param, user, time_runs)
-        print('Done WORKFLOW, LIGKA 541.')
-
-    else:
-        if param['Equilibrium_code'] == 'Helena':
-            print('=====================STARTING HELENA===================')
-            helena(param, user)
-            print(param['Equilibrium_code'],' done.')
-        if param['Distributions_1'] == 'Hagis_1':
-            print('=====================STARTING HAGIS 1===================')
-            hagis_1(param, user, time_runs)
-
-        ## LEAVE PLACE FOR HAGIS 2
-
-        if param['Stability_code'] == 'Ligka_m1':
-            update_xml_param_on_run(param_ligka, 'modus', '1')
-            save_xml_param_to_file_on_run('workflow/input/z_ligka.xml', 'modus', '1')
-            param_ligka = parameters_workflow('workflow/input/z_ligka.xml')
-            print('=====================STARTING LIGKA MODE 1===================')
-            ligka_mode_1(param, user, time_runs)
-        
-        if param['Stability_code'] == 'Ligka_m4':
-            update_xml_param_on_run(param_ligka, 'modus', '4')
-            save_xml_param_to_file_on_run('workflow/input/z_ligka.xml', 'modus', '4')
-            param_ligka = parameters_workflow('workflow/input/z_ligka.xml')
-            print('=====================STARTING LIGKA MODE 4===================')
-            ligka_mode_4(param, user, time_runs)
-        
-        if param['Stability_code'] == 'Ligka_m5':
+            
             update_xml_param_on_run(param_ligka, 'modus', '5')
             save_xml_param_to_file_on_run('workflow/input/z_ligka.xml', 'modus', '5')
             param_ligka = parameters_workflow('workflow/input/z_ligka.xml')
-            print('=====================STARTING LIGKA MODE 5===================')
-            ligka_mode_5(param, user, time_runs)
-        
-        if param['Stability_code'] == 'Ligka_m2':
-            update_xml_param_on_run(param_ligka, 'modus', '2')
-            save_xml_param_to_file_on_run('workflow/input/z_ligka.xml', 'modus', '2')
+            if param_ligka['modus'] == 5:
+                ligka_mode_5(param, user, time_runs)
+                print('Done LIGKA mode 5, starting MODE 4')
+
+            update_xml_param_on_run(param_ligka, 'modus', '4')
+            save_xml_param_to_file_on_run('workflow/input/z_ligka.xml', 'modus', '4')
             param_ligka = parameters_workflow('workflow/input/z_ligka.xml')
-            print('=====================STARTING LIGKA MODE 2===================')
-            ligka_mode_2(param, user, time_runs)
+            if param_ligka['modus'] == 4:
+                ligka_mode_4(param, user, time_runs)
+                print('Done LIGKA mode 4, starting MODE 1')
+
+            
+            update_xml_param_on_run(param_ligka, 'modus', '1')
+            save_xml_param_to_file_on_run('workflow/input/z_ligka.xml', 'modus', '1')
+            param_ligka = parameters_workflow('workflow/input/z_ligka.xml')
+            if param_ligka['modus'] == 1:
+                ligka_mode_1(param, user, time_runs)
+            print('Done WORKFLOW, LIGKA 541.')
+
+        else:
+            if param['Equilibrium_code'] == 'Helena':
+                print('=====================STARTING HELENA===================')
+                helena(param, user)
+                print(param['Equilibrium_code'],' done.')
+            if param['Distributions_1'] == 'Hagis_1':
+                print('=====================STARTING HAGIS 1===================')
+                hagis_1(param, user, time_runs)
+
+            ## LEAVE PLACE FOR HAGIS 2
+
+            if param['Stability_code'] == 'Ligka_m1':
+                update_xml_param_on_run(param_ligka, 'modus', '1')
+                save_xml_param_to_file_on_run('workflow/input/z_ligka.xml', 'modus', '1')
+                param_ligka = parameters_workflow('workflow/input/z_ligka.xml')
+                print('=====================STARTING LIGKA MODE 1===================')
+                ligka_mode_1(param, user, time_runs)
+            
+            if param['Stability_code'] == 'Ligka_m4':
+                update_xml_param_on_run(param_ligka, 'modus', '4')
+                save_xml_param_to_file_on_run('workflow/input/z_ligka.xml', 'modus', '4')
+                param_ligka = parameters_workflow('workflow/input/z_ligka.xml')
+                print('=====================STARTING LIGKA MODE 4===================')
+                ligka_mode_4(param, user, time_runs)
+            
+            if param['Stability_code'] == 'Ligka_m5':
+                update_xml_param_on_run(param_ligka, 'modus', '5')
+                save_xml_param_to_file_on_run('workflow/input/z_ligka.xml', 'modus', '5')
+                param_ligka = parameters_workflow('workflow/input/z_ligka.xml')
+                print('=====================STARTING LIGKA MODE 5===================')
+                ligka_mode_5(param, user, time_runs)
+            
+            if param['Stability_code'] == 'Ligka_m2':
+                update_xml_param_on_run(param_ligka, 'modus', '2')
+                save_xml_param_to_file_on_run('workflow/input/z_ligka.xml', 'modus', '2')
+                param_ligka = parameters_workflow('workflow/input/z_ligka.xml')
+                print('=====================STARTING LIGKA MODE 2===================')
+                ligka_mode_2(param, user, time_runs)

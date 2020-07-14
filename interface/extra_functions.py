@@ -1,9 +1,8 @@
 from tkinter import * 
 from tkinter import filedialog, ttk
 from lxml import etree
-import os, sys
 import interface.colour_definitions as col
-from interface.create_workflow_param import update_xml_param, save_xml_param_to_file
+from interface.create_workflow_param import update_xml_param, save_xml_param_to_file, create_workflow_param_from_file
 from workflow.analysis_modes import analysis_ligka_mode5,analysis_ligka_mode2,analysis_ligka_mode1
 import os, sys, glob, yaml, argparse, re
 from operator import itemgetter
@@ -89,6 +88,27 @@ def analysis_window():
 
 
 def scenario_window():
+  shots_runs= []
+  shots = []
+  def OnDoubleClick(event):
+    item = tv.selection()
+    item = tv.selection()[0]
+    item_run = tv.item(tv.focus())
+    if tv.item(item,'text') not in shots:
+      shots.append(tv.item(item,'text'))
+      shots_runs.append((tv.item(item,'text'),item_run['values'][0]))
+    else:
+      print('The selected Pulse is already in the list.')
+    print('The list is now:',shots_runs)
+    workflow_param = create_workflow_param_from_file('workflow/input/input_workflow_default.xml')
+    fur_ref = list(workflow_param.keys())[1]
+    if workflow_param[fur_ref]['pulse_list'] == '1':
+      with open('shots.dat', 'w') as f:
+        f.write(repr(shots_runs))
+      # with open("shots.dat") as f:
+      #   shhh = eval(f.read())
+    else:
+      print('Please check the pulse_list box in order to save the selected shots and runs')
 
   window_a = Toplevel()
   window_a.title('Scenario Selector')
@@ -103,12 +123,20 @@ def scenario_window():
   except: 
     pass   
   
-  #fr_l = Frame(window_a, width = 500, height = 500, background = col.c2)
-  #fr_l.grid(column=0, row=0, sticky="nsew")
-  tv = ttk.Treeview(window_a)
+  frame = Frame(window_a)
+  frame.pack(fill = BOTH, anchor = 'n', expand = True)
+
+  bottom_frame = Frame(window_a)
+  bottom_frame.pack(side = BOTTOM, anchor = 's')
+
+  closeButton = Button(bottom_frame, text='Close')
+  closeButton.pack(side=BOTTOM, padx=5, pady=5)
+  closeButton.configure(command = lambda: window_a.destroy())
+
+  tv = ttk.Treeview(frame)
   tv['columns'] = ('run', 'database', 'reference', 'ip', 'b0', 'fuelling', 'confinement', 'workflow')
-  tv.heading("#0", text='Pulse', anchor='w')
-  tv.column("#0", anchor="w", width=100)
+  tv.heading('#0', text='Pulse', anchor='w')
+  tv.column('#0', anchor='w', width=100)
   tv.heading('run', text='Run')
   tv.column('run', anchor='center', width=100)
   tv.heading('database', text='Database')
@@ -127,9 +155,10 @@ def scenario_window():
   tv.column('workflow', anchor='center', width=100)
   tv.grid(sticky = 'nsew')
   treeview = tv
-  tv.pack(fill ='y', expand = True)
+  tv.pack(side = TOP,fill = BOTH, expand = True)
   tv.grid_rowconfigure(0, weight = 1)
   tv.grid_columnconfigure(0, weight = 1)
+
 
 
   #RETRIEVE AND SELECT DATA
@@ -170,3 +199,4 @@ def scenario_window():
       confinement   = sdata[i].get('scenario_key_parameters').get('confinement_regime')
       workflow      = sdata[i].get('characteristics').get('workflow')
       tv.insert('','end', text = shot, values = (run, database, ref_name, ip, b0, fuelling, confinement, workflow))
+  tv.bind("<Double-1>", OnDoubleClick)

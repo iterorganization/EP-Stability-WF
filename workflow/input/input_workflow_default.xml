@@ -2,25 +2,25 @@
   <workflow_parameters display="WORKFLOW PARAMETERS">
     <user>public</user>
     <machine>ITER</machine>
-    <shot_nr>130012</shot_nr>
+    <shot_nr>100015</shot_nr>
     <run_in>1</run_in>
     <machine_out>ligka_modes</machine_out>
-    <run_out>11</run_out>
-    <itbegin>24</itbegin>
+    <run_out>89</run_out>
+    <itbegin>26</itbegin>
     <itend>27</itend>
   </workflow_parameters>
 
   <further_settings display="FURTHER SETTINGS">
-    <ligka_541>1</ligka_541>
-    <other_settings_1>0</other_settings_1>
+    <ligka_541>0</ligka_541>
+    <pulse_list>1</pulse_list>
     <other_settings_2>0</other_settings_2>
   </further_settings>
 
   <actor_selection display="ACTOR SELECTION">
-    <Equilibrium_code>0</Equilibrium_code> <!-- 0:NONE, 1:HELENA, 2:CHEASE-->
-    <Distributions_1>Hagis_1</Distributions_1> <!-- 0:NONE, 1:HAGIS1-->
-    <Distributions_2>Hagis_2</Distributions_2> <!-- 0:NONE, 1:HAGIS2-->
-    <Stability_code>Ligka_m1</Stability_code> <!-- 0:NONE, 1:Ligka mode 5, 2: LIGKA mode 4, 3: LIGKA mode 1-->
+    <Equilibrium_code>Helena</Equilibrium_code> <!-- 0:NONE, 1:HELENA, 2:CHEASE-->
+    <Distributions_1>0</Distributions_1> <!-- 0:NONE, 1:HAGIS1-->
+    <Distributions_2>0</Distributions_2> <!-- 0:NONE, 1:HAGIS2-->
+    <Stability_code>0</Stability_code> <!-- 0:NONE, 1:Ligka mode 5, 2: LIGKA mode 4, 3: LIGKA mode 1-->
   </actor_selection>
 
 </root>
