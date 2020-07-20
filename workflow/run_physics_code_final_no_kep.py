@@ -7,7 +7,7 @@
 import os, imas, sys, pdb, random, copy
 from lxml import etree
 import xml.etree.ElementTree as ET
-from workflow.functions_wf import parameters_workflow
+from workflow.functions_wf import parameters_workflow, profiles_get
 from interface.create_workflow_param import save_xml_param_to_file_on_run, update_xml_param_on_run
 from workflow.workflow_components import helena, hagis_1, ligka_mode_1, ligka_mode_4, ligka_mode_5, ligka_mode_2
 sys.path.append(os.getcwd())
@@ -51,6 +51,21 @@ def run_HL_noKEP():
             update_xml_param_on_run(param, 'run_in', i[1])
             save_xml_param_to_file_on_run('workflow/input/input_workflow_default.xml', 'run_in', str(i[1]))
             param = parameters_workflow('workflow/input/input_workflow_default.xml')
+        # MODIFY LIGKA XML TO TAKE NSPEC automatically!!
+        print('Now modifying LIGKA XML by taking the species present in core_profiles IDS')
+        curr_str, nspec, nback, nhot = profiles_get(param)
+        update_xml_param_on_run(param_ligka, 'spec_str', curr_str)
+        save_xml_param_to_file_on_run('workflow/input/z_ligka.xml', 'spec_str', str(curr_str))
+        update_xml_param_on_run(param_ligka, 'nspec', nspec)
+        save_xml_param_to_file_on_run('workflow/input/z_ligka.xml', 'nspec', str(nspec))
+        update_xml_param_on_run(param_ligka, 'nback', nback)
+        save_xml_param_to_file_on_run('workflow/input/z_ligka.xml', 'nback', str(nback))
+        update_xml_param_on_run(param_ligka, 'nhot', nhot)
+        save_xml_param_to_file_on_run('workflow/input/z_ligka.xml', 'nhot', str(nhot))
+        param_ligka = parameters_workflow('workflow/input/z_ligka.xml')
+
+
+        param_ligka = parameters_workflow('workflow/input/z_ligka.xml')
 
         if param['ligka_541'] == 1:
             if param['Equilibrium_code'] == 'Helena':

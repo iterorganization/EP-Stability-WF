@@ -4,7 +4,7 @@ module load IMAS/3.28.1-4.8.3
 module load netCDF-Fortran/4.4.4-intel-2018a
 module load PSPLINE/20181008-intel-2018a
 module load MUMPS/5.1.2-intel-2018a-metis/
-module load NAG
+module load NAG/26-intel-2018a
 module load SLATEC/4.1-iccifort-2018.1.163-GCC-6.4.0-2.28
 module load ppplib
 module load FC2K/4.12.0-Java-1.8

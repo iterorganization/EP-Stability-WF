@@ -105,8 +105,6 @@ def scenario_window():
     if workflow_param[fur_ref]['pulse_list'] == '1':
       with open('shots.dat', 'w') as f:
         f.write(repr(shots_runs))
-      # with open("shots.dat") as f:
-      #   shhh = eval(f.read())
     else:
       print('Please check the pulse_list box in order to save the selected shots and runs')
 

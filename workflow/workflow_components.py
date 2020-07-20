@@ -156,7 +156,7 @@ def ligka_mode_1(param, user, time_runs):
     idx_out = output.mhd_linear.getPulseCtx()
 
 
-    output.mhd_linear = ligka_actor(input.equilibrium, input.core_profiles,input.mhd_linear, 'workflow/input/z_ligka.xml', 'mpi_local', mpi_processes=4)
+    output.mhd_linear = ligka_actor(input.equilibrium, input.core_profiles,input.mhd_linear, 'workflow/input/z_ligka.xml', 'mpi_local', mpi_processes=  param['mpi_processes'])
    
     input.mhd_linear.copyValues(output.mhd_linear)
     input.mhd_linear.setPulseCtx(idx_in)
@@ -211,7 +211,7 @@ def ligka_mode_2(param, user, time_runs):
     idx_out = output.mhd_linear.getPulseCtx()
 
 
-    output.mhd_linear = ligka_actor(input.equilibrium, input.core_profiles,input.mhd_linear, 'workflow/input/z_ligka.xml', 'mpi_local', mpi_processes=4)
+    output.mhd_linear = ligka_actor(input.equilibrium, input.core_profiles,input.mhd_linear, 'workflow/input/z_ligka.xml', 'mpi_local', mpi_processes=  param['mpi_processes'])
    
     input.mhd_linear.copyValues(output.mhd_linear)
     input.mhd_linear.setPulseCtx(idx_in)
@@ -315,7 +315,7 @@ def ligka_mode_4(param, user, time_runs):
     input.core_profiles.getSlice(time[itime], 1)
     idx_out = output.mhd_linear.getPulseCtx()
 
-    output.mhd_linear = ligka_actor(input.equilibrium, input.core_profiles, input.mhd_linear, 'workflow/input/z_ligka.xml', 'mpi_local', mpi_processes=4)
+    output.mhd_linear = ligka_actor(input.equilibrium, input.core_profiles, input.mhd_linear, 'workflow/input/z_ligka.xml', 'mpi_local', mpi_processes=  param['mpi_processes'])
     
     input.mhd_linear.copyValues(output.mhd_linear)
     input.mhd_linear.setPulseCtx(idx_in)

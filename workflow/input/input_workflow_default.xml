@@ -11,9 +11,9 @@
   </workflow_parameters>
 
   <further_settings display="FURTHER SETTINGS">
-    <ligka_541>0</ligka_541>
+    <ligka_541>1</ligka_541>
     <pulse_list>1</pulse_list>
-    <other_settings_2>0</other_settings_2>
+    <mpi_processes>4</mpi_processes>
   </further_settings>
 
   <actor_selection display="ACTOR SELECTION">

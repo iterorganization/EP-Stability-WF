@@ -33,3 +33,83 @@ def read_timestep(user, database, run):
     ntime = len(time)
     input_total.close()
     return(time, ntime)
+
+def profiles_get(param):
+    print('=> Open input datafile and read the numer of species and other neccesary inputs for LIGKA')
+    input_species = imas.ids(param['shot_nr'], param['run_in'], 0, 0)
+    input_species.open_env(param['user'], param['machine'], '3')
+    core_profiles = input_species.core_profiles
+    time = core_profiles.partialGet('time')
+    ntime = len(time)
+
+    core_profiles.profiles_1d.resize(1)
+    core_profiles.profiles_1d[0] = input_species.core_profiles.partialGet('profiles_1d('+str(int(time[1]))+')')
+    nspecies = len(core_profiles.profiles_1d[0].ion)
+
+    species = []
+    for ispecies in range(nspecies):
+      species.append(core_profiles.profiles_1d[0].ion[ispecies].label)
+    volume = core_profiles.profiles_1d[0].grid.volume
+    ntot = 0
+    species_density = [0] * nspecies
+    for ispecies in range(nspecies):
+        species_density[ispecies] = sum(volume*core_profiles.profiles_1d[0].ion[ispecies].density)
+        ntot = ntot + species_density[ispecies]
+
+    ne = sum(volume*core_profiles.profiles_1d[0].electrons.density)
+
+    nspec_over_ntot = species_density/ntot
+    nspec_over_ne   = species_density/ne
+
+    for ispecies in range(nspecies):
+      for jspecies in range(nspecies):
+          if (species[jspecies] == species[ispecies]) & (jspecies != ispecies):
+              nspec_over_ntot[ispecies] = nspec_over_ntot[ispecies] + nspec_over_ntot[jspecies]
+              nspec_over_ntot[jspecies] = 0
+              nspec_over_ne[ispecies] = nspec_over_ne[ispecies] + nspec_over_ne[jspecies]
+              nspec_over_ne[jspecies] = 0
+    
+    curr_str = 'el'
+    nspec = 1
+    nback = 1
+    nhot = 0
+
+    for ispecies in range(nspecies):
+      if nspec_over_ntot[ispecies] > 0. and nspec_over_ne[ispecies] > 0.:
+        print('For ion name: ',species[ispecies])
+        print('Density over total: ', format('%.10f' % nspec_over_ntot[ispecies]))
+        print('Density over electron density: ', format('%.10f' % nspec_over_ne[ispecies]))
+        # ALL THERMAL PARTICLES:
+        if species[ispecies] == 'H' and nspec_over_ntot[ispecies] > 2E-2:
+          curr_str = curr_str + 'hh'
+          nspec = nspec + 1
+          nback = nback + 1
+        if species[ispecies] == 'D' and nspec_over_ntot[ispecies] > 2E-2:
+          curr_str = curr_str + 'dd'
+          nspec = nspec + 1
+          nback = nback + 1
+        if species[ispecies] == 'T' and nspec_over_ntot[ispecies] > 2E-2:
+          curr_str = curr_str + 'tt'
+          nspec = nspec + 1
+          nback = nback + 1
+        if species[ispecies] == 'He3' and nspec_over_ntot[ispecies] > 2E-2:
+          curr_str = curr_str + 'he'
+          nspec = nspec + 1
+          nback = nback + 1
+        if species[ispecies] == 'Be' and nspec_over_ntot[ispecies] > 2E-2:
+          curr_str = curr_str + 'be'
+          nspec = nspec + 1
+          nback = nback + 1
+        if species[ispecies] == 'C' and nspec_over_ntot[ispecies] > 2E-2:
+          curr_str = curr_str + 'ca'
+          nspec = nspec + 1
+          nback = nback + 1
+        # ALL FAST PARTICLES (not sure how to differentiate in the ids)
+        if species[ispecies] == 'He4' and nspec_over_ntot[ispecies] > 2E-2:
+          curr_str = curr_str + 'al'
+          nspec = nspec + 1
+          nhot = nhot + 1
+
+    # NEED TO IMPLEMENT FAST HYDROGEN NBI, FAST DEUTERIUM NBI, RUNAWAYS ELECTRONS, DT combined
+
+    return curr_str, nspec, nback, nhot
