@@ -14,7 +14,7 @@ from workflow.run_physics_code_final_no_kep import run_HL_noKEP
 from workflow.functions_wf import read_timestep
 from interface.create_workflow_param import create_workflow_param_from_file, create_xml_param_from_file, save_xml_param_to_file, update_xml_param
 from interface.extra_functions import actor_window,analysis_window,scenario_window
-# from workflow.analysis_modes import analysis_ligka_mode5,analysis_ligka_mode2,analysis_ligka_mode1
+from workflow.analysis_modes import analysis_ligka_mode5,analysis_ligka_mode2,analysis_ligka_mode1
 import interface.colour_definitions as col
 
 # set the path to the folders where the configuration and codeparameters are stored
@@ -129,9 +129,9 @@ def open_gui(default_workflow_param_path):
     button_run_nosave.grid(row = 51, column = 1, padx = 5, pady = 5, sticky = 'ew')
     button_run_nosave.configure(command = lambda: save_and_run(default_workflow_param_path, False))
     
-    # button_analysis = Button(fr_wfp, text = 'LIGKA Analysis', bg = col.c2)
-    # button_analysis.grid(row = 52, column = 1, padx = 5, pady = 5, sticky = 'ew')
-    # button_analysis.configure(command = lambda: analysis_window())
+    button_analysis = Button(fr_wfp, text = 'LIGKA Analysis', bg = col.c2)
+    button_analysis.grid(row = 52, column = 1, padx = 5, pady = 5, sticky = 'ew')
+    button_analysis.configure(command = lambda: analysis_window())
 
     button_save_asdef = Button(fr_wfp, text = 'Save Configuration as Default', bg = col.c2)
     button_save_asdef.grid(row = 53, column = 0, padx = 5, pady = 5, sticky = 'ew')

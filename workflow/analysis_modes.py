@@ -8,7 +8,6 @@ import os,imas,sys,pdb,random,copy
 from pyal import ALEnv
 from lxml import etree
 import numpy as np
-from scipy.stats import norm
 import xml.etree.ElementTree as ET
 import matplotlib.pyplot as plt
 from datetime import datetime
