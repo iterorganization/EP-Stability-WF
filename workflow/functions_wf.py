@@ -104,11 +104,12 @@ def profiles_get(param):
           curr_str = curr_str + 'ca'
           nspec = nspec + 1
           nback = nback + 1
-        # ALL FAST PARTICLES (not sure how to differentiate in the ids)
-        if species[ispecies] == 'He4' and nspec_over_ntot[ispecies] > 2E-2:
-          curr_str = curr_str + 'al'
-          nspec = nspec + 1
-          nhot = nhot + 1
+        # ALL FAST PARTICLES
+        if param['fast_particles'] == 1:
+          if species[ispecies] == 'He4' and nspec_over_ntot[ispecies] > 5E-2:
+            curr_str = curr_str + 'al'
+            nspec = nspec + 1
+            nhot = nhot + 1
 
     # NEED TO IMPLEMENT FAST HYDROGEN NBI, FAST DEUTERIUM NBI, RUNAWAYS ELECTRONS, DT combined
 

@@ -13,6 +13,7 @@
   <further_settings display="FURTHER SETTINGS">
     <ligka_541>1</ligka_541>
     <pulse_list>1</pulse_list>
+    <fast_particles>0</fast_particles>
     <mpi_processes>4</mpi_processes>
   </further_settings>
 
