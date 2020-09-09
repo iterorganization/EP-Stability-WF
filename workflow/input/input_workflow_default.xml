@@ -2,19 +2,19 @@
   <workflow_parameters display="WORKFLOW PARAMETERS">
     <user>public</user>
     <machine>ITER</machine>
-    <shot_nr>100015</shot_nr>
-    <run_in>1</run_in>
+    <shot_nr>130012</shot_nr>
+    <run_in>2</run_in>
     <machine_out>ligka_modes</machine_out>
-    <run_out>89</run_out>
-    <itbegin>26</itbegin>
-    <itend>27</itend>
+    <run_out>11</run_out>
+    <itbegin>15</itbegin>
+    <itend>16</itend>
   </workflow_parameters>
 
   <further_settings display="FURTHER SETTINGS">
     <ligka_541>1</ligka_541>
-    <pulse_list>1</pulse_list>
+    <pulse_list>0</pulse_list>
     <fast_particles>0</fast_particles>
-    <mpi_processes>4</mpi_processes>
+    <mpi_processes>8</mpi_processes>
   </further_settings>
 
   <actor_selection display="ACTOR SELECTION">

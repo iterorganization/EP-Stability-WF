@@ -81,7 +81,7 @@ def analysis_ligka_mode5():
   
   
   for i in range(len(input.mhd_linear.time)):
-    for j in range(param_ligka['max_n_tor']-param_ligka['min_n_tor']+1):
+    for j in range(0, 414+1):
 
       freq = input.mhd_linear.time_slice[i].toroidal_mode[j].plasma.phi_potential_perturbed.real
       
@@ -96,7 +96,7 @@ def analysis_ligka_mode5():
       
     
       # naming the x axis 
-      plt.axis([0.55,0.85,0,1])
+      #plt.axis([0.55,0.85,0,1])
       # naming the x axis 
       plt.xlabel('s') 
       

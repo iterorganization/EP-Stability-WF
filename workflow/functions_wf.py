@@ -43,7 +43,10 @@ def profiles_get(param):
     ntime = len(time)
 
     core_profiles.profiles_1d.resize(1)
-    core_profiles.profiles_1d[0] = input_species.core_profiles.partialGet('profiles_1d('+str(int(time[1]))+')')
+    if ntime > 1: #if NOT ASTRA shot
+      core_profiles.profiles_1d[0] = input_species.core_profiles.partialGet('profiles_1d('+str(int(time[1]))+')')
+    else:
+      input_species.core_profiles.get()
     nspecies = len(core_profiles.profiles_1d[0].ion)
 
     species = []
@@ -80,36 +83,48 @@ def profiles_get(param):
         print('Density over total: ', format('%.10f' % nspec_over_ntot[ispecies]))
         print('Density over electron density: ', format('%.10f' % nspec_over_ne[ispecies]))
         # ALL THERMAL PARTICLES:
-        if species[ispecies] == 'H' and nspec_over_ntot[ispecies] > 2E-2:
-          curr_str = curr_str + 'hh'
-          nspec = nspec + 1
-          nback = nback + 1
-        if species[ispecies] == 'D' and nspec_over_ntot[ispecies] > 2E-2:
-          curr_str = curr_str + 'dd'
-          nspec = nspec + 1
-          nback = nback + 1
-        if species[ispecies] == 'T' and nspec_over_ntot[ispecies] > 2E-2:
-          curr_str = curr_str + 'tt'
-          nspec = nspec + 1
-          nback = nback + 1
-        if species[ispecies] == 'He3' and nspec_over_ntot[ispecies] > 2E-2:
-          curr_str = curr_str + 'he'
-          nspec = nspec + 1
-          nback = nback + 1
-        if species[ispecies] == 'Be' and nspec_over_ntot[ispecies] > 2E-2:
-          curr_str = curr_str + 'be'
-          nspec = nspec + 1
-          nback = nback + 1
-        if species[ispecies] == 'C' and nspec_over_ntot[ispecies] > 2E-2:
-          curr_str = curr_str + 'ca'
-          nspec = nspec + 1
-          nback = nback + 1
-        # ALL FAST PARTICLES
-        if param['fast_particles'] == 1:
-          if species[ispecies] == 'He4' and nspec_over_ntot[ispecies] > 5E-2:
-            curr_str = curr_str + 'al'
+        if species[ispecies] == 'H' or species[ispecies] == 'H+':
+          if nspec_over_ntot[ispecies] > 2E-2:
+            curr_str = curr_str + 'hh'
             nspec = nspec + 1
-            nhot = nhot + 1
+            nback = nback + 1
+        if species[ispecies] == 'D'  or species[ispecies] == 'D+':
+          if nspec_over_ntot[ispecies] > 2E-2:
+            curr_str = curr_str + 'dd'
+            nspec = nspec + 1
+            nback = nback + 1
+        if species[ispecies] == 'T'  or species[ispecies] == 'T+':
+          if nspec_over_ntot[ispecies] > 2E-2:
+            curr_str = curr_str + 'tt'
+            nspec = nspec + 1
+            nback = nback + 1
+        if species[ispecies] == 'He3'  or species[ispecies] == 'He3+2':
+          if nspec_over_ntot[ispecies] > 2E-2:
+            curr_str = curr_str + 'he'
+            nspec = nspec + 1
+            nback = nback + 1
+        # if species[ispecies] == 'Be'  or species[ispecies] == 'Be+':
+        #   if nspec_over_ntot[ispecies] > 2E-2:
+        #     curr_str = curr_str + 'be'
+        #     nspec = nspec + 1
+        #     nback = nback + 1
+        if species[ispecies] == 'C' or species[ispecies] == 'C+':
+          if nspec_over_ntot[ispecies] > 2E-2:
+            curr_str = curr_str + 'ca'
+            nspec = nspec + 1
+            nback = nback + 1
+        # if species[ispecies] == 'Ne' or species[ispecies] == 'Ne+':
+        #   if nspec_over_ntot[ispecies] > 2E-2:
+        #     curr_str = curr_str + 'ca'
+        #     nspec = nspec + 1
+        #     nback = nback + 1  
+        # ALL FAST PARTICLES
+    if param['fast_particles'] == 1:
+      # if species[ispecies] == 'He4' or species[ispecies] == 'He4+2':
+      #   if nspec_over_ntot[ispecies] > 5E-5:
+          curr_str = curr_str + 'al'
+          nspec = nspec + 1
+          nhot = nhot + 1
 
     # NEED TO IMPLEMENT FAST HYDROGEN NBI, FAST DEUTERIUM NBI, RUNAWAYS ELECTRONS, DT combined
 

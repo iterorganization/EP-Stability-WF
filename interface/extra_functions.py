@@ -3,6 +3,7 @@ from tkinter import filedialog, ttk
 from lxml import etree
 import interface.colour_definitions as col
 from interface.create_workflow_param import update_xml_param, save_xml_param_to_file, create_workflow_param_from_file
+from workflow.analysis_modes import analysis_ligka_mode5,analysis_ligka_mode2,analysis_ligka_mode1
 import os, sys, glob, yaml, argparse, re
 from operator import itemgetter
 from stat import *

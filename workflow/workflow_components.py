@@ -50,14 +50,17 @@ def helena(param, user):
 
     output.core_profiles.setExpIdx(idx_out)
 
-    if itime == param['itbegin']:
+    # if itime == param['itbegin']:
 
-        output.equilibrium.put()
-        output.core_profiles.put()
-    else:
+    #     output.equilibrium.put()
+    #     output.core_profiles.put()
+    # else:
 
-        output.equilibrium.putSlice()
-        output.core_profiles.putSlice()
+    #     output.equilibrium.putSlice()
+    #     output.core_profiles.putSlice()
+    output.equilibrium.putSlice()
+    output.core_profiles.putSlice()
+
     print('*************************************')
     print('Output time = ', output.equilibrium.time[0])
     print('Saved helena equilibrium and core_profiles')
@@ -106,10 +109,12 @@ def hagis_1(param, user, time_runs):
     
     input.equilibrium.setPulseCtx(idx_in)
 
-    if itime == 0:
-        input.equilibrium.put(1)
-    else:
-        input.equilibrium.putSlice(1)
+    # if itime == 0:
+    #     input.equilibrium.put(1)
+    # else:
+    #     input.equilibrium.putSlice(1)
+
+    input.equilibrium.putSlice(1)
 
     print('*************************************')
     print('Output time = ', input.equilibrium.time[0])
@@ -161,10 +166,12 @@ def ligka_mode_1(param, user, time_runs):
     input.mhd_linear.copyValues(output.mhd_linear)
     input.mhd_linear.setPulseCtx(idx_in)
 
-    if itime == 0:
-        input.mhd_linear.put(2)
-    else:
-        input.mhd_linear.putSlice(2)
+    # if itime == 0:
+    #     input.mhd_linear.put(2)
+    # else:
+    #     input.mhd_linear.putSlice(2)
+
+    input.mhd_linear.putSlice(2)
 
     print('*************************************')
     print('Output time = ', input.mhd_linear.time[0])
@@ -216,10 +223,12 @@ def ligka_mode_2(param, user, time_runs):
     input.mhd_linear.copyValues(output.mhd_linear)
     input.mhd_linear.setPulseCtx(idx_in)
 
-    if itime == 0:
-        input.mhd_linear.put(3)
-    else:
-        input.mhd_linear.putSlice(3)
+    # if itime == 0:
+    #     input.mhd_linear.put(3)
+    # else:
+    #     input.mhd_linear.putSlice(3)
+
+    input.mhd_linear.putSlice(3)
 
     print('*************************************')
     print('Output time = ', input.mhd_linear.time[0])
@@ -265,10 +274,12 @@ def ligka_mode_5(param, user, time_runs):
 
     input.mhd_linear.setPulseCtx(idx_in)
 
-    if itime == 0:
-        input.mhd_linear.put()
-    else:
-        input.mhd_linear.putSlice()
+    # if itime == 0:
+    #     input.mhd_linear.put()
+    # else:
+    #     input.mhd_linear.putSlice()
+
+    input.mhd_linear.putSlice()
 
     print('*************************************')
     print('Output time = ', input.mhd_linear.time[0])
@@ -320,10 +331,12 @@ def ligka_mode_4(param, user, time_runs):
     input.mhd_linear.copyValues(output.mhd_linear)
     input.mhd_linear.setPulseCtx(idx_in)
 
-    if itime == 0:
-        input.mhd_linear.put(1)
-    else:
-        input.mhd_linear.putSlice(1)
+    # if itime == 0:
+    #     input.mhd_linear.put(1)
+    # else:
+    #     input.mhd_linear.putSlice(1)
+
+    input.mhd_linear.putSlice(1)
 
     print('*************************************')
     print('Output time = ', input.mhd_linear.time[0])

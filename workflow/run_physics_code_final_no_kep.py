@@ -64,9 +64,6 @@ def run_HL_noKEP():
         save_xml_param_to_file_on_run('workflow/input/z_ligka.xml', 'nhot', str(nhot))
         param_ligka = parameters_workflow('workflow/input/z_ligka.xml')
 
-
-        param_ligka = parameters_workflow('workflow/input/z_ligka.xml')
-
         if param['ligka_541'] == 1:
             if param['Equilibrium_code'] == 'Helena':
                 print('=================Starting HELENA and LIGKA mode 5 - 4 - 1=================')
