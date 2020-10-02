@@ -11,6 +11,7 @@ import numpy as np
 import xml.etree.ElementTree as ET
 import matplotlib.pyplot as plt
 from datetime import datetime
+from workflow.functions_wf import parameters_workflow
 
 
 def analysis_ligka_mode5():
@@ -324,5 +325,112 @@ def analysis_ligka_mode2():
       print('Analysis for timepoint '+str(input.mhd_linear.time[i])+' data was saved in:',str(analysis_mode2))
   input.close()
   print('Done')
+
+
+def create_shot_dir(shot_nr, run_out):
+    # SEPARATE FOLDERS FOR DIFFERENT RUNS/SHOTS
+    # create new directory if none exists
+    shot_dir = (os.path.join(os.getcwd(), 'workflow/Analysis/'+str(shot_nr)+'_'+str(run_out)))
+    shot_dir_check = os.path.isdir(shot_dir)
+    if not shot_dir_check:
+        os.makedirs(shot_dir)
+        print('Shot + run folder: {} was created'.format(shot_dir))
+    return shot_dir
+
+# Directly from ligka output (nyquist array) (as saved in the IDS)
+def get_nyq_from_mode(mode):
+    nyq_m5 = mode.plasma.velocity_perturbed.coordinate1.coefficients_real
+    return nyq_m5
+
+def search_nyq(nyq):
+    fnyq = {}
+    # convert indices to fortran ordering for convenience (same as nyquist in LIGKA)
+    for k in range(nyq.shape[0]):
+        fnyq[k+1] = nyq[k]
+    q_TAE = fnyq[2]
+    r_TAE = fnyq[1]
+    w_TAE = fnyq[16]
+    return q_TAE,r_TAE,w_TAE
+
+def mode_analysis_ligka(occurence, val_plot):
+
+  param = parameters_workflow('workflow/input/z_ligka.xml')
+
+
+  user = param['user_wrap']
+  version = os.getenv('IMAS_VERSION')[0]
+  shot_nr = param['shot_number_wrap']
+  run_out = param['run_wrap']
+  machine_out = param['machine_wrap']
+  max_n_tor = param['max_n_tor']
+  min_n_tor = param['min_n_tor']
+  odd = param['even']
+  sidebands = param['sidebands'] + param['sidebands_asy']
+
+  np.set_printoptions(threshold=sys.maxsize)
+
+
+  input = imas.ids(shot_nr, run_out, 0, 0)
+  input.open_env(user, machine_out, '3')
+  input.mhd_linear.get(occurence)
+
+  shot_dir = create_shot_dir(shot_nr, run_out)
+  ntime = len(input.mhd_linear.time)
+
+  time_list = []
+  mpol_check = []
+  
+  # check how many poloidals we have
+  for itime, time_val in enumerate(input.mhd_linear.time):
+    time_slice = input.mhd_linear.time_slice[itime]
+    for imode, mode in enumerate(time_slice.toroidal_mode):
+      if mode.n_tor == max_n_tor:
+        if mode.m_pol_dominant not in mpol_check:
+        #if mode.n_tor == n:
+          mpol_check.append(mode.m_pol_dominant)
+
+  freq = [[None] * ntime for i in range(len(mpol_check))]
+  damp = [[None] * ntime for i in range(len(mpol_check))]
+
+  for itime, time_val in enumerate(input.mhd_linear.time):
+    time_slice = input.mhd_linear.time_slice[itime]
+    time_list.append(time_val)
+    mpol = []
+    i = 0
+    for imode, mode in enumerate(time_slice.toroidal_mode):
+      if mode.n_tor == max_n_tor:
+        if mode.m_pol_dominant not in mpol:
+          mpol.append(mode.m_pol_dominant)
+          freq[i][itime] = mode.frequency
+          damp[i][itime] = mode.growthrate
+          i = i + 1
+
+  fig, ax = plt.subplots()
+
+  poloidals = []
+  for i in mpol_check:
+    poloidals.append(str('m = '+str(int(i))))
+  for i in range(len(mpol_check)):
+    if val_plot == 1:
+      ax.plot(time_list, freq[i])
+    else:
+      ax.plot(time_list, damp[i])
+  
+  if val_plot == 1:
+    ax.set(xlabel='Time [s]', ylabel='Mode Frequency [Hz]',
+        title='Mode Frequency vs Time for n = '+str(max_n_tor))
+    ax.grid()
+    plt.legend(poloidals)
+    fig.savefig(str(shot_dir)+'/'+str(shot_nr)+'_'+str(run_out)+'_n_'+str(max_n_tor)+'_freq_.png')
+    plt.show()
+    print('Plot of Frequency vs time is saved in',str(shot_dir))
+  else:
+    ax.set(xlabel='Time [s]', ylabel='Mode Damping',
+        title='Mode Damping vs Time for n = '+str(max_n_tor))
+    ax.grid()
+    plt.legend(poloidals)
+    fig.savefig(str(shot_dir)+'/'+str(shot_nr)+'_'+str(run_out)+'_n_'+str(max_n_tor)+'_damp.png')
+    print('Plot of Damping vs Time is saved in',str(shot_dir))
+    plt.show()
 
 

@@ -3,7 +3,7 @@ from tkinter import filedialog, ttk
 from lxml import etree
 import interface.colour_definitions as col
 from interface.create_workflow_param import update_xml_param, save_xml_param_to_file, create_workflow_param_from_file
-from workflow.analysis_modes import analysis_ligka_mode5,analysis_ligka_mode2,analysis_ligka_mode1
+from workflow.analysis_modes import analysis_ligka_mode5,analysis_ligka_mode2,analysis_ligka_mode1, mode_analysis_ligka
 import os, sys, glob, yaml, argparse, re
 from operator import itemgetter
 from stat import *
@@ -69,11 +69,11 @@ def analysis_window():
   window_a = Tk()
   window_a.title('LIGKA Analysis')
   window_a.configure(bg = col.c1)
-  window_a.geometry('300x500')
+  window_a.geometry('500x500')
 
   fr_ana = Frame(window_a, width = 300, height = 500, background = col.c2)
   fr_ana.grid(row = 0, column = 0, rowspan = 2,  sticky = 'nwes', padx = 3, pady = 3)
-
+  # LEFT SIDE
   button_analysis = Button(fr_ana, text = 'Mode 5', bg = col.c2)
   button_analysis.grid(row = 5, column = 0, padx = 5, pady = 5, sticky = 'ew')
   button_analysis.configure(command = lambda: analysis_ligka_mode5())
@@ -85,6 +85,32 @@ def analysis_window():
   button_analysis = Button(fr_ana, text = 'Mode 2', bg = col.c2)
   button_analysis.grid(row = 7, column = 0, padx = 5, pady = 5, sticky = 'ew')
   button_analysis.configure(command = lambda: analysis_ligka_mode2())
+
+  button_analysis = Button(fr_ana, text = 'Frequency (mode 5)', bg = col.c2)
+  button_analysis.grid(row = 8, column = 0, padx = 5, pady = 5, sticky = 'ew')
+  button_analysis.configure(command = lambda: mode_analysis_ligka(0,1))
+
+  button_analysis = Button(fr_ana, text = 'Frequency (mode 4)', bg = col.c2)
+  button_analysis.grid(row = 9, column = 0, padx = 5, pady = 5, sticky = 'ew')
+  button_analysis.configure(command = lambda: mode_analysis_ligka(1,1))
+
+  button_analysis = Button(fr_ana, text = 'Frequency (mode 5)', bg = col.c2)
+  button_analysis.grid(row = 10, column = 0, padx = 5, pady = 5, sticky = 'ew')
+  button_analysis.configure(command = lambda: mode_analysis_ligka(2,1))
+
+  # RIGHT SIDE
+  button_analysis = Button(fr_ana, text = 'Damping (mode 5)', bg = col.c2)
+  button_analysis.grid(row = 8, column = 1, padx = 5, pady = 5, sticky = 'ew')
+  button_analysis.configure(command = lambda: mode_analysis_ligka(0,2))
+
+  button_analysis = Button(fr_ana, text = 'Damping (mode 4)', bg = col.c2)
+  button_analysis.grid(row = 9, column = 1, padx = 5, pady = 5, sticky = 'ew')
+  button_analysis.configure(command = lambda: mode_analysis_ligka(1,2))
+
+  button_analysis = Button(fr_ana, text = 'Damping (mode 5)', bg = col.c2)
+  button_analysis.grid(row = 10, column = 1, padx = 5, pady = 5, sticky = 'ew')
+  button_analysis.configure(command = lambda: mode_analysis_ligka(2,2))
+
 
 
 def scenario_window():
