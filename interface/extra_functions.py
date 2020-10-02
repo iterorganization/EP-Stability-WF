@@ -94,7 +94,7 @@ def analysis_window():
   button_analysis.grid(row = 9, column = 0, padx = 5, pady = 5, sticky = 'ew')
   button_analysis.configure(command = lambda: mode_analysis_ligka(1,1))
 
-  button_analysis = Button(fr_ana, text = 'Frequency (mode 5)', bg = col.c2)
+  button_analysis = Button(fr_ana, text = 'Frequency (mode 1)', bg = col.c2)
   button_analysis.grid(row = 10, column = 0, padx = 5, pady = 5, sticky = 'ew')
   button_analysis.configure(command = lambda: mode_analysis_ligka(2,1))
 
@@ -107,7 +107,7 @@ def analysis_window():
   button_analysis.grid(row = 9, column = 1, padx = 5, pady = 5, sticky = 'ew')
   button_analysis.configure(command = lambda: mode_analysis_ligka(1,2))
 
-  button_analysis = Button(fr_ana, text = 'Damping (mode 5)', bg = col.c2)
+  button_analysis = Button(fr_ana, text = 'Damping (mode 1)', bg = col.c2)
   button_analysis.grid(row = 10, column = 1, padx = 5, pady = 5, sticky = 'ew')
   button_analysis.configure(command = lambda: mode_analysis_ligka(2,2))
 
