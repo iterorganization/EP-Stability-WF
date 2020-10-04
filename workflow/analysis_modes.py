@@ -349,25 +349,30 @@ def search_nyq(nyq):
         fnyq[k+1] = nyq[k]
     q_TAE = fnyq[2]
     r_TAE = fnyq[1]
-    w_TAE = fnyq[16]
-    return q_TAE,r_TAE,w_TAE
+    #w_TAE = fnyq[16]
+    return q_TAE,r_TAE
 
-def mode_analysis_ligka(occurence, val_plot):
+def mode_analysis_ligka(val_plot):
 
-  param = parameters_workflow('workflow/input/z_ligka.xml')
+  param = parameters_workflow('workflow/input/analysis.xml')
 
 
-  user = param['user_wrap']
+  user = param['user']
   version = os.getenv('IMAS_VERSION')[0]
-  shot_nr = param['shot_number_wrap']
-  run_out = param['run_wrap']
-  machine_out = param['machine_wrap']
-  max_n_tor = param['max_n_tor']
-  min_n_tor = param['min_n_tor']
-  odd = param['even']
-  sidebands = param['sidebands'] + param['sidebands_asy']
+  shot_nr = param['shot_number']
+  run_out = param['run']
+  machine_out = param['machine']
+  n = param['n']
+  mode = param['mode']
 
+  if mode == 1:
+    occurence = 2
+  elif mode == 4:
+    occurence = 1
+  else:
+    occurence = 0
   np.set_printoptions(threshold=sys.maxsize)
+
 
 
   input = imas.ids(shot_nr, run_out, 0, 0)
@@ -384,13 +389,15 @@ def mode_analysis_ligka(occurence, val_plot):
   for itime, time_val in enumerate(input.mhd_linear.time):
     time_slice = input.mhd_linear.time_slice[itime]
     for imode, mode in enumerate(time_slice.toroidal_mode):
-      if mode.n_tor == max_n_tor:
+      if mode.n_tor == n:
         if mode.m_pol_dominant not in mpol_check:
         #if mode.n_tor == n:
           mpol_check.append(mode.m_pol_dominant)
 
   freq = [[None] * ntime for i in range(len(mpol_check))]
   damp = [[None] * ntime for i in range(len(mpol_check))]
+  q_TAE = [[None] * ntime for i in range(len(mpol_check))]
+  r_TAE = [[None] * ntime for i in range(len(mpol_check))]
 
   for itime, time_val in enumerate(input.mhd_linear.time):
     time_slice = input.mhd_linear.time_slice[itime]
@@ -398,9 +405,12 @@ def mode_analysis_ligka(occurence, val_plot):
     mpol = []
     i = 0
     for imode, mode in enumerate(time_slice.toroidal_mode):
-      if mode.n_tor == max_n_tor:
+      if mode.n_tor == n:
         if mode.m_pol_dominant not in mpol:
           mpol.append(mode.m_pol_dominant)
+          nyq_m5 = get_nyq_from_mode(mode)
+          nyq = nyq_m5[:, 0, 0]
+          q_TAE[i][itime], r_TAE[i][itime] = search_nyq(nyq)
           freq[i][itime] = mode.frequency
           damp[i][itime] = mode.growthrate
           i = i + 1
@@ -413,24 +423,34 @@ def mode_analysis_ligka(occurence, val_plot):
   for i in range(len(mpol_check)):
     if val_plot == 1:
       ax.plot(time_list, freq[i])
-    else:
+    elif val_plot == 2:
       ax.plot(time_list, damp[i])
+    else:
+      ax.plot(time_list, r_TAE[i])
   
   if val_plot == 1:
     ax.set(xlabel='Time [s]', ylabel='Mode Frequency [Hz]',
-        title='Mode Frequency vs Time for n = '+str(max_n_tor))
+        title='Mode Frequency vs Time for n = '+str(n))
     ax.grid()
     plt.legend(poloidals)
-    fig.savefig(str(shot_dir)+'/'+str(shot_nr)+'_'+str(run_out)+'_n_'+str(max_n_tor)+'_freq_.png')
+    fig.savefig(str(shot_dir)+'/'+str(shot_nr)+'_'+str(run_out)+'_n_'+str(n)+'_freq_.png')
     plt.show()
     print('Plot of Frequency vs time is saved in',str(shot_dir))
-  else:
+  elif val_plot == 2:
     ax.set(xlabel='Time [s]', ylabel='Mode Damping',
-        title='Mode Damping vs Time for n = '+str(max_n_tor))
+        title='Mode Damping vs Time for n = '+str(n))
     ax.grid()
     plt.legend(poloidals)
-    fig.savefig(str(shot_dir)+'/'+str(shot_nr)+'_'+str(run_out)+'_n_'+str(max_n_tor)+'_damp.png')
+    fig.savefig(str(shot_dir)+'/'+str(shot_nr)+'_'+str(run_out)+'_n_'+str(n)+'_damp.png')
     print('Plot of Damping vs Time is saved in',str(shot_dir))
+    plt.show()
+  else:
+    ax.set(xlabel='Time [s]', ylabel='Mode Radial Position',
+        title='Mode Radial Position vs Time for n = '+str(n))
+    ax.grid()
+    plt.legend(poloidals)
+    fig.savefig(str(shot_dir)+'/'+str(shot_nr)+'_'+str(run_out)+'_n_'+str(n)+'_r_TAE.png')
+    print('Plot of Radial Position vs Time is saved in',str(shot_dir))
     plt.show()
 
 

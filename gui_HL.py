@@ -45,6 +45,7 @@ def open_gui(default_workflow_param_path):
     workflow_param = create_workflow_param_from_file(default_workflow_param_path)
     ligka_param = create_xml_param_from_file('workflow/input/z_ligka.xml')
     hagis1_param = create_xml_param_from_file('workflow/input/hagis1.xml')
+    analysis_param = create_xml_param_from_file('workflow/input/analysis.xml')
 
     fr_wfp = Frame(window, width = 300, height = 500, background = col.c3)
     fr_wfp.grid(row = 0, column = 0, rowspan = 2,  sticky = 'nwes', padx = 3, pady = 3)
@@ -64,6 +65,8 @@ def open_gui(default_workflow_param_path):
     act_ref = list(workflow_param.keys())[2]
     wfp_ref_l = list(ligka_param.keys())
     wfp_ref_h = list(hagis1_param.keys())
+    ana_ref = list(analysis_param.keys())[0]
+    
   
 
 
@@ -131,7 +134,7 @@ def open_gui(default_workflow_param_path):
     
     button_analysis = Button(fr_wfp, text = 'LIGKA Analysis', bg = col.c2)
     button_analysis.grid(row = 52, column = 1, padx = 5, pady = 5, sticky = 'ew')
-    button_analysis.configure(command = lambda: analysis_window())
+    button_analysis.configure(command = lambda: analysis_window(ana_ref, analysis_param))
 
     button_save_asdef = Button(fr_wfp, text = 'Save Configuration as Default', bg = col.c2)
     button_save_asdef.grid(row = 53, column = 0, padx = 5, pady = 5, sticky = 'ew')

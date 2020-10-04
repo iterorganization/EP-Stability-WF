@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import filedialog, ttk
 from lxml import etree
 import interface.colour_definitions as col
-from interface.create_workflow_param import update_xml_param, save_xml_param_to_file, create_workflow_param_from_file
+from interface.create_workflow_param import create_workflow_param_from_file, create_xml_param_from_file, save_xml_param_to_file, update_xml_param
 from workflow.analysis_modes import analysis_ligka_mode5,analysis_ligka_mode2,analysis_ligka_mode1, mode_analysis_ligka
 import os, sys, glob, yaml, argparse, re
 from operator import itemgetter
@@ -57,7 +57,7 @@ def actor_window(wfp_ref_l, ligka_param, l):
 
 
     ## FUNCTION NEW ANALYSIS WINDOW 
-def analysis_window():
+def analysis_window(ana_ref, analysis_param):
   #create analysis directory if none exists
   analysis_dir = ('workflow/Analysis')
   analysis_dir_check = os.path.isdir(analysis_dir)
@@ -66,50 +66,97 @@ def analysis_window():
     os.makedirs(analysis_dir)
     print('Analysis folder was created')
 
-  window_a = Tk()
-  window_a.title('LIGKA Analysis')
-  window_a.configure(bg = col.c1)
-  window_a.geometry('500x500')
+  window_an = Toplevel()
+  window_an.title('LIGKA Analysis')
+  window_an.configure(bg = col.c1)
 
-  fr_ana = Frame(window_a, width = 300, height = 500, background = col.c2)
+  try:
+    wh = window_an.winfo_reqheight()
+    ww = window_an.winfo_reqwidth()
+    wx = window_an.winfo_x()
+    wy = window_an.winfo_y()
+    window_an.geometry("+%d+%d" %(wx, wy))
+  except: 
+    pass
+
+  fr_ana = Frame(window_an, width = 300, height = 500, background = col.c2)
   fr_ana.grid(row = 0, column = 0, rowspan = 2,  sticky = 'nwes', padx = 3, pady = 3)
-  # LEFT SIDE
-  button_analysis = Button(fr_ana, text = 'Mode 5', bg = col.c2)
-  button_analysis.grid(row = 5, column = 0, padx = 5, pady = 5, sticky = 'ew')
-  button_analysis.configure(command = lambda: analysis_ligka_mode5())
 
-  button_analysis = Button(fr_ana, text = 'Mode 1', bg = col.c2)
-  button_analysis.grid(row = 6, column = 0, padx = 5, pady = 5, sticky = 'ew')
-  button_analysis.configure(command = lambda: analysis_ligka_mode1())
 
-  button_analysis = Button(fr_ana, text = 'Mode 2', bg = col.c2)
-  button_analysis.grid(row = 7, column = 0, padx = 5, pady = 5, sticky = 'ew')
-  button_analysis.configure(command = lambda: analysis_ligka_mode2())
+  irow = 0
+  for ref in [ana_ref]:
+      
+      Label(fr_ana, text = ref, bg = col.c3, font = '15').grid(row = irow, column = 0, columnspan = 3, pady = 10, padx = 5, sticky = 'we')
+      irow += 1
 
-  button_analysis = Button(fr_ana, text = 'Frequency (mode 5)', bg = col.c2)
-  button_analysis.grid(row = 8, column = 0, padx = 5, pady = 5, sticky = 'ew')
-  button_analysis.configure(command = lambda: mode_analysis_ligka(0,1))
+      for elem in analysis_param[ref]:  
+          
+        Label(fr_ana, text = elem, bg = col.c3).grid(row = irow,  column = 0, padx = 3, pady = 2, sticky = 'w')
+        if elem == 'mode':
+          entrystring = StringVar()
+          entrystring.set(analysis_param[ref][elem])
+          Label(fr_ana, text = elem, bg = col.c3).grid(row = irow, column = 0, padx = 3, pady = 2, sticky = 'w')
+          combobox = ttk.Combobox(fr_ana, textvariable = entrystring)
+          combobox.grid(row = irow, column = 1, padx = 3, pady = 2, sticky = 'e')
+          combobox.config(values = ('5', '4', '1'))
+          entrystring.trace('w', lambda name, index, mode, elem = elem, entrystring = entrystring, ref = ref: update_xml_param(analysis_param, ref, elem, entrystring.get()))
+          irow += 1
+        else:
+          entrystring = StringVar()
+          entrystring.set(analysis_param[ref][elem])
+          entrystring.trace('w', lambda name, index, mode, elem = elem, entrystring = entrystring, ref = ref: update_xml_param(analysis_param, ref, elem, entrystring.get()))                      # if an entry is changed, the new values should immediately be changed in the workflow_param dictionary
+          Entry(fr_ana, textvariable = entrystring, bg = col.c1).grid(row = irow, column = 1, padx = 3, pady = 2, sticky = 'e')
+          irow += 1
 
-  button_analysis = Button(fr_ana, text = 'Frequency (mode 4)', bg = col.c2)
-  button_analysis.grid(row = 9, column = 0, padx = 5, pady = 5, sticky = 'ew')
-  button_analysis.configure(command = lambda: mode_analysis_ligka(1,1))
+  button_saveconfig = Button(fr_ana, text = 'Save Analysis Configuration', bg = col.c2)
+  button_saveconfig.grid(row = 52, column = 0, padx = 5, pady = 5, sticky = 'ew')
+  button_saveconfig.configure(command = lambda: save_xml_param_to_file(analysis_param, 'workflow/input/analysis.xml'))
+# LEFT SIDE
+  # button_analysis = Button(fr_ana, text = 'Mode 5', bg = col.c2)
+  # button_analysis.grid(row = 1, column = 2, padx = 5, pady = 5, sticky = 'ew')
+  # button_analysis.configure(command = lambda: analysis_ligka_mode5())
 
-  button_analysis = Button(fr_ana, text = 'Frequency (mode 1)', bg = col.c2)
-  button_analysis.grid(row = 10, column = 0, padx = 5, pady = 5, sticky = 'ew')
-  button_analysis.configure(command = lambda: mode_analysis_ligka(2,1))
+  # button_analysis = Button(fr_ana, text = 'Mode 1', bg = col.c2)
+  # button_analysis.grid(row = 2, column = 2, padx = 5, pady = 5, sticky = 'ew')
+  # button_analysis.configure(command = lambda: analysis_ligka_mode1())
 
-  # RIGHT SIDE
-  button_analysis = Button(fr_ana, text = 'Damping (mode 5)', bg = col.c2)
-  button_analysis.grid(row = 8, column = 1, padx = 5, pady = 5, sticky = 'ew')
-  button_analysis.configure(command = lambda: mode_analysis_ligka(0,2))
+  # button_analysis = Button(fr_ana, text = 'Mode 2', bg = col.c2)
+  # button_analysis.grid(row = 3, column = 2, padx = 5, pady = 5, sticky = 'ew')
+  # button_analysis.configure(command = lambda: analysis_ligka_mode2())
 
-  button_analysis = Button(fr_ana, text = 'Damping (mode 4)', bg = col.c2)
-  button_analysis.grid(row = 9, column = 1, padx = 5, pady = 5, sticky = 'ew')
-  button_analysis.configure(command = lambda: mode_analysis_ligka(1,2))
+  # button_analysis = Button(fr_ana, text = 'Frequency (mode 5)', bg = col.c2)
+  # button_analysis.grid(row = 8, column = 0, padx = 5, pady = 5, sticky = 'ew')
+  # button_analysis.configure(command = lambda: mode_analysis_ligka(0,1))
 
-  button_analysis = Button(fr_ana, text = 'Damping (mode 1)', bg = col.c2)
-  button_analysis.grid(row = 10, column = 1, padx = 5, pady = 5, sticky = 'ew')
-  button_analysis.configure(command = lambda: mode_analysis_ligka(2,2))
+  # button_analysis = Button(fr_ana, text = 'Frequency (mode 4)', bg = col.c2)
+  # button_analysis.grid(row = 9, column = 0, padx = 5, pady = 5, sticky = 'ew')
+  # button_analysis.configure(command = lambda: mode_analysis_ligka(1,1))
+
+  # button_analysis = Button(fr_ana, text = 'Frequency (mode 1)', bg = col.c2)
+  # button_analysis.grid(row = 10, column = 0, padx = 5, pady = 5, sticky = 'ew')
+  # button_analysis.configure(command = lambda: mode_analysis_ligka(2,1))
+
+  # # RIGHT SIDE
+
+  button_analysis = Button(fr_ana, text = 'Frequency', bg = col.c2)
+  button_analysis.grid(row = 1, column = 3, padx = 5, pady = 5, sticky = 'ew')
+  button_analysis.configure(command = lambda: mode_analysis_ligka(1))
+
+  button_analysis = Button(fr_ana, text = 'Damping', bg = col.c2)
+  button_analysis.grid(row = 2, column = 3, padx = 5, pady = 5, sticky = 'ew')
+  button_analysis.configure(command = lambda: mode_analysis_ligka(2))
+
+  button_analysis = Button(fr_ana, text = 'Radial Position', bg = col.c2)
+  button_analysis.grid(row = 3, column = 3, padx = 5, pady = 5, sticky = 'ew')
+  button_analysis.configure(command = lambda: mode_analysis_ligka(3))
+
+  # button_analysis = Button(fr_ana, text = 'Damping (mode 4)', bg = col.c2)
+  # button_analysis.grid(row = 9, column = 1, padx = 5, pady = 5, sticky = 'ew')
+  # button_analysis.configure(command = lambda: mode_analysis_ligka(1,2))
+
+  # button_analysis = Button(fr_ana, text = 'Damping (mode 1)', bg = col.c2)
+  # button_analysis.grid(row = 10, column = 1, padx = 5, pady = 5, sticky = 'ew')
+  # button_analysis.configure(command = lambda: mode_analysis_ligka(2,2))
 
 
 

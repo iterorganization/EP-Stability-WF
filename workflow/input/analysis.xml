@@ -1,0 +1,10 @@
+<parameter display="Analysis Settings">
+<shot_number>130012</shot_number>
+<run>19</run>
+<user>popaa</user>
+<machine>ligka_modes</machine>
+<n>10</n>
+<itbegin>1</itbegin>
+<itend>1</itend>
+<mode>4</mode>
+</parameter>
