@@ -11,7 +11,7 @@ import numpy as np
 import xml.etree.ElementTree as ET
 import matplotlib.pyplot as plt
 from datetime import datetime
-from scipy.interpolate import sproot, splrep
+# from scipy.interpolate import sproot, splrep
 from workflow.functions_wf import parameters_workflow
 
 
@@ -37,24 +37,23 @@ def search_nyq(nyq):
         fnyq[k+1] = nyq[k]
     q_TAE = fnyq[2]
     r_TAE = fnyq[1]
-    #w_TAE = fnyq[16]
     return q_TAE,r_TAE
 
 
-def find_rationals_n(ntor, q_sgrid, q_data, mlist=None, half_rationals = False):
-    tck     = splrep(q_sgrid, q_data, k=3, s=0)
-    qmin    = np.min(q_data)
-    qmax    = np.max(q_data)
-    result  = {}
-    qdiff = 0 + half_rationals * 0.5
-    for m in [i for i in range(np.floor(ntor*qmin).astype(np.int)-1, np.ceil(ntor*qmax).astype(np.int)+1) if (i+qdiff)>=ntor*qmin and (i+qdiff)<=ntor*qmax]:
-        if mlist is not None:
-            if m not in mlist:
-                continue
-        q = (m+qdiff)/ntor
-        tck_mod = (tck[0], tck[1]-q, tck[2])
-        result[m] = sproot(tck_mod)
-    return result
+# def find_rationals_n(ntor, q_sgrid, q_data, mlist=None, half_rationals = False):
+#     tck     = splrep(q_sgrid, q_data, k=3, s=0)
+#     qmin    = np.min(q_data)
+#     qmax    = np.max(q_data)
+#     result  = {}
+#     qdiff = 0 + half_rationals * 0.5
+#     for m in [i for i in range(np.floor(ntor*qmin).astype(np.int)-1, np.ceil(ntor*qmax).astype(np.int)+1) if (i+qdiff)>=ntor*qmin and (i+qdiff)<=ntor*qmax]:
+#         if mlist is not None:
+#             if m not in mlist:
+#                 continue
+#         q = (m+qdiff)/ntor
+#         tck_mod = (tck[0], tck[1]-q, tck[2])
+#         result[m] = sproot(tck_mod)
+#     return result
 
 def mode_analysis_ligka(val_plot):
 
