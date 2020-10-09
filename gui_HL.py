@@ -14,7 +14,6 @@ from workflow.run_physics_code_final_no_kep import run_HL_noKEP
 from workflow.functions_wf import read_timestep
 from interface.create_workflow_param import create_workflow_param_from_file, create_xml_param_from_file, save_xml_param_to_file, update_xml_param
 from interface.extra_functions import actor_window,analysis_window,scenario_window
-from workflow.analysis_modes import analysis_ligka_mode5,analysis_ligka_mode2,analysis_ligka_mode1
 import interface.colour_definitions as col
 
 # set the path to the folders where the configuration and codeparameters are stored

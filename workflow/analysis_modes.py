@@ -11,320 +11,8 @@ import numpy as np
 import xml.etree.ElementTree as ET
 import matplotlib.pyplot as plt
 from datetime import datetime
+from scipy.interpolate import sproot, splrep
 from workflow.functions_wf import parameters_workflow
-
-
-def analysis_ligka_mode5():
-
-  # IMPORT PARAMETERS FROM WORKFLOW AND LIGKA XML --------------------------------------
-  def parameters_workflow(input_file,l):  
-    tree = ET.parse(input_file)
-    root = tree.getroot()
-
-    param = {}
-    param_ligka = {} 
-    
-    if l != 1:
-      print('----- WORKFLOW PARAMETERS ----')
-
-      for elem in root.iter():
-        if len(elem) == 0:
-          try:
-            param[elem.tag] = int(elem.text)
-          except:
-            try:
-              param[elem.tag] = float(elem.text)
-            except:
-              param[elem.tag] = elem.text
-
-          param['input_path'] = input_file
-          print(elem.tag, ' = ', param[elem.tag])
-      return(param)
-    else:
-      print('----- LIGKA PARAMETERS ----')
-
-      for elem in root.iter():
-        if len(elem) == 0:
-          try:
-            param_ligka[elem.tag] = int(elem.text)
-          except:
-            try:
-              param_ligka[elem.tag] = float(elem.text)
-            except:
-              param_ligka[elem.tag] = elem.text
-
-          param_ligka['input_path'] = input_file
-          print(elem.tag, ' = ', param_ligka[elem.tag])
-      return(param_ligka)
-
-  param = parameters_workflow('workflow/input/input_workflow_default.xml',0)
-  param_ligka = parameters_workflow('workflow/input/z_ligka.xml',1)
-  
-  #CREATE DIRECTORY IF IS NOT THERE:
-  analysis_mode5 = os.path.join(os.getcwd(), 'workflow/Analysis/Ligka_mode5_'+datetime.now().strftime('%d%m_%H%M%S'))
-  os.makedirs(analysis_mode5)
-  
-  #SETTINGS:
-  user = os.getenv('USER')
-  version = os.getenv('IMAS_VERSION')[0]
-
-
-  print('===Open DB and read the mhd_linear input===')
-
-  input = imas.ids(param['shot_nr'],param['run_out'],0,0)
-  input.open_env(user,param['machine_out'],'3')
-  input.mhd_linear.get()
-  
-  # LISTS WITH DATA DECLARATION AND FILLING:
-
-  radius = input.mhd_linear.time_slice[0].toroidal_mode[0].plasma.grid.dim1
-  np.set_printoptions(threshold=sys.maxsize)
-  
-  
-  for i in range(len(input.mhd_linear.time)):
-    for j in range(0, 414+1):
-
-      freq = input.mhd_linear.time_slice[i].toroidal_mode[j].plasma.phi_potential_perturbed.real
-      
-      if len(freq) == 0:
-        print('List for timepoint '+str(input.mhd_linear.time[i])+' is empty, skipping this timepoint.')
-        continue
-    
-      # plotting the points  
-      plt.figure()
-
-      plt.plot(radius, freq) 
-      
-    
-      # naming the x axis 
-      #plt.axis([0.55,0.85,0,1])
-      # naming the x axis 
-      plt.xlabel('s') 
-      
-      # naming the y axis 
-      plt.ylabel('Electrostatic Potential') 
-    
-      # giving a title to my graph 
-      plt.title('EF_ANA_n'+str(input.mhd_linear.time_slice[i].toroidal_mode[j].n_tor)+'_'+str(input.mhd_linear.time[i]))  
-      
-      
-
-      # function to save/show the plot 
-      plt.savefig(str(analysis_mode5)+'/EF_ANA_n'+str(input.mhd_linear.time_slice[i].toroidal_mode[j].n_tor)+'_m'+str(input.mhd_linear.time_slice[i].toroidal_mode[j].m_pol_dominant)+'_'+str(input.mhd_linear.time[i])+'.png')
-      
-      print('Analysis for timepoint '+str(input.mhd_linear.time[i])+' data was saved in:',str(analysis_mode5))
-  input.close()
-  print('Done')
-  
-
-def analysis_ligka_mode1():
-
-  # IMPORT PARAMETERS FROM WORKFLOW AND LIGKA XML --------------------------------------
-  def parameters_workflow(input_file,l):  
-    tree = ET.parse(input_file)
-    root = tree.getroot()
-
-    param = {}
-    param_ligka = {} 
-    
-    if l != 1:
-      print('----- WORKFLOW PARAMETERS ----')
-
-      for elem in root.iter():
-        if len(elem) == 0:
-          try:
-            param[elem.tag] = int(elem.text)
-          except:
-            try:
-              param[elem.tag] = float(elem.text)
-            except:
-              param[elem.tag] = elem.text
-
-          param['input_path'] = input_file
-          print(elem.tag, ' = ', param[elem.tag])
-      return(param)
-    else:
-      print('----- LIGKA PARAMETERS ----')
-
-      for elem in root.iter():
-        if len(elem) == 0:
-          try:
-            param_ligka[elem.tag] = int(elem.text)
-          except:
-            try:
-              param_ligka[elem.tag] = float(elem.text)
-            except:
-              param_ligka[elem.tag] = elem.text
-
-          param_ligka['input_path'] = input_file
-          print(elem.tag, ' = ', param_ligka[elem.tag])
-      return(param_ligka)
-
-  param = parameters_workflow('workflow/input/input_workflow_default.xml',0)
-  param_ligka = parameters_workflow('workflow/input/z_ligka.xml',1)
-  
-  #CREATE DIRECTORY IF IS NOT THERE:
-  analysis_mode1 = os.path.join(os.getcwd(), 'workflow/Analysis/Ligka_mode1_'+datetime.now().strftime('%d%m_%H%M%S'))
-  os.makedirs(analysis_mode1)
-  
-  #SETTINGS:
-  user = os.getenv('USER')
-  version = os.getenv('IMAS_VERSION')[0]
-
-
-  print('===Open DB and read the mhd_linear input===')
-
-  input = imas.ids(param['shot_nr'],param['run_out'],0,0)
-  input.open_env(user,param['machine_out'],'3')
-  input.mhd_linear.get(2)
-  
-  # LISTS WITH DATA DECLARATION AND FILLING:
-
-  
-  radius = input.mhd_linear.time_slice[1].toroidal_mode[0].plasma.grid.dim1
-  print(len(radius))
-  np.set_printoptions(threshold=sys.maxsize)
-  
-  
-  for i in range(len(input.mhd_linear.time)):
-    for j in range(param_ligka['max_n_tor']-param_ligka['min_n_tor']+1):
-
-      freq = input.mhd_linear.time_slice[i].toroidal_mode[j].plasma.phi_potential_perturbed.real
-      #freq_list = []
-      if len(freq) == 0:
-        print('List for timepoint '+str(input.mhd_linear.time[i])+' is empty, skipping this timepoint.')
-        continue
-      #for pos in freq:
-        #freq_list.append(pos[1])
-      print(len(freq)) 
-      # plotting the points  
-      plt.figure()
-      #plt.plot(radius, freq_list) 
-      plt.plot(radius, freq)
-      
-      #plt.axis([0,2,-10,20])
-    
-      # naming the x axis 
-      plt.xlabel('s') 
-      
-      # naming the y axis 
-      plt.ylabel('Electrostatic Potential')  
-    
-      # giving a title to my graph 
-      plt.title('EF_phi_n'+str(input.mhd_linear.time_slice[i].toroidal_mode[j].n_tor)+'_'+str(input.mhd_linear.time[i]))  
-      
-
-      # function to save/show the plot 
-      plt.savefig(str(analysis_mode1)+'/EF_PHI_n'+str(input.mhd_linear.time_slice[i].toroidal_mode[j].n_tor)+'_m'+str(input.mhd_linear.time_slice[i].toroidal_mode[j].m_pol_dominant)+'_'+str(input.mhd_linear.time[i])+'.png')
-      
-      print('Analysis for timepoint '+str(input.mhd_linear.time[i])+' data was saved in:',str(analysis_mode1))
-  input.close()
-  print('Done')
-  
-def analysis_ligka_mode2():
-
-  # IMPORT PARAMETERS FROM WORKFLOW AND LIGKA XML --------------------------------------
-  def parameters_workflow(input_file,l):  
-    tree = ET.parse(input_file)
-    root = tree.getroot()
-
-    param = {}
-    param_ligka = {} 
-    
-    if l != 1:
-      print('----- WORKFLOW PARAMETERS ----')
-
-      for elem in root.iter():
-        if len(elem) == 0:
-          try:
-            param[elem.tag] = int(elem.text)
-          except:
-            try:
-              param[elem.tag] = float(elem.text)
-            except:
-              param[elem.tag] = elem.text
-
-          param['input_path'] = input_file
-          print(elem.tag, ' = ', param[elem.tag])
-      return(param)
-    else:
-      print('----- LIGKA PARAMETERS ----')
-
-      for elem in root.iter():
-        if len(elem) == 0:
-          try:
-            param_ligka[elem.tag] = int(elem.text)
-          except:
-            try:
-              param_ligka[elem.tag] = float(elem.text)
-            except:
-              param_ligka[elem.tag] = elem.text
-
-          param_ligka['input_path'] = input_file
-          print(elem.tag, ' = ', param_ligka[elem.tag])
-      return(param_ligka)
-
-  param = parameters_workflow('workflow/input/input_workflow_default.xml',0)
-  param_ligka = parameters_workflow('workflow/input/z_ligka.xml',1)
-  
-  #CREATE DIRECTORY IF IS NOT THERE:
-  analysis_mode2 = os.path.join(os.getcwd(), 'workflow/Analysis/Ligka_mode2_'+datetime.now().strftime('%d%m_%H%M%S'))
-  os.makedirs(analysis_mode2)
-  
-  #SETTINGS:
-  user = os.getenv('USER')
-  version = os.getenv('IMAS_VERSION')[0]
-
-
-  print('===Open DB and read the mhd_linear input===')
-
-  input = imas.ids(param['shot_nr'],param['run_out'],0,0)
-  input.open_env(user,param['machine_out'],'3')
-  input.mhd_linear.get(3)
-  
-  # LISTS WITH DATA DECLARATION AND FILLING:
-
-  
-  radius = input.mhd_linear.time_slice[1].toroidal_mode[0].plasma.grid.dim1
-  print(len(radius))
-  np.set_printoptions(threshold=sys.maxsize)
-  
-  
-  for i in range(len(input.mhd_linear.time)):
-    for j in range(param_ligka['max_n_tor']-param_ligka['min_n_tor']+1):
-
-      freq = input.mhd_linear.time_slice[i].toroidal_mode[j].plasma.phi_potential_perturbed.real
-      freq_list = []
-      if len(freq) == 0:
-        print('List for timepoint '+str(input.mhd_linear.time[i])+' is empty, skipping this timepoint.')
-        continue
-      #for pos in freq:
-        #freq_list.append(pos[1])
-      print(len(freq)) 
-      # plotting the points  
-      plt.figure()
-      #plt.plot(radius, freq_list) 
-      plt.plot(radius, freq)
-      
-      #plt.axis([0,2,-10,20])
-    
-      # naming the x axis 
-      plt.xlabel('s') 
-      
-      # naming the y axis 
-      plt.ylabel('Electrostatic Potential') 
-    
-      # giving a title to my graph 
-      plt.title('EF_phi_n'+str(input.mhd_linear.time_slice[i].toroidal_mode[j].n_tor)+'_'+str(input.mhd_linear.time[i])) 
-      
-      
-
-      # function to save/show the plot 
-      plt.savefig(str(analysis_mode2)+'/EF_PHI_n'+str(input.mhd_linear.time_slice[i].toroidal_mode[j].n_tor)+'_m'+str(input.mhd_linear.time_slice[i].toroidal_mode[j].m_pol_dominant)+'_'+str(input.mhd_linear.time[i])+'.png')
-      
-      print('Analysis for timepoint '+str(input.mhd_linear.time[i])+' data was saved in:',str(analysis_mode2))
-  input.close()
-  print('Done')
 
 
 def create_shot_dir(shot_nr, run_out):
@@ -352,6 +40,22 @@ def search_nyq(nyq):
     #w_TAE = fnyq[16]
     return q_TAE,r_TAE
 
+
+def find_rationals_n(ntor, q_sgrid, q_data, mlist=None, half_rationals = False):
+    tck     = splrep(q_sgrid, q_data, k=3, s=0)
+    qmin    = np.min(q_data)
+    qmax    = np.max(q_data)
+    result  = {}
+    qdiff = 0 + half_rationals * 0.5
+    for m in [i for i in range(np.floor(ntor*qmin).astype(np.int)-1, np.ceil(ntor*qmax).astype(np.int)+1) if (i+qdiff)>=ntor*qmin and (i+qdiff)<=ntor*qmax]:
+        if mlist is not None:
+            if m not in mlist:
+                continue
+        q = (m+qdiff)/ntor
+        tck_mod = (tck[0], tck[1]-q, tck[2])
+        result[m] = sproot(tck_mod)
+    return result
+
 def mode_analysis_ligka(val_plot):
 
   param = parameters_workflow('workflow/input/analysis.xml')
@@ -363,8 +67,15 @@ def mode_analysis_ligka(val_plot):
   run_out = param['run']
   machine_out = param['machine']
   n = param['n']
+  s_min = param['r_TAE_min']
+  s_max = param['r_TAE_max']
+  m_min = param['m_min']
+  m_max = param['m_max']
+  itbegin = param['itbegin']
+  itend = param['itend']
   mode = param['mode']
 
+  #time_runs = itend - itbegin
   if mode == 1:
     occurence = 2
   elif mode == 4:
@@ -373,7 +84,18 @@ def mode_analysis_ligka(val_plot):
     occurence = 0
   np.set_printoptions(threshold=sys.maxsize)
 
+  if val_plot == 4:
+    profiles_q = imas.ids(shot_nr, run_out, 0, 0)
+    profiles_q.open_env(user, machine_out, '3')
+    profiles_q.equilibrium.get()
 
+    q_list = []
+
+    for itime in range(itbegin, itend + 1):
+      time_slice = profiles_q.equilibrium.time_slice[itime]
+      q_list.append(time_slice.profiles_1d.q)
+
+    profiles_q.close()
 
   input = imas.ids(shot_nr, run_out, 0, 0)
   input.open_env(user, machine_out, '3')
@@ -383,50 +105,61 @@ def mode_analysis_ligka(val_plot):
   ntime = len(input.mhd_linear.time)
 
   time_list = []
-  mpol_check = []
+  s_list = input.mhd_linear.time_slice[0].toroidal_mode[0].plasma.grid.dim1
   
-  # check how many poloidals we have
+  mpol = {}
   for itime, time_val in enumerate(input.mhd_linear.time):
-    time_slice = input.mhd_linear.time_slice[itime]
-    for imode, mode in enumerate(time_slice.toroidal_mode):
-      if mode.n_tor == n:
-        if mode.m_pol_dominant not in mpol_check:
-        #if mode.n_tor == n:
-          mpol_check.append(mode.m_pol_dominant)
+    if itime >= itbegin and itime <= itend:
+      time_slice = input.mhd_linear.time_slice[itime]
+      mpol[time_val] = {}
+      for imode, mode in enumerate(time_slice.toroidal_mode):
+        if mode.n_tor == n:
+          if mode.m_pol_dominant not in mpol[time_val] and mode.m_pol_dominant >= m_min and mode.m_pol_dominant <= m_max:
+            nyq_m5 = get_nyq_from_mode(mode)
+            nyq = nyq_m5[:, 0, 0]
+            q_TAE, r_TAE = search_nyq(nyq)
+            freq = mode.frequency
+            damp = mode.growthrate
+            if r_TAE >= s_min and r_TAE <= s_max:
+              mpol[time_val][mode.m_pol_dominant] = [freq, damp, r_TAE, q_TAE]
+            else:
+              print('For time ',time_val,' m = ',mode.m_pol_dominant,' no mode was found between r = ',s_min,' and ',s_max)
+              mpol[time_val][mode.m_pol_dominant] = [None, None, None, None]
 
-  freq = [[None] * ntime for i in range(len(mpol_check))]
-  damp = [[None] * ntime for i in range(len(mpol_check))]
-  q_TAE = [[None] * ntime for i in range(len(mpol_check))]
-  r_TAE = [[None] * ntime for i in range(len(mpol_check))]
-
-  for itime, time_val in enumerate(input.mhd_linear.time):
-    time_slice = input.mhd_linear.time_slice[itime]
-    time_list.append(time_val)
-    mpol = []
-    i = 0
-    for imode, mode in enumerate(time_slice.toroidal_mode):
-      if mode.n_tor == n:
-        if mode.m_pol_dominant not in mpol:
-          mpol.append(mode.m_pol_dominant)
-          nyq_m5 = get_nyq_from_mode(mode)
-          nyq = nyq_m5[:, 0, 0]
-          q_TAE[i][itime], r_TAE[i][itime] = search_nyq(nyq)
-          freq[i][itime] = mode.frequency
-          damp[i][itime] = mode.growthrate
-          i = i + 1
 
   fig, ax = plt.subplots()
-
+  # prepare lists
   poloidals = []
-  for i in mpol_check:
-    poloidals.append(str('m = '+str(int(i))))
-  for i in range(len(mpol_check)):
+  poloidals_index = []
+  time_list = []
+  for i in mpol:
+    time_list.append(i)
+    for j in mpol[i]:
+      m = str('m = '+str(int(j)))
+      if m not in poloidals:
+        poloidals.append(m)
+        poloidals_index.append(j)
+  
+  for j in poloidals_index:
+    freq_list = []
+    damp_list = []
+    r_TAE_list = []
+    for i in mpol:
+      if j not in mpol[i]:
+        freq_list.append(None)
+        damp_list.append(None)
+        r_TAE_list.append(None)
+      else:
+        freq_list.append(mpol[i][j][0])
+        damp_list.append(mpol[i][j][1])
+        r_TAE_list.append(mpol[i][j][2])
+
     if val_plot == 1:
-      ax.plot(time_list, freq[i])
+      ax.plot(time_list, freq_list)
     elif val_plot == 2:
-      ax.plot(time_list, damp[i])
+      ax.plot(time_list, damp_list)
     else:
-      ax.plot(time_list, r_TAE[i])
+      ax.plot(time_list, r_TAE_list)
   
   if val_plot == 1:
     ax.set(xlabel='Time [s]', ylabel='Mode Frequency [Hz]',
@@ -444,6 +177,7 @@ def mode_analysis_ligka(val_plot):
     fig.savefig(str(shot_dir)+'/'+str(shot_nr)+'_'+str(run_out)+'_n_'+str(n)+'_damp.png')
     print('Plot of Damping vs Time is saved in',str(shot_dir))
     plt.show()
+  # elif val_plot == 3:
   else:
     ax.set(xlabel='Time [s]', ylabel='Mode Radial Position',
         title='Mode Radial Position vs Time for n = '+str(n))
@@ -452,5 +186,13 @@ def mode_analysis_ligka(val_plot):
     fig.savefig(str(shot_dir)+'/'+str(shot_nr)+'_'+str(run_out)+'_n_'+str(n)+'_r_TAE.png')
     print('Plot of Radial Position vs Time is saved in',str(shot_dir))
     plt.show()
+  # else:
+  #   ax.set(xlabel='s', ylabel='Mode q_TAE',
+  #       title='Mode Rational Surface vs Radial Position for n = '+str(n))
+  #   ax.grid()
+  #   plt.legend(poloidals)
+  #   fig.savefig(str(shot_dir)+'/'+str(shot_nr)+'_'+str(run_out)+'_n_'+str(n)+'_q_TAE.png')
+  #   print('Plot of Rational Surface TAE vs Radial Position is saved in',str(shot_dir))
+  #   plt.show()
 
 

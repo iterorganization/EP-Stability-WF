@@ -4,6 +4,10 @@
 <user>popaa</user>
 <machine>ligka_modes</machine>
 <n>10</n>
+<m_min>10</m_min>
+<m_max>20</m_max>
+<r_TAE_min>0.2</r_TAE_min>
+<r_TAE_max>0.9</r_TAE_max>
 <itbegin>1</itbegin>
 <itend>1</itend>
 <mode>4</mode>
