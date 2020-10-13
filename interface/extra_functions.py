@@ -126,9 +126,13 @@ def analysis_window(ana_ref, analysis_param):
   button_analysis.grid(row = 3, column = 3, padx = 5, pady = 5, sticky = 'ew')
   button_analysis.configure(command = lambda: mode_analysis_ligka(3))
 
+  button_analysis = Button(fr_ana, text = 'Mode Structure', bg = col.c2)
+  button_analysis.grid(row = 4, column = 3, padx = 5, pady = 5, sticky = 'ew')
+  button_analysis.configure(command = lambda: mode_analysis_ligka(4))
+
   # button_analysis = Button(fr_ana, text = 'Rational Surfaces / q - profile', bg = col.c2)
   # button_analysis.grid(row = 4, column = 3, padx = 5, pady = 5, sticky = 'ew')
-  # button_analysis.configure(command = lambda: mode_analysis_ligka(4))
+  # button_analysis.configure(command = lambda: mode_analysis_ligka(5))
 
 
 

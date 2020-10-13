@@ -74,16 +74,17 @@ def mode_analysis_ligka(val_plot):
   itend = param['itend']
   mode = param['mode']
 
-  #time_runs = itend - itbegin
+  # Select which LIGKA MODE to plot:
   if mode == 1:
     occurence = 2
   elif mode == 4:
     occurence = 1
   else:
     occurence = 0
+
   np.set_printoptions(threshold=sys.maxsize)
 
-  if val_plot == 4:
+  if val_plot == 5:
     profiles_q = imas.ids(shot_nr, run_out, 0, 0)
     profiles_q.open_env(user, machine_out, '3')
     profiles_q.equilibrium.get()
@@ -105,86 +106,119 @@ def mode_analysis_ligka(val_plot):
 
   time_list = []
   s_list = input.mhd_linear.time_slice[0].toroidal_mode[0].plasma.grid.dim1
-  
-  mpol = {}
-  for itime, time_val in enumerate(input.mhd_linear.time):
-    if itime >= itbegin and itime <= itend:
-      time_slice = input.mhd_linear.time_slice[itime]
-      mpol[time_val] = {}
-      for imode, mode in enumerate(time_slice.toroidal_mode):
-        if mode.n_tor == n:
-          if mode.m_pol_dominant not in mpol[time_val] and mode.m_pol_dominant >= m_min and mode.m_pol_dominant <= m_max:
-            nyq_m5 = get_nyq_from_mode(mode)
-            nyq = nyq_m5[:, 0, 0]
-            q_TAE, r_TAE = search_nyq(nyq)
-            freq = mode.frequency
-            damp = mode.growthrate
-            if r_TAE >= s_min and r_TAE <= s_max:
-              mpol[time_val][mode.m_pol_dominant] = [freq, damp, r_TAE, q_TAE]
-            else:
-              print('For time ',time_val,' m = ',mode.m_pol_dominant,' no mode was found between r = ',s_min,' and ',s_max)
-              mpol[time_val][mode.m_pol_dominant] = [None, None, None, None]
-
-
-  fig, ax = plt.subplots()
+  if val_plot == 1 or val_plot == 2 or val_plot == 3:
+    mpol = {}
+    for itime, time_val in enumerate(input.mhd_linear.time):
+      if itime >= itbegin and itime <= itend:
+        time_slice = input.mhd_linear.time_slice[itime]
+        mpol[time_val] = {}
+        for imode, mode in enumerate(time_slice.toroidal_mode):
+          if mode.n_tor == n:
+            if mode.m_pol_dominant not in mpol[time_val] and mode.m_pol_dominant >= m_min and mode.m_pol_dominant <= m_max:
+              nyq_m5 = get_nyq_from_mode(mode)
+              nyq = nyq_m5[:, 0, 0]
+              q_TAE, r_TAE = search_nyq(nyq)
+              freq = mode.frequency
+              damp = mode.growthrate
+              if r_TAE >= s_min and r_TAE <= s_max:
+                mpol[time_val][mode.m_pol_dominant] = [freq, damp, r_TAE, q_TAE]
+              else:
+                print('For time ',time_val,' m = ',mode.m_pol_dominant,' no mode was found between r = ',s_min,' and ',s_max)
+                mpol[time_val][mode.m_pol_dominant] = [None, None, None, None]
+  else: 
+    # THIS WORKS FOR BOTH METIS AND ASTRA (due to time - independence of the plots)
+    fig, ax = plt.subplots()
+    for itime, time_val in enumerate(input.mhd_linear.time):
+      if itime >= itbegin and itime <= itend:
+        time_slice = input.mhd_linear.time_slice[itime]
+        mpol = []
+        for imode, mode in enumerate(time_slice.toroidal_mode):
+          if mode.n_tor == n:
+            if mode.m_pol_dominant not in mpol and mode.m_pol_dominant >= m_min and mode.m_pol_dominant <= m_max:
+              mpol.append(mode.m_pol_dominant)
+              nyq_m5 = get_nyq_from_mode(mode)
+              nyq = nyq_m5[:, 0, 0]
+              q_TAE, r_TAE = search_nyq(nyq)
+              if r_TAE >= s_min and r_TAE <= s_max:
+                poloidals = []
+                potential = mode.plasma.phi_potential_perturbed.real
+                m_list = mode.plasma.grid.dim2
+                for k in m_list:
+                  poloidals.append(str('m = '+str(int(k))))
+                ax.clear()
+                ax.plot(s_list, potential)
+                ax.set(xlabel='s', ylabel='Electrostatic Potential', title='Mode Structure for Time = ' + str(time_val))
+                ax.grid()
+                plt.legend(poloidals)
+                fig.savefig(str(shot_dir)+'/'+str(shot_nr)+'_'+str(run_out)+'_n_'+str(n)+'_m_'+str(mode.m_pol_dominant)+'_t_'+str(time_val)+'_structure.png')
+                #plt.show()
+              else:
+                print('For time ',time_val,' m = ',mode.m_pol_dominant,' no mode was found between r = ',s_min,' and ',s_max)
+                
   # prepare lists
-  poloidals = []
-  poloidals_index = []
-  time_list = []
-  for i in mpol:
-    time_list.append(i)
-    for j in mpol[i]:
-      m = str('m = '+str(int(j)))
-      if m not in poloidals:
-        poloidals.append(m)
-        poloidals_index.append(j)
-  
-  for j in poloidals_index:
-    freq_list = []
-    damp_list = []
-    r_TAE_list = []
+  # METIS CASES:
+  # FREQUENCY, DAMPING, RADIAL POSITION:
+  if val_plot == 1 or val_plot == 2 or val_plot == 3:
+    fig, ax = plt.subplots()
+    poloidals = []
+    poloidals_index = []
+    time_list = []
     for i in mpol:
-      if j not in mpol[i]:
-        freq_list.append(None)
-        damp_list.append(None)
-        r_TAE_list.append(None)
-      else:
-        freq_list.append(mpol[i][j][0])
-        damp_list.append(mpol[i][j][1])
-        r_TAE_list.append(mpol[i][j][2])
+      time_list.append(i)
+      for j in mpol[i]:
+        m = str('m = '+str(int(j)))
+        if m not in poloidals:
+          poloidals.append(m)
+          poloidals_index.append(j)
 
-    if val_plot == 1:
-      ax.plot(time_list, freq_list)
-    elif val_plot == 2:
-      ax.plot(time_list, damp_list)
-    else:
-      ax.plot(time_list, r_TAE_list)
+    # ASTRA CASES:
+    # TO BE DONE
+
+    for j in poloidals_index:
+      freq_list = []
+      damp_list = []
+      r_TAE_list = []
+      for i in mpol:
+        if j not in mpol[i]:
+          freq_list.append(None)
+          damp_list.append(None)
+          r_TAE_list.append(None)
+        else:
+          freq_list.append(mpol[i][j][0])
+          damp_list.append(mpol[i][j][1])
+          r_TAE_list.append(mpol[i][j][2])
+
+      if val_plot == 1:
+        ax.plot(time_list, freq_list)
+      elif val_plot == 2:
+        ax.plot(time_list, damp_list)
+      else:
+        ax.plot(time_list, r_TAE_list)
   
-  if val_plot == 1:
-    ax.set(xlabel='Time [s]', ylabel='Mode Frequency [Hz]',
-        title='Mode Frequency vs Time for n = '+str(n))
-    ax.grid()
-    plt.legend(poloidals)
-    fig.savefig(str(shot_dir)+'/'+str(shot_nr)+'_'+str(run_out)+'_n_'+str(n)+'_freq_.png')
-    plt.show()
-    print('Plot of Frequency vs time is saved in',str(shot_dir))
-  elif val_plot == 2:
-    ax.set(xlabel='Time [s]', ylabel='Mode Damping',
-        title='Mode Damping vs Time for n = '+str(n))
-    ax.grid()
-    plt.legend(poloidals)
-    fig.savefig(str(shot_dir)+'/'+str(shot_nr)+'_'+str(run_out)+'_n_'+str(n)+'_damp.png')
-    print('Plot of Damping vs Time is saved in',str(shot_dir))
-    plt.show()
-  # elif val_plot == 3:
-  else:
-    ax.set(xlabel='Time [s]', ylabel='Mode Radial Position',
-        title='Mode Radial Position vs Time for n = '+str(n))
-    ax.grid()
-    plt.legend(poloidals)
-    fig.savefig(str(shot_dir)+'/'+str(shot_nr)+'_'+str(run_out)+'_n_'+str(n)+'_r_TAE.png')
-    print('Plot of Radial Position vs Time is saved in',str(shot_dir))
-    plt.show()
+    if val_plot == 1:
+      ax.set(xlabel='Time [s]', ylabel='Mode Frequency [Hz]',
+          title='Mode Frequency vs Time for n = '+str(n))
+      ax.grid()
+      plt.legend(poloidals)
+      fig.savefig(str(shot_dir)+'/'+str(shot_nr)+'_'+str(run_out)+'_n_'+str(n)+'_freq_.png')
+      plt.show()
+      print('Plot of Frequency vs time is saved in',str(shot_dir))
+    elif val_plot == 2:
+      ax.set(xlabel='Time [s]', ylabel='Mode Damping',
+          title='Mode Damping vs Time for n = '+str(n))
+      ax.grid()
+      plt.legend(poloidals)
+      fig.savefig(str(shot_dir)+'/'+str(shot_nr)+'_'+str(run_out)+'_n_'+str(n)+'_damp.png')
+      print('Plot of Damping vs Time is saved in',str(shot_dir))
+      plt.show()
+    else:
+      ax.set(xlabel='Time [s]', ylabel='Mode Radial Position',
+          title='Mode Radial Position vs Time for n = '+str(n))
+      ax.grid()
+      plt.legend(poloidals)
+      fig.savefig(str(shot_dir)+'/'+str(shot_nr)+'_'+str(run_out)+'_n_'+str(n)+'_r_TAE.png')
+      print('Plot of Radial Position vs Time is saved in',str(shot_dir))
+      plt.show()
   # else:
   #   ax.set(xlabel='s', ylabel='Mode q_TAE',
   #       title='Mode Rational Surface vs Radial Position for n = '+str(n))
