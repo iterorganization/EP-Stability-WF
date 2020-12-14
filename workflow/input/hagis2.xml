@@ -1,0 +1,60 @@
+<parameter display="HAGIS 2 PARAMETERS">
+
+<mamu>4</mamu>
+<qc>2</qc>
+<filin>''</filin>
+<filpin>part.dat</filpin>
+<scntyp>2</scntyp>
+<nresy>5</nresy>
+<orbit_properties_compute>true</orbit_properties_compute>
+<orbit_propertie_norbits>2</orbit_propertie_norbits>
+<wradloc>true</wradloc>
+<findtpb>true</findtpb>
+
+<time_option>2</time_option>
+<tmaxi>1.0d-2</tmaxi>
+<tmini>0.0</tmini>
+<n_interm > 250  </n_interm >
+<n_integ_1>  150  </n_integ_1>
+<n_integ_2>  150  </n_integ_2>
+<toler_1>  1.0d-7   </toler_1>
+
+<characteristic_time>   2 </characteristic_time>
+
+
+
+<start0>   0 </start0>
+<nmrkrs>  10  </nmrkrs>
+
+<ltrap>false</ltrap>
+<s_load_min>  0.05d0   </s_load_min>
+<s_load_max>  0.95d0   </s_load_max>
+<ensmin>  3.0d4  </ensmin>
+<ensmax>  4.4d6   </ensmax>
+
+<tstpar>  1  </tstpar>
+
+<lpert>false</lpert>
+<lmodev>false</lmodev>
+
+<nomods>  0  </nomods>
+
+
+ <n_prop_min>10</n_prop_min>
+ <n_prop_max>10 </n_prop_max>	
+ <m_min_prop>8</m_min_prop>	
+ <m_max_prop>12</m_max_prop>	  		
+ <k_prop>5</k_prop>
+ <num_kin_rad>128</num_kin_rad>
+ <num_kin_lam>20</num_kin_lam>
+ <num_kin_en>10</num_kin_en>	
+
+
+<shot_number> 130012  </shot_number>
+ <run> 13 </run>
+ <itime> 15  </itime>
+ <ids_time> 68.0 </ids_time>
+<user>lauberp</user>
+ <machine>helena_test</machine>
+
+</parameter>

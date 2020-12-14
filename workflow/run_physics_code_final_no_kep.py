@@ -51,6 +51,7 @@ def run_HL_noKEP():
             update_xml_param_on_run(param, 'run_in', i[1])
             save_xml_param_to_file_on_run('workflow/input/input_workflow_default.xml', 'run_in', str(i[1]))
             param = parameters_workflow('workflow/input/input_workflow_default.xml')
+
         # MODIFY LIGKA XML TO TAKE NSPEC automatically!!
         print('Now modifying LIGKA XML by taking the species present in core_profiles IDS')
         curr_str, nspec, nback, nhot = profiles_get(param)
@@ -102,9 +103,6 @@ def run_HL_noKEP():
                 print('=====================STARTING HELENA===================')
                 helena(param, user)
                 print(param['Equilibrium_code'],' done.')
-            if param['Distributions_1'] == 'Hagis_1':
-                print('=====================STARTING HAGIS 1===================')
-                hagis_1(param, user, time_runs)
 
             ## LEAVE PLACE FOR HAGIS 2
 
@@ -135,3 +133,9 @@ def run_HL_noKEP():
                 param_ligka = parameters_workflow('workflow/input/z_ligka.xml')
                 print('=====================STARTING LIGKA MODE 2===================')
                 ligka_mode_2(param, user, time_runs)
+            # For now it is moved here, because it runs after LIGKA m 5/4/1. 
+            # Soon, automatic way of checking who to run first, but after a filar version of the wf is ready
+            # i.e all actors are established. 
+            if param['Distributions_1'] == 'Hagis_1':
+                print('=====================STARTING HAGIS 1===================')
+                hagis_1(param, user, time_runs)

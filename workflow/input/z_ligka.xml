@@ -1,10 +1,10 @@
 <parameter display="LIGKA PARAMETERS">
-<modus>10</modus>
+<modus>1</modus>
 <min_n_tor>8</min_n_tor>
-<max_n_tor>8</max_n_tor>
-<min_m>9</min_m>
-<max_m>9</max_m>
-<sidebands>6</sidebands>
+<max_n_tor>20</max_n_tor>
+<min_m>6</min_m>
+<max_m>25</max_m>
+<sidebands>4</sidebands>
 <sidebands_asy>0</sidebands_asy>
 <mode_type>1</mode_type>
 <even>0</even>
@@ -15,16 +15,16 @@
 <kr_read>0.0</kr_read>
 <q0>0.0d0</q0>
 
-<nspec>3</nspec>
-<spec_str>elddtt</spec_str>
-<nback>3</nback>
+<nspec>1</nspec>
+<spec_str>el</spec_str>
+<nback>1</nback>
 <nhot>0</nhot>
 <mass_ratio>-1.0d0</mass_ratio>
 <writeout>0</writeout>
 
 <shot_number_wrap>130012</shot_number_wrap>
-<run_wrap>11</run_wrap>
+<run_wrap>19</run_wrap>
 <itime_wrap>21</itime_wrap>
-<user_wrap>lauberp</user_wrap>
-<machine_wrap>helena_test</machine_wrap>
+<user_wrap>popaa</user_wrap>
+<machine_wrap>ligka_modes</machine_wrap>
 </parameter>

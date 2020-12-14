@@ -50,14 +50,6 @@ def helena(param, user):
 
     output.core_profiles.setExpIdx(idx_out)
 
-    # if itime == param['itbegin']:
-
-    #     output.equilibrium.put()
-    #     output.core_profiles.put()
-    # else:
-
-    #     output.equilibrium.putSlice()
-    #     output.core_profiles.putSlice()
     output.equilibrium.putSlice()
     output.core_profiles.putSlice()
 
@@ -87,7 +79,7 @@ def hagis_1(param, user, time_runs):
   print('=> Create output datafile')
   output = imas.ids(param['shot_nr'], run_out)
 
-  input.mhd_linear.ids_properties.homogeneous_time = 1
+  # input.mhd_linear.ids_properties.homogeneous_time = 1
 
   # CREATE OUTPUT DATAFILE
   output.create_env(user, param['machine_out'], '3')
@@ -99,27 +91,29 @@ def hagis_1(param, user, time_runs):
 
     input.equilibrium.setPulseCtx(idx_in)
     input.equilibrium.getSlice(time[itime], 2)
+    input.mhd_linear.setPulseCtx(idx_in)
+    input.mhd_linear.getSlice(time[itime], 2) #Load mode 5 of ligka for now i.e. mhd_linear(0)
     idx_out = output.equilibrium.getPulseCtx()
 
-    input.mhd_linear.time = input.equilibrium.time
+    # input.mhd_linear.time = input.equilibrium.time
 
     output.equilibrium, output.mhd_linear = hagis1_actor(input.equilibrium, input.mhd_linear, 'workflow/input/hagis1.xml')
 
     input.equilibrium.copyValues(output.equilibrium)
-    
     input.equilibrium.setPulseCtx(idx_in)
 
-    # if itime == 0:
-    #     input.equilibrium.put(1)
-    # else:
-    #     input.equilibrium.putSlice(1)
+    input.mhd_linear.copyValues(output.mhd_linear)
+    input.mhd_linear.setPulseCtx(idx_in)
+
 
     input.equilibrium.putSlice(1)
+    input.mhd_linear.putSlice(3)
 
     print('*************************************')
     print('Output time = ', input.equilibrium.time[0])
     print('OUTPUT ITIME = ', itime)
     print('Saved equilibrium from HAGIS 1 under oc 1')
+    print('Saved mhd_linear from HAGIS 1 under oc 4')
     print('*************************************')
 
   input.close()
@@ -166,10 +160,6 @@ def ligka_mode_1(param, user, time_runs):
     input.mhd_linear.copyValues(output.mhd_linear)
     input.mhd_linear.setPulseCtx(idx_in)
 
-    # if itime == 0:
-    #     input.mhd_linear.put(2)
-    # else:
-    #     input.mhd_linear.putSlice(2)
 
     input.mhd_linear.putSlice(2)
 
@@ -223,10 +213,6 @@ def ligka_mode_2(param, user, time_runs):
     input.mhd_linear.copyValues(output.mhd_linear)
     input.mhd_linear.setPulseCtx(idx_in)
 
-    # if itime == 0:
-    #     input.mhd_linear.put(3)
-    # else:
-    #     input.mhd_linear.putSlice(3)
 
     input.mhd_linear.putSlice(3)
 
@@ -273,11 +259,6 @@ def ligka_mode_5(param, user, time_runs):
     input.mhd_linear = ligka_actor(input.equilibrium, input.core_profiles, input.mhd_linear, 'workflow/input/z_ligka.xml', 'mpi_local')
 
     input.mhd_linear.setPulseCtx(idx_in)
-
-    # if itime == 0:
-    #     input.mhd_linear.put()
-    # else:
-    #     input.mhd_linear.putSlice()
 
     input.mhd_linear.putSlice()
 
@@ -331,10 +312,6 @@ def ligka_mode_4(param, user, time_runs):
     input.mhd_linear.copyValues(output.mhd_linear)
     input.mhd_linear.setPulseCtx(idx_in)
 
-    # if itime == 0:
-    #     input.mhd_linear.put(1)
-    # else:
-    #     input.mhd_linear.putSlice(1)
 
     input.mhd_linear.putSlice(1)
 

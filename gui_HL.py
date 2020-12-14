@@ -109,6 +109,8 @@ def open_gui(default_workflow_param_path):
           combobox.grid(row = irow, column = 1, padx = 3, pady = 2, sticky = 'e')
           if elem == 'Equilibrium_code':
             combobox.config(values = ('0', 'Helena', 'Chease'))
+          elif elem == 'Distributions_1':
+            combobox.config(values = ('0', 'Hagis_1'))
           elif elem == 'Stability_code':
             combobox.config(values = ('0', 'Ligka_m5', 'Ligka_m4', 'Ligka_m1', 'Ligka_m2'))
           else:

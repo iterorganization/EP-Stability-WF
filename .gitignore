@@ -1,0 +1,12 @@
+auto_batch*
+fort*
+imas_*
+test_new/
+tmp_*
+helena*
+.DS_Store
+interface/__pycache__/
+shots.dat
+workflow/Analysis/
+workflow/__pycache__/
+
