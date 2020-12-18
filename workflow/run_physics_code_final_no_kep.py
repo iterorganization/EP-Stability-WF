@@ -139,3 +139,7 @@ def run_HL_noKEP():
             if param['Distributions_1'] == 'Hagis_1':
                 print('=====================STARTING HAGIS 1===================')
                 hagis_1(param, user, time_runs)
+            # HAGIS 2 to be added
+            # if param['Distributions_2'] == 'Hagis_2':
+            #     print('=====================STARTING HAGIS 2===================')
+            #     hagis_2(param, user, time_runs)
