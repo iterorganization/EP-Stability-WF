@@ -6,11 +6,7 @@
 <genpet>false</genpet>
 <genf0>false</genf0>
 <ideal>false</ideal>
+<plotnam>hagis.ps</plotnam>
+<plotdev>psc</plotdev>
 
-<shot_number> 130012  </shot_number>
- <run> 11 </run>
- <itime> 15  </itime>
- <ids_time> 53.0 </ids_time>
-<user>lauberp</user>
- <machine>helena_test</machine>
 </parameter>

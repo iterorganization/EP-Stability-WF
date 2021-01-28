@@ -303,3 +303,66 @@ def mode_analysis_ligka(val_plot):
       fig.savefig(str(shot_dir)+'/'+str(shot_nr)+'_'+str(run_out)+'_r_TAE_1time.png')
       print('Plot of Radial Position vs Toroidal Mode Number is saved in',str(shot_dir))
       plt.show()
+
+
+
+def export_data():
+  param = parameters_workflow('workflow/input/analysis.xml')
+
+
+  user = param['user']
+  version = os.getenv('IMAS_VERSION')[0]
+  shot_nr = param['shot_number']
+  run_out = param['run']
+  machine_out = param['machine']
+  n = param['n']
+  s_min = param['r_TAE_min']
+  s_max = param['r_TAE_max']
+  m_min = param['m_min']
+  m_max = param['m_max']
+  itbegin = param['itbegin']
+  itend = param['itend']
+  mode = param['mode']
+  if mode == 1:
+      occurence = 2
+  elif mode == 4:
+      occurence = 1
+  else:
+      occurence = 0
+  
+
+  now = datetime.now()
+  date_time = now.strftime("%m%d%Y_%H_%M_%S")
+  filename = (os.path.join(os.getcwd(), 'workflow/Analysis/exported_'+str(shot_nr)+'_'+str(run_out)+'_'+str(date_time)+'.txt'))
+  f = open(filename, 'w+')
+
+  f.write(str(user)+" "+str(shot_nr)+" "+str(run_out)+" "+str(machine_out)+" "+str(occurence) + "\n")
+
+  input = imas.ids(shot_nr, run_out, 0, 0)
+  input.open_env(user, machine_out, '3')
+  input.mhd_linear.get(occurence)
+
+  mpol = {}
+  for itime, time_val in enumerate(input.mhd_linear.time):
+    if itime >= itbegin and itime <= itend:
+      time_slice = input.mhd_linear.time_slice[itime]
+      mpol[time_val] = {}
+      for imode, mode in enumerate(time_slice.toroidal_mode):
+        if mode.n_tor == n:
+          if mode.m_pol_dominant not in mpol[time_val] and mode.m_pol_dominant >= m_min and mode.m_pol_dominant <= m_max:
+            nyq_m5 = get_nyq_from_mode(mode)
+            nyq = nyq_m5[:, 0, 0]
+            q_TAE, r_TAE = search_nyq(nyq)
+            if r_TAE >= s_min and r_TAE <= s_max:
+              # nyq = np.array(nyq)
+              f.write(str(time_val) + " " + str(itime) + " ")
+              f.write(" ".join(map(str, nyq))+"\n")
+            
+
+# TODO: CHECK THE FORMATTING OF THE FILE BEING SAVED
+
+
+  f.close()
+  print('Done, file is saved in Analysis folder')
+
+

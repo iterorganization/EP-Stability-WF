@@ -3,7 +3,7 @@ from tkinter import filedialog, ttk
 from lxml import etree
 import interface.colour_definitions as col
 from interface.create_workflow_param import create_workflow_param_from_file, create_xml_param_from_file, save_xml_param_to_file, update_xml_param
-from workflow.analysis_modes import mode_analysis_ligka
+from workflow.analysis_modes import mode_analysis_ligka, export_data
 import os, sys, glob, yaml, argparse, re
 from operator import itemgetter
 from stat import *
@@ -13,10 +13,14 @@ from stat import *
 def actor_window(wfp_ref_l, ligka_param, l):
 
   window_a = Toplevel()
-  if l ==0:
+  if l == 0:
     window_a.title('LIGKA Parameters')
-  else:
+  elif l == 1:
     window_a.title('HAGIS 1 PARAMETERS')
+  elif l == 2:
+     window_a.title('HAGIS 2 PARAMETERS')
+  elif l == 3:
+    window_a.title('HELENA PARAMETERS')
   window_a.configure(bg = col.c1)
   
   try:
@@ -67,7 +71,7 @@ def analysis_window(ana_ref, analysis_param):
     print('Analysis folder was created')
 
   window_an = Toplevel()
-  window_an.title('LIGKA Analysis')
+  window_an.title('EP Analysis')
   window_an.configure(bg = col.c1)
 
   try:
@@ -107,6 +111,10 @@ def analysis_window(ana_ref, analysis_param):
           entrystring.trace('w', lambda name, index, mode, elem = elem, entrystring = entrystring, ref = ref: update_xml_param(analysis_param, ref, elem, entrystring.get()))                      # if an entry is changed, the new values should immediately be changed in the workflow_param dictionary
           Entry(fr_ana, textvariable = entrystring, bg = col.c1).grid(row = irow, column = 1, padx = 3, pady = 2, sticky = 'e')
           irow += 1
+
+  button_saveconfig = Button(fr_ana, text = 'Export Data', bg = col.c2)
+  button_saveconfig.grid(row = 51, column = 0, padx = 5, pady = 5, sticky = 'ew')
+  button_saveconfig.configure(command = lambda: export_data())
 
   button_saveconfig = Button(fr_ana, text = 'Save Analysis Configuration', bg = col.c2)
   button_saveconfig.grid(row = 52, column = 0, padx = 5, pady = 5, sticky = 'ew')

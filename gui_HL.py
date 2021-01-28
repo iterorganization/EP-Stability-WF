@@ -25,7 +25,7 @@ default_ligka_param_path = run_config_folder_path+ '/z_ligka.xml'
 window = Tk()
 ## create mainwindow
       
-window.title('H-L WORKFLOW')
+window.title('EP WORKFLOW')
 window.configure(bg = col.c1)
 
 
@@ -43,7 +43,9 @@ def open_gui(default_workflow_param_path):
     
     workflow_param = create_workflow_param_from_file(default_workflow_param_path)
     ligka_param = create_xml_param_from_file('workflow/input/z_ligka.xml')
+    helena_param = create_xml_param_from_file('workflow/input/helena.xml')
     hagis1_param = create_xml_param_from_file('workflow/input/hagis1.xml')
+    hagis2_param = create_xml_param_from_file('workflow/input/hagis2.xml')
     analysis_param = create_xml_param_from_file('workflow/input/analysis.xml')
 
     fr_wfp = Frame(window, width = 300, height = 500, background = col.c3)
@@ -62,8 +64,10 @@ def open_gui(default_workflow_param_path):
     wfp_ref = list(workflow_param.keys())[0]
     fur_ref = list(workflow_param.keys())[1]
     act_ref = list(workflow_param.keys())[2]
+    wfp_ref_hel = list(helena_param.keys())
     wfp_ref_l = list(ligka_param.keys())
     wfp_ref_h = list(hagis1_param.keys())
+    wfp_ref_h2 = list(hagis2_param.keys())
     ana_ref = list(analysis_param.keys())[0]
     
   
@@ -108,11 +112,11 @@ def open_gui(default_workflow_param_path):
           combobox = ttk.Combobox(fr_as, textvariable = entrystring)
           combobox.grid(row = irow, column = 1, padx = 3, pady = 2, sticky = 'e')
           if elem == 'Equilibrium_code':
-            combobox.config(values = ('0', 'Helena', 'Chease'))
+            combobox.config(values = ('0', 'Helena', 'Chease (not working yet)'))
           elif elem == 'Distributions_1':
             combobox.config(values = ('0', 'Hagis_1'))
           elif elem == 'Distributions_2':
-            combobox.config(values = ('0', 'Hagis_2 (not yet implemented)'))
+            combobox.config(values = ('0', 'Hagis_2'))
           elif elem == 'Stability_code':
             combobox.config(values = ('0', 'Ligka_m5', 'Ligka_m4', 'Ligka_m1', 'Ligka_m2'))
           else:
@@ -153,6 +157,11 @@ def open_gui(default_workflow_param_path):
     button_exit.configure(command = lambda: sys.exit())
     
     ## BUTONS RIGHT SIDE:
+
+    button_saveconfig = Button(fr_as, text = 'HELENA Parameters', bg = col.c2)
+    button_saveconfig.grid(row = 53, column = 0, padx = 5, pady = 5, sticky = 'ew')
+    button_saveconfig.configure(command = lambda: actor_window(wfp_ref_hel, helena_param, 3))
+
     button_saveconfig = Button(fr_as, text = 'LIGKA Parameters', bg = col.c2)
     button_saveconfig.grid(row = 54, column = 0, padx = 5, pady = 5, sticky = 'ew')
     button_saveconfig.configure(command = lambda: actor_window(wfp_ref_l, ligka_param, 0))
@@ -160,6 +169,10 @@ def open_gui(default_workflow_param_path):
     button_saveconfig = Button(fr_as, text = 'HAGIS 1 Parameters', bg = col.c2)
     button_saveconfig.grid(row = 55, column = 0, padx = 5, pady = 5, sticky = 'ew')
     button_saveconfig.configure(command = lambda: actor_window(wfp_ref_h, hagis1_param, 1))
+
+    button_saveconfig = Button(fr_as, text = 'HAGIS 2 Parameters', bg = col.c2)
+    button_saveconfig.grid(row = 56, column = 0, padx = 5, pady = 5, sticky = 'ew')
+    button_saveconfig.configure(command = lambda: actor_window(wfp_ref_h2, hagis2_param, 2))
 
     
      ## FUNCTIONS - SAVING & UPDATING

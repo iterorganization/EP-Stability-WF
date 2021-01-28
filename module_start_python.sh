@@ -16,13 +16,14 @@ module load PLplot/5.13.0-intel-2018a-Java-1.8.0_162-Python-3.6.4
 module load SPRNG/2.0b-intel-2018a
 
 # CREATE FOLDER FOR ACTOR POOL
+export ACTOR_FOLDER_WF=~/public/imas_actors #edit this line to best suit your needs
 export ACTOR_FOLDER=public/imas_actors #edit this line to best suit your needs
 mkdir -p ~/$ACTOR_FOLDER
 
 # EXTEND PYTHON PATH AND AVOID DOUBLONS (where the actors are under the form: "/actor_name/version(if any)"
-export PYTHONPATH=$ACTOR_FOLDER/hagis1:$PYTHONPATH
-export PYTHONPATH=$ACTOR_FOLDER/hagis2:$PYTHONPATH
-export PYTHONPATH=$ACTOR_FOLDER/helena_imas/0.1/:$PYTHONPATH
-export PYTHONPATH=$ACTOR_FOLDER/ligka:$PYTHONPATH
-export PYTHONPATH=$ACTOR_FOLDER/chease:$PYTHONPATH
+export PYTHONPATH=$ACTOR_FOLDER_WF/hagis1:$PYTHONPATH
+export PYTHONPATH=$ACTOR_FOLDER_WF/hagis2:$PYTHONPATH
+export PYTHONPATH=$ACTOR_FOLDER_WF/helena_imas:$PYTHONPATH
+export PYTHONPATH=$ACTOR_FOLDER_WF/ligka:$PYTHONPATH
+export PYTHONPATH=$ACTOR_FOLDER_WF/chease:$PYTHONPATH
 export PYTHONPATH="$(perl -e 'print join(":", grep { not $seen{$_}++ } split(/:/, $ENV{PYTHONPATH}))')"

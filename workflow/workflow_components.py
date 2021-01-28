@@ -41,7 +41,7 @@ def helena(param, user):
     idx_out = output.equilibrium.getPulseCtx()
 
     if param['Equilibrium_code'] == 'Helena':
-        output.equilibrium = helena_imas_actor(input.equilibrium)
+        output.equilibrium = helena_imas_actor(input.equilibrium, 'workflow/input/helena.xml')
     #else:
         #output.equilibrium = chease_actor(
             #input.equilibrium, 'workflow/input/chease_input_choices_default.xml')
@@ -120,63 +120,63 @@ def hagis_1(param, user, time_runs):
   output.close()
 
   # HAGIS2 TO BE EDDITED
-  # def hagis_2(param, user, time_runs):
-  #   run_out = 4
+  def hagis_2(param, user, time_runs):
+    run_out = 4
 
-  #   # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
-  #   # AND READ FULL TIME VECTOR OF EQUILIBRIUM IDS TO GET THE TIME BASE
-  #   time, ntime = read_timestep(user, param['machine_out'], param['run_out'])
+    # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
+    # AND READ FULL TIME VECTOR OF EQUILIBRIUM IDS TO GET THE TIME BASE
+    time, ntime = read_timestep(user, param['machine_out'], param['run_out'])
 
-  #   # OPEN INPUT IDS'S AGAIN TO PROCEED WITH GETSLICE
-  #   # NOTE: WE CANNOT USE THE SAME INPUT STRUCTURE FOR BOTH GET AND GETSLICE!!!
-  #   # IF WE DO SO: GETSLICE ALWAYS GET THE FIRST TIME SLICE WHATEVER IS ASKED
-  #   input = imas.ids(param['shot_nr'], param['run_out'], 0, 0)
-  #   input.open_env(user, param['machine_out'], '3')
-  #   idx_in = input.equilibrium.getPulseCtx()
+    # OPEN INPUT IDS'S AGAIN TO PROCEED WITH GETSLICE
+    # NOTE: WE CANNOT USE THE SAME INPUT STRUCTURE FOR BOTH GET AND GETSLICE!!!
+    # IF WE DO SO: GETSLICE ALWAYS GET THE FIRST TIME SLICE WHATEVER IS ASKED
+    input = imas.ids(param['shot_nr'], param['run_out'], 0, 0)
+    input.open_env(user, param['machine_out'], '3')
+    idx_in = input.equilibrium.getPulseCtx()
 
-  #   # OPEN OUTPUT OBJECT, IN VIEW OF SAVING RESULTS TO LOCAL DB
-  #   print('=> Create output datafile')
-  #   output = imas.ids(param['shot_nr'], run_out)
+    # OPEN OUTPUT OBJECT, IN VIEW OF SAVING RESULTS TO LOCAL DB
+    print('=> Create output datafile')
+    output = imas.ids(param['shot_nr'], run_out)
 
-  #   # input.mhd_linear.ids_properties.homogeneous_time = 1
+    input.distributions.ids_properties.homogeneous_time = 1
 
-  #   # CREATE OUTPUT DATAFILE
-  #   output.create_env(user, param['machine_out'], '3')
+    # CREATE OUTPUT DATAFILE
+    output.create_env(user, param['machine_out'], '3')
 
-  #   for itime in range(0, time_runs + 1):
+    for itime in range(0, time_runs + 1):
 
-  #     # EXECUTE PHYSICS CODE
-  #     print('Time = ', time[itime], ' s, itime = ', itime, '/', ntime-1)
+      # EXECUTE PHYSICS CODE
+      print('Time = ', time[itime], ' s, itime = ', itime, '/', ntime-1)
 
-  #     input.equilibrium.setPulseCtx(idx_in)
-  #     input.equilibrium.getSlice(time[itime], 2)
-  #     input.mhd_linear.setPulseCtx(idx_in)
-  #     input.mhd_linear.getSlice(time[itime], 2) #Load mode 5 of ligka for now i.e. mhd_linear(0)
-  #     idx_out = output.equilibrium.getPulseCtx()
+      input.equilibrium.setPulseCtx(idx_in)
+      input.equilibrium.getSlice(time[itime], 2, 1)
+      input.mhd_linear.setPulseCtx(idx_in)
+      input.mhd_linear.getSlice(time[itime], 2, 3) #Load mhd_linear(3) from hagis 1
+      idx_out = output.equilibrium.getPulseCtx()
 
-  #     # input.mhd_linear.time = input.equilibrium.time
+      # input.mhd_linear.time = input.equilibrium.time
 
-  #     output.equilibrium, output.mhd_linear = hagis2_actor(input.equilibrium, input.mhd_linear, 'workflow/input/hagis1.xml')
+      output.mhd_linear, output.distributions  = hagis2_actor(input.equilibrium, input.mhd_linear, 'workflow/input/hagis2.xml','mpi_local', mpi_processes = param['mpi_processes'])
 
-  #     input.equilibrium.copyValues(output.equilibrium)
-  #     input.equilibrium.setPulseCtx(idx_in)
+      input.distributions.copyValues(output.distributions)
+      input.distributions.setPulseCtx(idx_in)
 
-  #     input.mhd_linear.copyValues(output.mhd_linear)
-  #     input.mhd_linear.setPulseCtx(idx_in)
+      input.mhd_linear.copyValues(output.mhd_linear)
+      input.mhd_linear.setPulseCtx(idx_in)
 
 
-  #     input.equilibrium.putSlice(1)
-  #     input.mhd_linear.putSlice(3)
+      input.distributions.putSlice()
+      input.mhd_linear.putSlice(4)
 
-  #     print('*************************************')
-  #     print('Output time = ', input.equilibrium.time[0])
-  #     print('OUTPUT ITIME = ', itime)
-  #     print('Saved equilibrium from HAGIS 1 under oc 1')
-  #     print('Saved mhd_linear from HAGIS 1 under oc 4')
-  #     print('*************************************')
+      print('*************************************')
+      print('Output time = ', input.equilibrium.time[0])
+      print('OUTPUT ITIME = ', itime)
+      print('Saved distributions from HAGIS 2 under oc 0')
+      print('Saved mhd_linear from HAGIS 2 under oc 5')
+      print('*************************************')
 
-  #   input.close()
-  #   output.close()
+    input.close()
+    output.close()
 
 
 def ligka_mode_1(param, user, time_runs):
