@@ -21,6 +21,8 @@ def actor_window(wfp_ref_l, ligka_param, l):
      window_a.title('HAGIS 2 PARAMETERS')
   elif l == 3:
     window_a.title('HELENA PARAMETERS')
+  elif l == 4:
+    window_a.title('FINDER PARAMETERS')
   window_a.configure(bg = col.c1)
   
   try:

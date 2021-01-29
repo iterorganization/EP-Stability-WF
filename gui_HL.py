@@ -46,6 +46,7 @@ def open_gui(default_workflow_param_path):
     helena_param = create_xml_param_from_file('workflow/input/helena.xml')
     hagis1_param = create_xml_param_from_file('workflow/input/hagis1.xml')
     hagis2_param = create_xml_param_from_file('workflow/input/hagis2.xml')
+    finder_param = create_xml_param_from_file('workflow/input/finder_input.xml')
     analysis_param = create_xml_param_from_file('workflow/input/analysis.xml')
 
     fr_wfp = Frame(window, width = 300, height = 500, background = col.c3)
@@ -68,6 +69,7 @@ def open_gui(default_workflow_param_path):
     wfp_ref_l = list(ligka_param.keys())
     wfp_ref_h = list(hagis1_param.keys())
     wfp_ref_h2 = list(hagis2_param.keys())
+    wfp_ref_f = list(finder_param.keys())
     ana_ref = list(analysis_param.keys())[0]
     
   
@@ -173,6 +175,10 @@ def open_gui(default_workflow_param_path):
     button_saveconfig = Button(fr_as, text = 'HAGIS 2 Parameters', bg = col.c2)
     button_saveconfig.grid(row = 56, column = 0, padx = 5, pady = 5, sticky = 'ew')
     button_saveconfig.configure(command = lambda: actor_window(wfp_ref_h2, hagis2_param, 2))
+
+    button_saveconfig = Button(fr_as, text = 'FINDER Parameters', bg = col.c2)
+    button_saveconfig.grid(row = 57, column = 0, padx = 5, pady = 5, sticky = 'ew')
+    button_saveconfig.configure(command = lambda: actor_window(wfp_ref_f, finder_param, 4))
 
     
      ## FUNCTIONS - SAVING & UPDATING
