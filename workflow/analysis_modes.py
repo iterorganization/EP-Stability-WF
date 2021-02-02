@@ -55,9 +55,9 @@ def search_nyq(nyq):
 #         result[m] = sproot(tck_mod)
 #     return result
 
-def mode_analysis_ligka(val_plot):
+def mode_analysis_ligka(val_plot,wf_param_folder):
 
-  param = parameters_workflow('workflow/input/analysis.xml')
+  param = parameters_workflow(wf_param_folder+'/analysis.xml')
 
 
   user = param['user']
@@ -306,8 +306,8 @@ def mode_analysis_ligka(val_plot):
 
 
 
-def export_data():
-  param = parameters_workflow('workflow/input/analysis.xml')
+def export_data(wf_param_folder):
+  param = parameters_workflow(wf_param_folder+'/analysis.xml')
 
 
   user = param['user']

@@ -220,7 +220,7 @@ def analysis_window(ana_ref, analysis_param, wf_param_folder):
 
   button_saveconfig = Button(fr_ana, text = 'Export Data', bg = col.c2)
   button_saveconfig.grid(row = 51, column = 0, padx = 5, pady = 5, sticky = 'ew')
-  button_saveconfig.configure(command = lambda: export_data())
+  button_saveconfig.configure(command = lambda: export_data(wf_param_folder))
 
   button_saveconfig = Button(fr_ana, text = 'Save Analysis Configuration', bg = col.c2)
   button_saveconfig.grid(row = 52, column = 0, padx = 5, pady = 5, sticky = 'ew')
@@ -230,19 +230,19 @@ def analysis_window(ana_ref, analysis_param, wf_param_folder):
 
   button_analysis = Button(fr_ana, text = 'Frequency', bg = col.c2)
   button_analysis.grid(row = 1, column = 3, padx = 5, pady = 5, sticky = 'ew')
-  button_analysis.configure(command = lambda: mode_analysis_ligka(1))
+  button_analysis.configure(command = lambda: mode_analysis_ligka(1,wf_param_folder))
 
   button_analysis = Button(fr_ana, text = 'Damping', bg = col.c2)
   button_analysis.grid(row = 2, column = 3, padx = 5, pady = 5, sticky = 'ew')
-  button_analysis.configure(command = lambda: mode_analysis_ligka(2))
+  button_analysis.configure(command = lambda: mode_analysis_ligka(2,wf_param_folder))
 
   button_analysis = Button(fr_ana, text = 'Radial Position', bg = col.c2)
   button_analysis.grid(row = 3, column = 3, padx = 5, pady = 5, sticky = 'ew')
-  button_analysis.configure(command = lambda: mode_analysis_ligka(3))
+  button_analysis.configure(command = lambda: mode_analysis_ligka(3,wf_param_folder))
 
   button_analysis = Button(fr_ana, text = 'Mode Structure', bg = col.c2)
   button_analysis.grid(row = 4, column = 3, padx = 5, pady = 5, sticky = 'ew')
-  button_analysis.configure(command = lambda: mode_analysis_ligka(4))
+  button_analysis.configure(command = lambda: mode_analysis_ligka(4,wf_param_folder))
 
   # button_analysis = Button(fr_ana, text = 'Rational Surfaces / q - profile', bg = col.c2)
   # button_analysis.grid(row = 4, column = 3, padx = 5, pady = 5, sticky = 'ew')
