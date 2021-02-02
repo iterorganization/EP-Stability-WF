@@ -1,0 +1,35 @@
+<parameter display="FINDER PARAMETERS">
+
+<basedir>./</basedir>
+<hagisdir>'../bin/Linux_MPI_64/'</hagisdir>
+<nenergy>10 </nenergy>
+<nrad> 128 </nrad>
+<nrad_start> 1 </nrad_start>
+<nrad_end> 128</nrad_end>
+
+<spec>al</spec>
+<temp_birth>25000.0d0</temp_birth>
+<el_mass_ratio>0.0d0</el_mass_ratio>
+<hot>false</hot>
+
+<only_find_tpb>false</only_find_tpb>
+<mastername>master_xx</mastername>
+<np>10 </np>
+<lacc>0.01d0</lacc>
+<radacc>0.01</radacc>
+<force>false</force>
+<recalc>false</recalc>
+<only_trap>false</only_trap>
+<par_en>false</par_en>
+<equi_rad>true</equi_rad>
+<hagis_toler_1> 1.0d-7 </hagis_toler_1>
+<wintprog>true</wintprog>
+
+<shot_number> 130012  </shot_number>
+ <run> 12 </run>
+ <itime> 19  </itime>
+<ids_time> 68.0  </ids_time>
+<user>lauberp</user>
+ <machine>helena_test</machine>
+
+</parameter>

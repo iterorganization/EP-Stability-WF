@@ -1,0 +1,27 @@
+<root>
+  <workflow_parameters display="WORKFLOW PARAMETERS">
+    <user>public</user>
+    <machine>ITER</machine>
+    <shot_nr>131025</shot_nr>
+    <run_in>20</run_in>
+    <machine_out>ligka_modes</machine_out>
+    <run_out>19</run_out>
+    <itbegin>0</itbegin>
+    <itend>0</itend>
+  </workflow_parameters>
+
+  <further_settings display="FURTHER SETTINGS">
+    <ligka_541>1</ligka_541>
+    <pulse_list>0</pulse_list>
+    <fast_particles>0</fast_particles>
+    <mpi_processes>8</mpi_processes>
+  </further_settings>
+
+  <actor_selection display="ACTOR SELECTION">
+    <Equilibrium_code>Helena</Equilibrium_code> <!-- 0:NONE, 1:HELENA, 2:CHEASE-->
+    <Distributions_1>0</Distributions_1> <!-- 0:NONE, 1:HAGIS1-->
+    <Distributions_2>0</Distributions_2> <!-- 0:NONE, 1:HAGIS2-->
+    <Stability_code>0</Stability_code> <!-- 0:NONE, 1:Ligka mode 5, 2: LIGKA mode 4, 3: LIGKA mode 1-->
+  </actor_selection>
+
+</root>

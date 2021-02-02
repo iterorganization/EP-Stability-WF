@@ -10,7 +10,7 @@ MODULES: [ppplib, libcerf]
 
 BUILDS: 
   - DIR: helena
-    CMD: gmake imas
+    CMD: gmake all
 
 ACTORS: 
   - DIR: helena

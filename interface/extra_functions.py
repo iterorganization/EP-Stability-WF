@@ -6,11 +6,88 @@ from interface.create_workflow_param import create_workflow_param_from_file, cre
 from workflow.analysis_modes import mode_analysis_ligka, export_data
 import os, sys, glob, yaml, argparse, re
 from operator import itemgetter
+from shutil import copy2
 from stat import *
 
 
 
-def actor_window(wfp_ref_l, ligka_param, l):
+def copy_workflow_param_to_file(previous_folder,current_wf_param_folder,wf_param_folder_default):
+
+    # Copy the default workflow parameter file into the current one
+    copy2(wf_param_folder_default+'/input_workflow_default.xml',current_wf_param_folder,follow_symlinks=True)
+
+    # Copy the actors xml files into the current dir
+
+    for ep_files in ['analysis.xml','finder_input.xml','hagis1.xml','hagis2.xml','helena.xml','z_ligka.xml']:
+      if previous_folder is not None:
+        copy2(previous_folder+'/'+ep_files,current_wf_param_folder,follow_symlinks=True)
+      else:
+        copy2(wf_param_folder_default+'/'+ep_files,current_wf_param_folder,follow_symlinks=True)
+
+    return 0 
+
+
+def load(chosen_folder,open_gui):
+
+    if chosen_folder is () or chosen_folder == '':
+        print('Load cancelled', file=sys.stderr)
+        return
+
+    # Check if the chosen folder is a valid configuration folder
+    if not os.path.exists(chosen_folder+'/input_workflow_default.xml'):
+        print('The selected folder '+chosen_folder+' does not appear to be a proper', file=sys.stderr)
+        print('configuration folder since it contains no input_workflow_default.xml file '+'--> Nothing loaded.', file=sys.stderr)
+        return
+    for ep_files in ['analysis.xml','finder_input.xml','hagis1.xml','hagis2.xml','helena.xml','z_ligka.xml']:
+        if not os.path.exists(chosen_folder+'/'+ep_files):
+            print('The selected folder '+chosen_folder+' does not appear to be a proper', file=sys.stderr)
+            print('configuration folder since it contains no '+ep_files+' file '+'--> Nothing loaded.', file=sys.stderr)
+            return
+
+    print('---> Configuration loaded from '+chosen_folder, file=sys.stdout)
+    open_gui(chosen_folder)
+
+
+
+def save(current_config_folder,previous_folder,wf_param_folder_default):
+
+    from datetime import datetime
+
+    # Define the current folder (either chosen by the system with 'save' 
+    # or by the user with 'save as')
+    if current_config_folder is None:
+        first_save = 1
+        current_config_folder = os.path.join(os.getcwd(),'user_profiles/run_'+datetime.now().strftime('%y%m%d_%H:%M:%S'))
+    else:
+        first_save = 0
+
+    # When operation is cancelled from the interface
+    if current_config_folder is () or current_config_folder == '':
+        print('Save_as cancelled.', file=sys.stderr)
+        return None
+
+    if not os.path.exists(current_config_folder):
+        os.mkdir(current_config_folder)
+
+    # Copy/update the workflow parameter file if changed from the interface
+    err = copy_workflow_param_to_file(previous_folder,current_config_folder,wf_param_folder_default)
+
+
+    if err == 0:
+        print('---> Configuration saved in '+current_config_folder, file=sys.stdout)
+    else:
+        current_config_folder = None
+
+    return current_config_folder
+
+
+
+
+
+def actor_window(wfp_ref_l, ligka_param, wf_param_folder, l):
+
+  def update_scrollregion(event):
+    canvas.configure(scrollregion=canvas.bbox("all"))
 
   window_a = Toplevel()
   if l == 0:
@@ -24,7 +101,7 @@ def actor_window(wfp_ref_l, ligka_param, l):
   elif l == 4:
     window_a.title('FINDER PARAMETERS')
   window_a.configure(bg = col.c1)
-  
+
   try:
     wh = window_a.winfo_reqheight()
     ww = window_a.winfo_reqwidth()
@@ -33,37 +110,64 @@ def actor_window(wfp_ref_l, ligka_param, l):
     window_a.geometry("+%d+%d" %(wx, wy))
   except: 
     pass   
-  
-  fr_l = Frame(window_a, width = 300, height = 500, background = col.c2)
+
+  fr_l = Frame(window_a, width = 350, height = 500, background = col.c2)
   fr_l.grid(row = 0, column = 0, rowspan = 2,  sticky = 'nwes', padx = 3, pady = 3)
+
+  canvas = Canvas(fr_l,width = 350, height = 500, background = col.c2)
+  canvas.grid(row=0, column=0, sticky="nsew")
+
+  canvasFrame = Frame(canvas,background = col.c2)
+  canvas.create_window(0, 0, window=canvasFrame, anchor='nw')
 
   irow = 0
   for ref in wfp_ref_l:
       
-      Label(fr_l, text = ref, bg = col.c3, font = '15').grid(row = irow, column = 0, columnspan = 3, pady = 10, padx = 5, sticky = 'we')
+      Label(canvasFrame, text = ref, bg = col.c3, font = '15').grid(row = irow, column = 0, columnspan = 3, pady = 10, padx = 5, sticky = 'we')
       irow += 1
 
       for elem in ligka_param[ref]:
           
-          Label(fr_l, text = elem, bg = col.c3).grid(row = irow,  column = 0, padx = 3, pady = 2, sticky = 'w')
+          Label(canvasFrame, text = elem, bg = col.c3).grid(row = irow,  column = 0, padx = 3, pady = 2, sticky = 'w')
 
           entrystring = StringVar()
           entrystring.set(ligka_param[ref][elem])
           entrystring.trace('w', lambda name, index, mode, elem = elem, entrystring = entrystring, ref = ref: update_xml_param(ligka_param, ref, elem, entrystring.get()))                      # if an entry is changed, the new values should immediately be changed in the workflow_param dictionary
-          Entry(fr_l, textvariable = entrystring, bg = col.c1).grid(row = irow, column = 1, padx = 3, pady = 2, sticky = 'e')
+          Entry(canvasFrame, textvariable = entrystring, bg = col.c1).grid(row = irow, column = 1, padx = 3, pady = 2, sticky = 'e')
           irow += 1
+
+  scroll = Scrollbar(fr_l, orient=VERTICAL)
+  scroll.config(command=canvas.yview)
+  canvas.config(yscrollcommand=scroll.set)
+  scroll.grid(row=0, column=2, sticky="ns")
+
+  canvasFrame.bind("<Configure>", update_scrollregion)
+  
   if l == 0:
     button_saveconfig = Button(fr_l, text = 'Save LIGKA Configuration', bg = col.c2)
     button_saveconfig.grid(row = 52, column = 0, padx = 5, pady = 5, sticky = 'ew')
-    button_saveconfig.configure(command = lambda: save_xml_param_to_file(ligka_param, 'workflow/input/z_ligka.xml'))
-  else:
+    button_saveconfig.configure(command = lambda: save_xml_param_to_file(ligka_param, wf_param_folder+'/z_ligka.xml'))
+  elif l == 1:
     button_saveconfig = Button(fr_l, text = 'Save HAGIS 1 Configuration', bg = col.c2)
     button_saveconfig.grid(row = 52, column = 0, padx = 5, pady = 5, sticky = 'ew')
-    button_saveconfig.configure(command = lambda: save_xml_param_to_file(ligka_param, 'workflow/input/hagis1.xml'))
+    button_saveconfig.configure(command = lambda: save_xml_param_to_file(ligka_param, wf_param_folder+'/hagis1.xml'))
+  elif l == 2:
+    button_saveconfig = Button(fr_l, text = 'Save HAGIS 2 Configuration', bg = col.c2)
+    button_saveconfig.grid(row = 52, column = 0, padx = 5, pady = 5, sticky = 'ew')
+    button_saveconfig.configure(command = lambda: save_xml_param_to_file(ligka_param, wf_param_folder+'/hagis2.xml'))
+  elif l == 3:
+    button_saveconfig = Button(fr_l, text = 'Save HELENA Configuration', bg = col.c2)
+    button_saveconfig.grid(row = 52, column = 0, padx = 5, pady = 5, sticky = 'ew')
+    button_saveconfig.configure(command = lambda: save_xml_param_to_file(ligka_param, wf_param_folder+'/helena.xml'))
+  elif l == 4:
+    button_saveconfig = Button(fr_l, text = 'Save FINDER Configuration', bg = col.c2)
+    button_saveconfig.grid(row = 52, column = 0, padx = 5, pady = 5, sticky = 'ew')
+    button_saveconfig.configure(command = lambda: save_xml_param_to_file(ligka_param, wf_param_folder+'/finder_input.xml'))
+
 
 
     ## FUNCTION NEW ANALYSIS WINDOW 
-def analysis_window(ana_ref, analysis_param):
+def analysis_window(ana_ref, analysis_param, wf_param_folder):
   #create analysis directory if none exists
   analysis_dir = ('workflow/Analysis')
   analysis_dir_check = os.path.isdir(analysis_dir)
@@ -120,7 +224,7 @@ def analysis_window(ana_ref, analysis_param):
 
   button_saveconfig = Button(fr_ana, text = 'Save Analysis Configuration', bg = col.c2)
   button_saveconfig.grid(row = 52, column = 0, padx = 5, pady = 5, sticky = 'ew')
-  button_saveconfig.configure(command = lambda: save_xml_param_to_file(analysis_param, 'workflow/input/analysis.xml'))
+  button_saveconfig.configure(command = lambda: save_xml_param_to_file(analysis_param, wf_param_folder+'/analysis.xml'))
 
   # # RIGHT SIDE
 
@@ -146,7 +250,7 @@ def analysis_window(ana_ref, analysis_param):
 
 
 
-def scenario_window():
+def scenario_window(wf_param_folder):
   shots_runs= []
   shots = []
   def OnDoubleClick(event):
@@ -159,7 +263,7 @@ def scenario_window():
     else:
       print('The selected Pulse is already in the list.')
     print('The list is now:',shots_runs)
-    workflow_param = create_workflow_param_from_file('workflow/input/input_workflow_default.xml')
+    workflow_param = create_workflow_param_from_file(wf_param_folder+'/input_workflow_default.xml')
     fur_ref = list(workflow_param.keys())[1]
     if workflow_param[fur_ref]['pulse_list'] == '1':
       with open('shots.dat', 'w') as f:

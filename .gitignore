@@ -3,7 +3,10 @@ fort*
 imas_*
 test_new/
 tmp_*
-helena*
+helena.map
+helena.ps
+helena.vec
+helena_restart
 .DS_Store
 interface/__pycache__/
 shots.dat

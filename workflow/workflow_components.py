@@ -11,7 +11,7 @@ from workflow.functions_wf import parameters_workflow, read_timestep
 
 
 
-def helena(param, user):
+def helena(current_config_folder, param, user):
   # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
   # AND READ FULL TIME VECTOR OF EQUILIBRIUM IDS TO GET THE TIME BASE
   time, ntime = read_timestep(param['user'], param['machine'], param['run_in'])
@@ -41,7 +41,7 @@ def helena(param, user):
     idx_out = output.equilibrium.getPulseCtx()
 
     if param['Equilibrium_code'] == 'Helena':
-        output.equilibrium = helena_imas_actor(input.equilibrium, 'workflow/input/helena.xml')
+        output.equilibrium = helena_imas_actor(input.equilibrium, current_config_folder+'/helena.xml')
     #else:
         #output.equilibrium = chease_actor(
             #input.equilibrium, 'workflow/input/chease_input_choices_default.xml')
@@ -62,7 +62,7 @@ def helena(param, user):
   input.close()
   output.close()
 
-def hagis_1(param, user, time_runs):
+def hagis_1(current_config_folder,param, user, time_runs):
   run_out = 4
 
   # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
@@ -98,7 +98,7 @@ def hagis_1(param, user, time_runs):
 
     # input.mhd_linear.time = input.equilibrium.time
 
-    output.equilibrium, output.mhd_linear = hagis1_actor(input.equilibrium, input.mhd_linear, 'workflow/input/hagis1.xml')
+    output.equilibrium, output.mhd_linear = hagis1_actor(input.equilibrium, input.mhd_linear, current_config_folder+'/hagis1.xml')
 
 
     input.equilibrium.copyValues(output.equilibrium)
@@ -120,7 +120,7 @@ def hagis_1(param, user, time_runs):
   output.close()
 
   # HAGIS2 TO BE EDDITED
-  def hagis_2(param, user, time_runs):
+  def hagis_2(current_config_folder,param, user, time_runs):
     run_out = 4
 
     # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
@@ -156,7 +156,7 @@ def hagis_1(param, user, time_runs):
 
       # input.mhd_linear.time = input.equilibrium.time
 
-      output.mhd_linear, output.distributions  = hagis2_actor(input.equilibrium, input.mhd_linear, 'workflow/input/hagis2.xml','mpi_local', mpi_processes = param['mpi_processes'])
+      output.mhd_linear, output.distributions  = hagis2_actor(input.equilibrium, input.mhd_linear, current_config_folder+'/hagis2.xml','mpi_local', mpi_processes = param['mpi_processes'])
 
       input.distributions.copyValues(output.distributions)
       input.distributions.setPulseCtx(idx_in)
@@ -179,7 +179,7 @@ def hagis_1(param, user, time_runs):
     output.close()
 
 
-def ligka_mode_1(param, user, time_runs):
+def ligka_mode_1(current_config_folder,param, user, time_runs):
   # SETTINGS
   run_out = 1
 
@@ -215,7 +215,7 @@ def ligka_mode_1(param, user, time_runs):
     idx_out = output.mhd_linear.getPulseCtx()
 
 
-    output.mhd_linear = ligka_actor(input.equilibrium, input.core_profiles,input.mhd_linear, 'workflow/input/z_ligka.xml', 'mpi_local', mpi_processes=  param['mpi_processes'])
+    output.mhd_linear = ligka_actor(input.equilibrium, input.core_profiles,input.mhd_linear, current_config_folder+'/z_ligka.xml', 'mpi_local', mpi_processes=  param['mpi_processes'])
    
     input.mhd_linear.copyValues(output.mhd_linear)
     input.mhd_linear.setPulseCtx(idx_in)
@@ -232,7 +232,7 @@ def ligka_mode_1(param, user, time_runs):
   input.close()
   output.close()
 
-def ligka_mode_2(param, user, time_runs):
+def ligka_mode_2(current_config_folder,param, user, time_runs):
   # SETTINGS
   run_out = 2
 
@@ -268,7 +268,7 @@ def ligka_mode_2(param, user, time_runs):
     idx_out = output.mhd_linear.getPulseCtx()
 
 
-    output.mhd_linear = ligka_actor(input.equilibrium, input.core_profiles,input.mhd_linear, 'workflow/input/z_ligka.xml', 'mpi_local', mpi_processes=  param['mpi_processes'])
+    output.mhd_linear = ligka_actor(input.equilibrium, input.core_profiles,input.mhd_linear, current_config_folder+'/z_ligka.xml', 'mpi_local', mpi_processes=  param['mpi_processes'])
    
     input.mhd_linear.copyValues(output.mhd_linear)
     input.mhd_linear.setPulseCtx(idx_in)
@@ -285,7 +285,7 @@ def ligka_mode_2(param, user, time_runs):
   input.close()
   output.close()
 
-def ligka_mode_5(param, user, time_runs):
+def ligka_mode_5(current_config_folder,param, user, time_runs):
   # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
   # AND READ FULL TIME VECTOR OF EQUILIBRIUM IDS TO GET THE TIME BASE
   time, ntime = read_timestep(user, param['machine_out'], param['run_out'])
@@ -316,7 +316,7 @@ def ligka_mode_5(param, user, time_runs):
     idx_out = input.mhd_linear.getPulseCtx()
 
 
-    input.mhd_linear = ligka_actor(input.equilibrium, input.core_profiles, input.mhd_linear, 'workflow/input/z_ligka.xml', 'mpi_local')
+    input.mhd_linear = ligka_actor(input.equilibrium, input.core_profiles, input.mhd_linear, current_config_folder+'/z_ligka.xml', 'mpi_local')
 
     input.mhd_linear.setPulseCtx(idx_in)
 
@@ -332,7 +332,7 @@ def ligka_mode_5(param, user, time_runs):
 
 
 
-def ligka_mode_4(param, user, time_runs):
+def ligka_mode_4(current_config_folder,param, user, time_runs):
   # SETTINGS
   run_out = 4
 
@@ -367,7 +367,7 @@ def ligka_mode_4(param, user, time_runs):
     input.core_profiles.getSlice(time[itime], 1)
     idx_out = output.mhd_linear.getPulseCtx()
 
-    output.mhd_linear = ligka_actor(input.equilibrium, input.core_profiles, input.mhd_linear, 'workflow/input/z_ligka.xml', 'mpi_local', mpi_processes=  param['mpi_processes'])
+    output.mhd_linear = ligka_actor(input.equilibrium, input.core_profiles, input.mhd_linear, current_config_folder+'/z_ligka.xml', 'mpi_local', mpi_processes=  param['mpi_processes'])
     
     input.mhd_linear.copyValues(output.mhd_linear)
     input.mhd_linear.setPulseCtx(idx_in)

@@ -13,15 +13,15 @@ from shutil import copy2, copytree, rmtree
 from workflow.run_physics_code_final_no_kep import run_HL_noKEP
 from workflow.functions_wf import read_timestep
 from interface.create_workflow_param import create_workflow_param_from_file, create_xml_param_from_file, save_xml_param_to_file, update_xml_param
-from interface.extra_functions import actor_window,analysis_window,scenario_window
+from interface.extra_functions import actor_window,analysis_window,scenario_window,load,save
 import interface.colour_definitions as col
 
 # set the path to the folders where the configuration and codeparameters are stored
     
-run_config_folder_path = os.path.join(os.getcwd(), 'workflow/input')
+wf_param_folder_default = os.path.join(os.getcwd(), 'user_profiles/default')
 
-default_workflow_param_path = run_config_folder_path+ '/input_workflow_default.xml'
-default_ligka_param_path = run_config_folder_path+ '/z_ligka.xml'
+default_workflow_param_path = wf_param_folder_default+ '/input_workflow_default.xml'
+
 window = Tk()
 ## create mainwindow
       
@@ -29,7 +29,7 @@ window.title('EP WORKFLOW')
 window.configure(bg = col.c1)
 
 
-def open_gui(default_workflow_param_path):
+def open_gui(wf_param_folder):
 
     try:
         wh = window.winfo_reqheight()
@@ -41,13 +41,13 @@ def open_gui(default_workflow_param_path):
 
         pass   
     
-    workflow_param = create_workflow_param_from_file(default_workflow_param_path)
-    ligka_param = create_xml_param_from_file('workflow/input/z_ligka.xml')
-    helena_param = create_xml_param_from_file('workflow/input/helena.xml')
-    hagis1_param = create_xml_param_from_file('workflow/input/hagis1.xml')
-    hagis2_param = create_xml_param_from_file('workflow/input/hagis2.xml')
-    finder_param = create_xml_param_from_file('workflow/input/finder_input.xml')
-    analysis_param = create_xml_param_from_file('workflow/input/analysis.xml')
+    workflow_param = create_workflow_param_from_file(wf_param_folder+'/input_workflow_default.xml')
+    ligka_param = create_xml_param_from_file(wf_param_folder+'/z_ligka.xml')
+    helena_param = create_xml_param_from_file(wf_param_folder+'/helena.xml')
+    hagis1_param = create_xml_param_from_file(wf_param_folder+'/hagis1.xml')
+    hagis2_param = create_xml_param_from_file(wf_param_folder+'/hagis2.xml')
+    finder_param = create_xml_param_from_file(wf_param_folder+'/finder_input.xml')
+    analysis_param = create_xml_param_from_file(wf_param_folder+'/analysis.xml')
 
     fr_wfp = Frame(window, width = 300, height = 500, background = col.c3)
     fr_wfp.grid(row = 0, column = 0, rowspan = 2,  sticky = 'nwes', padx = 3, pady = 3)
@@ -74,6 +74,42 @@ def open_gui(default_workflow_param_path):
     
   
 
+
+
+
+
+
+    # Class to not re-generate a new folder name between two 'save' statements
+    class saved_folder_name(object):
+        def __init__(self):
+            self.value = None
+        def NoAction(self):
+            self.value = self.value
+        def Save(self,chosen_folder,init_folder):
+            previous_folder = init_folder
+            if chosen_folder == init_folder: # Very first SAVE, or SAVE after a SAVE_AS
+                self.value=save(self.value,previous_folder,wf_param_folder_default)
+            else:
+                if chosen_folder is None:
+                    if self.value is None: # 1st SAVE after a LOAD
+                        self.value=save(init_folder,previous_folder,wf_param_folder_default)
+                    else: # Next SAVEs after a LOAD; SAVE after a SAVE AS which is after a LOAD; 
+                        self.value=save(self.value,previous_folder,wf_param_folder_default)
+                else: # SAVE AS
+                    if_cancelled = self.value
+                    self.value=save(chosen_folder,previous_folder,wf_param_folder_default)
+                    if self.value is None:
+                        self.value = if_cancelled
+            return self.value
+
+    saved_folder = saved_folder_name()
+
+
+    # To use the folder loaded through the 'load' function for the next 'save' statements
+    if wf_param_folder+'/input_workflow_default.xml' == default_workflow_param_path:
+        init_folder = None
+    else:
+        init_folder = wf_param_folder
 
 
     ## LEFT - CONFIGURING THE WORKFLOW PARAMETERS
@@ -130,28 +166,36 @@ def open_gui(default_workflow_param_path):
     
     # left: 
     button_saveconfig = Button(fr_wfp, text = 'Save Configuration', bg = col.c2)
+    button_saveconfig.grid(row = 51, column = 0, padx = 5, pady = 5, sticky = 'ew')
+    button_saveconfig.configure(command = lambda: saved_folder.Save(None,init_folder))
+
+    button_saveconfig = Button(fr_wfp, text = 'Save Configuration as', bg = col.c2)
     button_saveconfig.grid(row = 52, column = 0, padx = 5, pady = 5, sticky = 'ew')
-    button_saveconfig.configure(command = lambda: save_workflow_param_to_file(default_workflow_param_path))
+    button_saveconfig.configure(command = lambda: saved_folder.Save(filedialog.askdirectory(initialdir=os.path.join(os.getcwd(),'user_profiles')),init_folder))
 
-    button_saveandrun = Button(fr_wfp, text = 'Save and Run', bg = col.c2)
-    button_saveandrun.grid(row = 51, column = 0, padx = 5, pady = 5, sticky = 'ew')
-    button_saveandrun.configure(command = lambda: save_and_run(default_workflow_param_path, True))
-
-    button_run_nosave = Button(fr_wfp, text = 'Run (without Saving)', bg = col.c2)
+    button_run_nosave = Button(fr_wfp, text = 'Run', bg = col.c2)
     button_run_nosave.grid(row = 51, column = 1, padx = 5, pady = 5, sticky = 'ew')
-    button_run_nosave.configure(command = lambda: save_and_run(default_workflow_param_path, False))
+    button_run_nosave.configure(command = lambda: run(saved_folder.Save(None,init_folder)))
+
+    button_restore_def = Button(fr_wfp, text='Restore Default', bg=col.c2)
+    button_restore_def.grid(row=53, column=0, padx=5, pady=5, sticky='ew')
+    button_restore_def.configure(command=lambda: open_gui(default_workflow_param_path))
+
+    button_analysis = Button(fr_wfp, text = 'Load Configuration', bg = col.c2)
+    button_analysis.grid(row = 52, column = 1, padx = 5, pady = 5, sticky = 'ew')
+    button_analysis.configure(command=lambda: load(filedialog.askdirectory(initialdir=os.path.join(os.getcwd(),'user_profiles')),open_gui))
     
     button_analysis = Button(fr_wfp, text = 'LIGKA Analysis', bg = col.c2)
-    button_analysis.grid(row = 52, column = 1, padx = 5, pady = 5, sticky = 'ew')
-    button_analysis.configure(command = lambda: analysis_window(ana_ref, analysis_param))
+    button_analysis.grid(row = 53, column = 1, padx = 5, pady = 5, sticky = 'ew')
+    button_analysis.configure(command = lambda: analysis_window(ana_ref, analysis_param, wf_param_folder))
 
     button_save_asdef = Button(fr_wfp, text = 'Save Configuration as Default', bg = col.c2)
-    button_save_asdef.grid(row = 53, column = 0, padx = 5, pady = 5, sticky = 'ew')
-    button_save_asdef.configure(command = lambda: save_workflow_param_to_file('workflow/input/input_workflow_default.xml'))
+    button_save_asdef.grid(row = 54, column = 0, padx = 5, pady = 5, sticky = 'ew')
+    button_save_asdef.configure(command = lambda: save_workflow_param_to_file(default_workflow_param_path))
 
     button_scenario = Button(fr_wfp, text = 'Scenario Summary Choice', bg = 'light grey')
-    button_scenario.grid(row = 53, column = 1, padx = 5, pady = 5, sticky = 'w')
-    button_scenario.configure(command = lambda: scenario_window())
+    button_scenario.grid(row = 54, column = 1, padx = 5, pady = 5, sticky = 'w')
+    button_scenario.configure(command = lambda: scenario_window(wf_param_folder))
 
 
     button_exit = Button(fr_wfp, text = 'Exit', bg = 'light grey')
@@ -162,23 +206,23 @@ def open_gui(default_workflow_param_path):
 
     button_saveconfig = Button(fr_as, text = 'HELENA Parameters', bg = col.c2)
     button_saveconfig.grid(row = 53, column = 0, padx = 5, pady = 5, sticky = 'ew')
-    button_saveconfig.configure(command = lambda: actor_window(wfp_ref_hel, helena_param, 3))
+    button_saveconfig.configure(command = lambda: actor_window(wfp_ref_hel, helena_param, wf_param_folder, 3))
 
     button_saveconfig = Button(fr_as, text = 'LIGKA Parameters', bg = col.c2)
     button_saveconfig.grid(row = 54, column = 0, padx = 5, pady = 5, sticky = 'ew')
-    button_saveconfig.configure(command = lambda: actor_window(wfp_ref_l, ligka_param, 0))
+    button_saveconfig.configure(command = lambda: actor_window(wfp_ref_l, ligka_param, wf_param_folder, 0))
 
     button_saveconfig = Button(fr_as, text = 'HAGIS 1 Parameters', bg = col.c2)
     button_saveconfig.grid(row = 55, column = 0, padx = 5, pady = 5, sticky = 'ew')
-    button_saveconfig.configure(command = lambda: actor_window(wfp_ref_h, hagis1_param, 1))
+    button_saveconfig.configure(command = lambda: actor_window(wfp_ref_h, hagis1_param, wf_param_folder, 1))
 
     button_saveconfig = Button(fr_as, text = 'HAGIS 2 Parameters', bg = col.c2)
     button_saveconfig.grid(row = 56, column = 0, padx = 5, pady = 5, sticky = 'ew')
-    button_saveconfig.configure(command = lambda: actor_window(wfp_ref_h2, hagis2_param, 2))
+    button_saveconfig.configure(command = lambda: actor_window(wfp_ref_h2, hagis2_param, wf_param_folder, 2))
 
     button_saveconfig = Button(fr_as, text = 'FINDER Parameters', bg = col.c2)
     button_saveconfig.grid(row = 57, column = 0, padx = 5, pady = 5, sticky = 'ew')
-    button_saveconfig.configure(command = lambda: actor_window(wfp_ref_f, finder_param, 4))
+    button_saveconfig.configure(command = lambda: actor_window(wfp_ref_f, finder_param, wf_param_folder, 4))
 
     
      ## FUNCTIONS - SAVING & UPDATING
@@ -198,14 +242,15 @@ def open_gui(default_workflow_param_path):
                    
         tree.write(filepath)
     
-    def save_and_run(filepath, save_yn):
-        
-        if save_yn == True:
-          save_workflow_param_to_file(filepath)
+    def run(current_config_folder):
 
-        run_HL_noKEP()
+      if current_config_folder is not None:
+          run_HL_noKEP(current_config_folder)
+      else:
+          print('Aborted.')
 
     window.mainloop()
 
+if __name__ == "__main__":
 
-open_gui(default_workflow_param_path)
+  open_gui(wf_param_folder_default)
