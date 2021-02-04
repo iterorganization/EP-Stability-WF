@@ -12,4 +12,6 @@ interface/__pycache__/
 shots.dat
 workflow/Analysis/
 workflow/__pycache__/
+user_profiles/*
+!user_profiles/default
 
