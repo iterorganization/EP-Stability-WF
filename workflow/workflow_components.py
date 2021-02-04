@@ -14,7 +14,7 @@ from workflow.functions_wf import parameters_workflow, read_timestep
 def helena(current_config_folder, param, user):
   # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
   # AND READ FULL TIME VECTOR OF EQUILIBRIUM IDS TO GET THE TIME BASE
-  time, ntime = read_timestep(param['user'], param['machine'], param['run_in'])
+  time, ntime = read_timestep(param['user'], param['machine'], param['run_in'], current_config_folder)
 
   # OPEN INPUT IDS'S AGAIN TO PROCEED WITH GETSLICE
   # NOTE: WE CANNOT USE THE SAME INPUT STRUCTURE FOR BOTH GET AND GETSLICE!!!
@@ -67,7 +67,7 @@ def hagis_1(current_config_folder,param, user, time_runs):
 
   # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
   # AND READ FULL TIME VECTOR OF EQUILIBRIUM IDS TO GET THE TIME BASE
-  time, ntime = read_timestep(user, param['machine_out'], param['run_out'])
+  time, ntime = read_timestep(user, param['machine_out'], param['run_out'], current_config_folder)
 
   # OPEN INPUT IDS'S AGAIN TO PROCEED WITH GETSLICE
   # NOTE: WE CANNOT USE THE SAME INPUT STRUCTURE FOR BOTH GET AND GETSLICE!!!
@@ -125,7 +125,7 @@ def hagis_1(current_config_folder,param, user, time_runs):
 
     # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
     # AND READ FULL TIME VECTOR OF EQUILIBRIUM IDS TO GET THE TIME BASE
-    time, ntime = read_timestep(user, param['machine_out'], param['run_out'])
+    time, ntime = read_timestep(user, param['machine_out'], param['run_out'], current_config_folder)
 
     # OPEN INPUT IDS'S AGAIN TO PROCEED WITH GETSLICE
     # NOTE: WE CANNOT USE THE SAME INPUT STRUCTURE FOR BOTH GET AND GETSLICE!!!
@@ -185,7 +185,7 @@ def ligka_mode_1(current_config_folder,param, user, time_runs):
 
   # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
   # AND READ FULL TIME VECTOR OF EQUILIBRIUM IDS TO GET THE TIME BASE
-  time, ntime = read_timestep(user, param['machine_out'], param['run_out'])
+  time, ntime = read_timestep(user, param['machine_out'], param['run_out'], current_config_folder)
 
   # OPEN INPUT IDS'S AGAIN TO PROCEED WITH GETSLICE
   # NOTE: WE CANNOT USE THE SAME INPUT STRUCTURE FOR BOTH GET AND GETSLICE!!!
@@ -238,7 +238,7 @@ def ligka_mode_2(current_config_folder,param, user, time_runs):
 
   # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
   # AND READ FULL TIME VECTOR OF EQUILIBRIUM IDS TO GET THE TIME BASE
-  time, ntime = read_timestep(user, param['machine_out'], param['run_out'])
+  time, ntime = read_timestep(user, param['machine_out'], param['run_out'], current_config_folder)
 
   # OPEN INPUT IDS'S AGAIN TO PROCEED WITH GETSLICE
   # NOTE: WE CANNOT USE THE SAME INPUT STRUCTURE FOR BOTH GET AND GETSLICE!!!
@@ -288,7 +288,7 @@ def ligka_mode_2(current_config_folder,param, user, time_runs):
 def ligka_mode_5(current_config_folder,param, user, time_runs):
   # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
   # AND READ FULL TIME VECTOR OF EQUILIBRIUM IDS TO GET THE TIME BASE
-  time, ntime = read_timestep(user, param['machine_out'], param['run_out'])
+  time, ntime = read_timestep(user, param['machine_out'], param['run_out'], current_config_folder)
 
   # OPEN INPUT IDS'S AGAIN TO PROCEED WITH GETSLICE
   # NOTE: WE CANNOT USE THE SAME INPUT STRUCTURE FOR BOTH GET AND GETSLICE!!!
@@ -338,7 +338,7 @@ def ligka_mode_4(current_config_folder,param, user, time_runs):
 
   # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
   # AND READ FULL TIME VECTOR OF EQUILIBRIUM IDS TO GET THE TIME BASE
-  time, ntime = read_timestep(user, param['machine_out'], param['run_out'])
+  time, ntime = read_timestep(user, param['machine_out'], param['run_out'], current_config_folder)
 
   # OPEN INPUT IDS'S AGAIN TO PROCEED WITH GETSLICE
   # NOTE: WE CANNOT USE THE SAME INPUT STRUCTURE FOR BOTH GET AND GETSLICE!!!
