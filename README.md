@@ -44,7 +44,7 @@ $ gmake hagis1_wf OPTS=IMAS,WF
 6. Compile and run FC2K for HAGIS 2:
 ```bash
 $ cd src/hagis2
-$ gmake hagis2_WF OPTS=MPI,IMAS,WF
+$ gmake hagis2_wf OPTS=MPI,IMAS,WF
 ```
 7. After the creation of the actors you should be able to go to **EP Stabiliy WF** and run:
 ```bash
