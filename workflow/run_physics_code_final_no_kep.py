@@ -101,7 +101,7 @@ def run_HL_noKEP(current_config_folder):
         else:
             if param['Equilibrium_code'] == 'Helena':
                 print('=====================STARTING HELENA===================')
-                helena(param, user)
+                helena(current_config_folder,param, user)
                 print(param['Equilibrium_code'],' done.')
 
             ## LEAVE PLACE FOR HAGIS 2
