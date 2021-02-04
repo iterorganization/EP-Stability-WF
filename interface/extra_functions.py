@@ -11,18 +11,29 @@ from stat import *
 
 
 
-def copy_workflow_param_to_file(previous_folder,current_wf_param_folder,wf_param_folder_default):
+def copy_workflow_param_to_file(previous_folder,current_wf_param_folder,wf_param_folder_default,workflow_param,wfp_ref,fur_ref,act_ref,saveAs):
 
     # Copy the default workflow parameter file into the current one
+    
     copy2(wf_param_folder_default+'/input_workflow_default.xml',current_wf_param_folder,follow_symlinks=True)
+    
+    tree = etree.parse(current_wf_param_folder+'/input_workflow_default.xml')
+    root = tree.getroot()
+    rl = [wfp_ref,fur_ref,act_ref]
+    for iroot in range(3):
+        for elem in root[iroot].iter():
+            if elem.tag is not etree.Comment and len(elem) == 0:
+                elem.text = workflow_param[rl[iroot]][elem.tag]
+    tree.write(current_wf_param_folder+'/input_workflow_default.xml')
 
     # Copy the actors xml files into the current dir
-
-    for ep_files in ['analysis.xml','finder_input.xml','hagis1.xml','hagis2.xml','helena.xml','z_ligka.xml']:
-      if previous_folder is not None:
-        copy2(previous_folder+'/'+ep_files,current_wf_param_folder,follow_symlinks=True)
-      else:
-        copy2(wf_param_folder_default+'/'+ep_files,current_wf_param_folder,follow_symlinks=True)
+    # Only in case of saveAs, because the individual .xml of the actors are saved separately
+    if saveAs == 1:
+      for ep_files in ['analysis.xml','finder_input.xml','hagis1.xml','hagis2.xml','helena.xml','z_ligka.xml']:
+        if previous_folder is not None:
+          copy2(previous_folder+'/'+ep_files,current_wf_param_folder,follow_symlinks=True)
+        else:
+          copy2(wf_param_folder_default+'/'+ep_files,current_wf_param_folder,follow_symlinks=True)
 
     return 0 
 
@@ -49,7 +60,7 @@ def load(chosen_folder,open_gui):
 
 
 
-def save(current_config_folder,previous_folder,wf_param_folder_default):
+def save(current_config_folder,previous_folder,wf_param_folder_default,workflow_param,wfp_ref,fur_ref,act_ref,saveAs):
 
     from datetime import datetime
 
@@ -70,7 +81,7 @@ def save(current_config_folder,previous_folder,wf_param_folder_default):
         os.mkdir(current_config_folder)
 
     # Copy/update the workflow parameter file if changed from the interface
-    err = copy_workflow_param_to_file(previous_folder,current_config_folder,wf_param_folder_default)
+    err = copy_workflow_param_to_file(previous_folder,current_config_folder,wf_param_folder_default,workflow_param,wfp_ref,fur_ref,act_ref,saveAs)
 
 
     if err == 0:
