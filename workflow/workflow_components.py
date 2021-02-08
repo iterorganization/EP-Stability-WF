@@ -386,7 +386,7 @@ def ligka_mode_4(current_config_folder,param, user, time_runs):
   output.close()
 
 def finder(current_config_folder,param, user, time_runs):
-
+  run_out = 5
   # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
   # AND READ FULL TIME VECTOR OF EQUILIBRIUM IDS TO GET THE TIME BASE
   time, ntime = read_timestep(user, param['machine_out'], param['run_out'], current_config_folder)
@@ -399,13 +399,13 @@ def finder(current_config_folder,param, user, time_runs):
   idx_in = input.equilibrium.getPulseCtx()
 
   # OPEN OUTPUT OBJECT, IN VIEW OF SAVING RESULTS TO LOCAL DB
-  # print('=> Create output datafile')
-  # output = imas.ids(param['shot_nr'], run_out)
+  print('=> Create output datafile')
+  output = imas.ids(param['shot_nr'], run_out)
 
   # input.mhd_linear.ids_properties.homogeneous_time = 1
 
   # CREATE OUTPUT DATAFILE
-  # output.create_env(user, param['machine_out'], '3')
+  output.create_env(user, param['machine_out'], '3')
 
   for itime in range(0, time_runs + 1):
 
@@ -415,8 +415,8 @@ def finder(current_config_folder,param, user, time_runs):
     input.equilibrium.setPulseCtx(idx_in)
     input.equilibrium.getSlice(time[itime], 1)
     # idx_out = output.equilibrium.getPulseCtx()
-
-    finder9_actor(input.equilibrium, current_config_folder+'/finder_input.xml', 'mpi_local', mpi_processes=  param['mpi_processes'])
+   
+    output.distributions = finder9_actor(input.equilibrium, current_config_folder+'/finder_input.xml', 'mpi_local', mpi_processes=  param['mpi_processes'])
 
 
     # input.equilibrium.copyValues(output.equilibrium)
