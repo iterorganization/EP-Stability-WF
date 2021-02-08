@@ -63,7 +63,7 @@
     <user>lauberp</user>
     <machine>helena_test</machine>
   
-  .
+  
   <basedir>./</basedir>
   <hagisdir>'../bin/Linux_MPI_64/'</hagisdir>
   <nenergy>10 </nenergy>
