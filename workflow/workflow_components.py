@@ -7,6 +7,7 @@ from ligka.wrapper import ligka_actor
 #from chease.wrapper import chease_actor
 from hagis1.wrapper import hagis1_actor
 from hagis2.wrapper import hagis2_actor
+from finder9.wrapper import finder9_actor
 from workflow.functions_wf import parameters_workflow, read_timestep
 
 
@@ -383,3 +384,54 @@ def ligka_mode_4(current_config_folder,param, user, time_runs):
 
   input.close()
   output.close()
+
+def finder(current_config_folder,param, user, time_runs):
+
+  # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
+  # AND READ FULL TIME VECTOR OF EQUILIBRIUM IDS TO GET THE TIME BASE
+  time, ntime = read_timestep(user, param['machine_out'], param['run_out'], current_config_folder)
+
+  # OPEN INPUT IDS'S AGAIN TO PROCEED WITH GETSLICE
+  # NOTE: WE CANNOT USE THE SAME INPUT STRUCTURE FOR BOTH GET AND GETSLICE!!!
+  # IF WE DO SO: GETSLICE ALWAYS GET THE FIRST TIME SLICE WHATEVER IS ASKED
+  input = imas.ids(param['shot_nr'], param['run_out'], 0, 0)
+  input.open_env(user, param['machine_out'], '3')
+  idx_in = input.equilibrium.getPulseCtx()
+
+  # OPEN OUTPUT OBJECT, IN VIEW OF SAVING RESULTS TO LOCAL DB
+  # print('=> Create output datafile')
+  # output = imas.ids(param['shot_nr'], run_out)
+
+  # input.mhd_linear.ids_properties.homogeneous_time = 1
+
+  # CREATE OUTPUT DATAFILE
+  # output.create_env(user, param['machine_out'], '3')
+
+  for itime in range(0, time_runs + 1):
+
+    # EXECUTE PHYSICS CODE
+    print('Time = ', time[itime], ' s, itime = ', itime, '/', ntime-1)
+
+    input.equilibrium.setPulseCtx(idx_in)
+    input.equilibrium.getSlice(time[itime], 1)
+    # idx_out = output.equilibrium.getPulseCtx()
+
+    finder9_actor(input.equilibrium, current_config_folder+'/finder_input.xml', 'mpi_local', mpi_processes=  param['mpi_processes'])
+
+
+    # input.equilibrium.copyValues(output.equilibrium)
+    # input.equilibrium.setPulseCtx(idx_in)
+    # input.equilibrium.putSlice(1)
+
+    # input.mhd_linear.copyValues(output.mhd_linear)
+    # input.mhd_linear.setPulseCtx(idx_in)
+    # input.mhd_linear.putSlice(3)
+
+    print('*************************************')
+    print('Output time = ', input.equilibrium.time[0])
+    print('OUTPUT ITIME = ', itime)
+    print('Saved data from finder9 under oc 1')
+    print('*************************************')
+
+  input.close()
+  # output.close()

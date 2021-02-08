@@ -21,6 +21,7 @@
     <Equilibrium_code>Helena</Equilibrium_code> <!-- 0:NONE, 1:HELENA, 2:CHEASE-->
     <Distributions_1>0</Distributions_1> <!-- 0:NONE, 1:HAGIS1-->
     <Distributions_2>0</Distributions_2> <!-- 0:NONE, 1:HAGIS2-->
+    <Orbit_Finder>0</Orbit_Finder> <!-- 0:NONE, 1:Finder-->
     <Stability_code>0</Stability_code> <!-- 0:NONE, 1:Ligka mode 5, 2: LIGKA mode 4, 3: LIGKA mode 1-->
   </actor_selection>
 

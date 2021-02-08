@@ -4,11 +4,11 @@ Time-dependent Energetic Particles Stability workflow.
 
 ## Installation
 
-You will need [EP Stability WF](https://git.iter.org/projects/WF/repos/ep-stability-wf/),  [LIGKA](https://git.iter.org/projects/STAB/repos/ligka/), [HELENA](https://git.iter.org/projects/EQ/repos/helena/) and [HAGIS 1 and 2](https://git.iter.org/projects/STAB/repos/hagis/browse) repositories:
+You will need [EP Stability WF](https://git.iter.org/projects/WF/repos/ep-stability-wf/),  [LIGKA/finder](https://git.iter.org/projects/STAB/repos/ligka/), [HELENA](https://git.iter.org/projects/EQ/repos/helena/) and [HAGIS 1 and 2](https://git.iter.org/projects/STAB/repos/hagis/browse) repositories:
 
 1. After cloning all 4 repositories checkout the following branches:
 
-for EP Stability WF and LIGKA
+for EP Stability WF and LIGKA/finder
 ```bash
 $ git checkout develop
 ```

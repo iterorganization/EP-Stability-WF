@@ -9,7 +9,7 @@ from lxml import etree
 import xml.etree.ElementTree as ET
 from workflow.functions_wf import parameters_workflow, profiles_get
 from interface.create_workflow_param import save_xml_param_to_file_on_run, update_xml_param_on_run
-from workflow.workflow_components import helena, hagis_1, ligka_mode_1, ligka_mode_4, ligka_mode_5, ligka_mode_2
+from workflow.workflow_components import helena, hagis_1, ligka_mode_1, ligka_mode_4, ligka_mode_5, ligka_mode_2, finder
 sys.path.append(os.getcwd())
 sys.path.append('input')
 
@@ -143,3 +143,6 @@ def run_HL_noKEP(current_config_folder):
             # if param['Distributions_2'] == 'Hagis_2':
             #     print('=====================STARTING HAGIS 2===================')
             #     hagis_2(param, user, time_runs)
+            if param['Orbit_Finder'] == 'Finder':
+                print('=====================STARTING Finder===================')
+                finder(current_config_folder, param, user, time_runs)

@@ -155,6 +155,8 @@ def open_gui(wf_param_folder):
             combobox.config(values = ('0', 'Hagis_1'))
           elif elem == 'Distributions_2':
             combobox.config(values = ('0', 'Hagis_2'))
+          elif elem == 'Orbit_Finder':
+            combobox.config(values = ('0', 'Finder'))
           elif elem == 'Stability_code':
             combobox.config(values = ('0', 'Ligka_m5', 'Ligka_m4', 'Ligka_m1', 'Ligka_m2'))
           else:
@@ -179,7 +181,7 @@ def open_gui(wf_param_folder):
 
     button_restore_def = Button(fr_wfp, text='Restore Default', bg=col.c2)
     button_restore_def.grid(row=53, column=0, padx=5, pady=5, sticky='ew')
-    button_restore_def.configure(command=lambda: open_gui(default_workflow_param_path))
+    button_restore_def.configure(command=lambda: open_gui(wf_param_folder_default))
 
     button_analysis = Button(fr_wfp, text = 'Load Configuration', bg = col.c2)
     button_analysis.grid(row = 52, column = 1, padx = 5, pady = 5, sticky = 'ew')
@@ -191,7 +193,7 @@ def open_gui(wf_param_folder):
 
     button_save_asdef = Button(fr_wfp, text = 'Save Configuration as Default', bg = col.c2)
     button_save_asdef.grid(row = 54, column = 0, padx = 5, pady = 5, sticky = 'ew')
-    button_save_asdef.configure(command = lambda: save_workflow_param_to_file(default_workflow_param_path))
+    button_save_asdef.configure(command = lambda: save_workflow_param_to_file(wf_param_folder_default))
 
     button_scenario = Button(fr_wfp, text = 'Scenario Summary Choice', bg = 'light grey')
     button_scenario.grid(row = 54, column = 1, padx = 5, pady = 5, sticky = 'w')
