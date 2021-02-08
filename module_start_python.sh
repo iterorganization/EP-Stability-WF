@@ -18,8 +18,8 @@ module load SPRNG/2.0b-intel-2018a
 # CREATE FOLDER FOR ACTOR POOL
 export ACTOR_FOLDER_WF=~/public/imas_actors #edit this line to best suit your needs
 export ACTOR_FOLDER=public/imas_actors #edit this line to best suit your needs
-# export HAGIS2PATH=$ACTOR_FOLDER/hagis2/hagis2/native_wrapper/lib/def  # DO NOT CHANGE THIS LINE! (required by the finder)
-export HAGIS2PATH=develop/testingActors
+export HAGIS2PATH=$ACTOR_FOLDER/hagis2/hagis2/native_wrapper/lib/def  # DO NOT CHANGE THIS LINE! (required by the finder)
+# export HAGIS2PATH=develop/testingActors
 mkdir -p ~/$ACTOR_FOLDER
 
 # EXTEND PYTHON PATH AND AVOID DOUBLONS (where the actors are under the form: "/actor_name/version(if any)"

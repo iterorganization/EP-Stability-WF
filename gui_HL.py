@@ -88,7 +88,7 @@ def open_gui(wf_param_folder):
         def Save(self,chosen_folder,init_folder):
             previous_folder = init_folder
             if chosen_folder == init_folder: # Very first SAVE, or SAVE after a SAVE_AS
-                self.value=save(self.value,previous_folder,wf_param_folder_default,workflow_param,wfp_ref,fur_ref,act_ref,0)
+                self.value=save(self.value,previous_folder,wf_param_folder_default,workflow_param,wfp_ref,fur_ref,act_ref,1)
             else:
                 if chosen_folder is None:
                     if self.value is None: # 1st SAVE after a LOAD
@@ -190,10 +190,6 @@ def open_gui(wf_param_folder):
     button_analysis = Button(fr_wfp, text = 'LIGKA Analysis', bg = col.c2)
     button_analysis.grid(row = 53, column = 1, padx = 5, pady = 5, sticky = 'ew')
     button_analysis.configure(command = lambda: analysis_window(ana_ref, analysis_param, wf_param_folder))
-
-    button_save_asdef = Button(fr_wfp, text = 'Save Configuration as Default', bg = col.c2)
-    button_save_asdef.grid(row = 54, column = 0, padx = 5, pady = 5, sticky = 'ew')
-    button_save_asdef.configure(command = lambda: save_workflow_param_to_file(wf_param_folder_default))
 
     button_scenario = Button(fr_wfp, text = 'Scenario Summary Choice', bg = 'light grey')
     button_scenario.grid(row = 54, column = 1, padx = 5, pady = 5, sticky = 'w')
