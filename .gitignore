@@ -14,4 +14,4 @@ workflow/Analysis/
 workflow/__pycache__/
 user_profiles/*
 !user_profiles/default
-
+IMAS_OUT_NR*

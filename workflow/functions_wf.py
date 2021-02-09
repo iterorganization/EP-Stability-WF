@@ -1,6 +1,7 @@
 import os, imas, sys, pdb, random, copy
 from lxml import etree
 import xml.etree.ElementTree as ET
+from imas import imasdef
 
 # IMPORT PARAMETERS FROM WORKFLOW AND LIGKA XML --------------------------------------
 def parameters_workflow(input_file):
@@ -27,14 +28,18 @@ def parameters_workflow(input_file):
 def read_timestep(user, database, run, current_config_folder):
     param = parameters_workflow(current_config_folder + '/input_workflow_default.xml')
     print('=> Open input datafile and read total equilibrium IDS for timesteps.')
-    input_total = imas.ids(param['shot_nr'], run, 0, 0)
-    input_total.open_env(user, database, '3')
-    time = input_total.equilibrium.partialGet('time')
+    input = imas.DBEntry(imasdef.MDSPLUS_BACKEND,database, param['shot_nr'], run ,user)
+    status,_ = input.open()
+    if status!=0:
+        print("Can't open the selected dataset!", file=sys.stderr)
+        sys.exit(1)
+    time = input.partial_get('equilibrium','time')
     ntime = len(time)
-    input_total.close()
+    input.close()
     return(time, ntime)
 
 def profiles_get(param):
+  # Needs to be updated to the new AL
     print('=> Open input datafile and read the numer of species and other neccesary inputs for LIGKA')
     input_species = imas.ids(param['shot_nr'], param['run_in'], 0, 0)
     input_species.open_env(param['user'], param['machine'], '3')
@@ -127,5 +132,5 @@ def profiles_get(param):
           nhot = nhot + 1
 
     # NEED TO IMPLEMENT FAST HYDROGEN NBI, FAST DEUTERIUM NBI, RUNAWAYS ELECTRONS, DT combined
-
+    input_species.close()
     return curr_str, nspec, nback, nhot
