@@ -22,15 +22,16 @@ def create_workflow_param_from_file(filepath):
     
     for elem in root[0].iter():
         if len(elem) == 0 and elem.tag is not etree.Comment:
-            workflow_param[name0][elem.tag] = elem.text
+            workflow_param[name0][elem.tag] = (elem.text,elem.attrib['display'])
 
     for elem in root[1].iter():
         if len(elem) == 0 and elem.tag is not etree.Comment:
-            workflow_param[name1][elem.tag] = elem.text
+            workflow_param[name1][elem.tag] = (elem.text,elem.attrib['display'])
+
 
     for elem in root[2].iter():
         if len(elem) == 0 and elem.tag is not etree.Comment:
-            workflow_param[name2][elem.tag] = elem.text       
+            workflow_param[name2][elem.tag] = (elem.text,elem.attrib['display'])       
 
 
     return(workflow_param)
@@ -76,13 +77,15 @@ def save_xml_param_to_file_on_run(filepath, variable, value):
         for elem in root.iter():
           if((elem.tag is not etree.Comment) and (len(elem) == 0)):
             if elem.tag == variable:
-                #elem.text = ligka_param[name0][elem.tag]
                 elem.text = value
                    
         tree.write(filepath)
 
 def update_xml_param(ligka_param, ref, elem, newvalue):
-        ligka_param[ref][elem] = newvalue
+        lst = list(ligka_param[ref][elem])
+        lst[0] = newvalue
+        ligka_param[ref][elem] = tuple(lst)
+        
 
 def update_xml_param_on_run(ligka_param, elem, newvalue):
         ligka_param['elem'] = newvalue

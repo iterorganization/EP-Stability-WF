@@ -15,6 +15,7 @@ from workflow.functions_wf import read_timestep
 from interface.create_workflow_param import create_workflow_param_from_file, create_xml_param_from_file, save_xml_param_to_file, update_xml_param
 from interface.extra_functions import actor_window,analysis_window,scenario_window,load,save
 import interface.colour_definitions as col
+from interface.extra_functions import CreateToolTip
 
 # set the path to the folders where the configuration and codeparameters are stored
     
@@ -55,7 +56,7 @@ def open_gui(wf_param_folder):
     fr_as = Frame(window, width = 500, height = 500, background = col.c1)
     fr_as.grid(row = 0, column = 1, rowspan = 2,  sticky = 'nwes', padx = 3, pady = 3)
 
-    fr_fc = Frame(window, width = 100, height = 100, background = col.c1)
+    fr_fc = Frame(window, width = 500, height = 500, background = col.c1)
     fr_fc.grid(row = 0, column = 2, sticky = 'news', padx = 3, pady = 3)
     fr_fc.grid_remove()
     
@@ -124,15 +125,18 @@ def open_gui(wf_param_folder):
           Label(fr_wfp, text = elem, bg = col.c3).grid(row = irow,  column = 0, padx = 3, pady = 2, sticky = 'w')
           if elem == 'ligka_541' or elem == 'pulse_list' or elem == 'fast_particles':
             entrystring = StringVar()
-            entrystring.set(workflow_param[ref][elem])
+            entrystring.set(workflow_param[ref][elem][0])
             c = Checkbutton(fr_wfp, variable = entrystring)
             c.grid(row = irow, column = 1, padx = 3, pady = 2, sticky = 'e')
+            CreateToolTip(c, text = workflow_param[ref][elem][1])
             entrystring.trace('w', lambda name, index, mode, elem = elem, entrystring = entrystring, ref = ref: update_xml_param(workflow_param, ref, elem, entrystring.get()))
           else:
             entrystring = StringVar()
-            entrystring.set(workflow_param[ref][elem])
+            entrystring.set(workflow_param[ref][elem][0])
             entrystring.trace('w', lambda name, index, mode, elem = elem, entrystring = entrystring, ref = ref: update_xml_param(workflow_param, ref, elem, entrystring.get()))                      # if an entry is changed, the new values should immediately be changed in the workflow_param dictionary
-            Entry(fr_wfp, textvariable = entrystring, bg = col.c1).grid(row = irow, column = 1, padx = 3, pady = 2, sticky = 'e')
+            x = Entry(fr_wfp, textvariable = entrystring, bg = col.c1)
+            x.grid(row = irow, column = 1, padx = 3, pady = 2, sticky = 'e')
+            CreateToolTip(x, text = workflow_param[ref][elem][1])
           irow += 1
             
     ## RIGHT - CONFIGURING WF ACTOR LIST AND THEIR PARAMETERS
@@ -145,10 +149,11 @@ def open_gui(wf_param_folder):
         for elem in workflow_param[ref]:
           
           entrystring = StringVar()
-          entrystring.set(workflow_param[ref][elem])
+          entrystring.set(workflow_param[ref][elem][0])
           Label(fr_as, text = elem, bg = col.c3).grid(row = irow, column = 0, padx = 3, pady = 2, sticky = 'w')
           combobox = ttk.Combobox(fr_as, textvariable = entrystring)
           combobox.grid(row = irow, column = 1, padx = 3, pady = 2, sticky = 'e')
+          CreateToolTip(combobox, text = workflow_param[ref][elem][1])
           if elem == 'Equilibrium_code':
             combobox.config(values = ('0', 'Helena', 'Chease (not working yet)'))
           elif elem == 'Distributions_1':
@@ -160,7 +165,7 @@ def open_gui(wf_param_folder):
           elif elem == 'Stability_code':
             combobox.config(values = ('0', 'Ligka_m5', 'Ligka_m4', 'Ligka_m1', 'Ligka_m2(not yet)'))
           else:
-            combobox.config(values = ('0', workflow_param[ref][elem]))
+            combobox.config(values = ('0', workflow_param[ref][elem][0]))
           entrystring.trace('w', lambda name, index, mode, elem = elem, entrystring = entrystring, ref = act_ref: update_xml_param(workflow_param, ref, elem, entrystring.get()))
           irow += 1
     
