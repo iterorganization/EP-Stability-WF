@@ -63,7 +63,6 @@ def save_xml_param_to_file(ligka_param, filepath):
         name0 = root.attrib['display']
         for elem in root.iter():
           if((elem.tag is not etree.Comment) and (len(elem) == 0)):
-
             elem.text = ligka_param[name0][elem.tag]
                    
         tree.write(filepath)
@@ -81,11 +80,13 @@ def save_xml_param_to_file_on_run(filepath, variable, value):
                    
         tree.write(filepath)
 
-def update_xml_param(ligka_param, ref, elem, newvalue):
+def update_xml_param_wf(ligka_param, ref, elem, newvalue):
         lst = list(ligka_param[ref][elem])
         lst[0] = newvalue
         ligka_param[ref][elem] = tuple(lst)
-        
+
+def update_xml_param(ligka_param, ref, elem, newvalue):  
+        ligka_param[ref][elem] = newvalue
 
 def update_xml_param_on_run(ligka_param, elem, newvalue):
         ligka_param['elem'] = newvalue

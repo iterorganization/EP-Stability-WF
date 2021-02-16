@@ -12,7 +12,7 @@ from datetime import datetime
 from shutil import copy2, copytree, rmtree
 from workflow.run_physics_code_final_no_kep import run_HL_noKEP
 from workflow.functions_wf import read_timestep
-from interface.create_workflow_param import create_workflow_param_from_file, create_xml_param_from_file, save_xml_param_to_file, update_xml_param
+from interface.create_workflow_param import create_workflow_param_from_file, create_xml_param_from_file, save_xml_param_to_file, update_xml_param, update_xml_param_wf
 from interface.extra_functions import actor_window,analysis_window,scenario_window,load,save
 import interface.colour_definitions as col
 from interface.extra_functions import CreateToolTip
@@ -129,11 +129,11 @@ def open_gui(wf_param_folder):
             c = Checkbutton(fr_wfp, variable = entrystring)
             c.grid(row = irow, column = 1, padx = 3, pady = 2, sticky = 'e')
             CreateToolTip(c, text = workflow_param[ref][elem][1])
-            entrystring.trace('w', lambda name, index, mode, elem = elem, entrystring = entrystring, ref = ref: update_xml_param(workflow_param, ref, elem, entrystring.get()))
+            entrystring.trace('w', lambda name, index, mode, elem = elem, entrystring = entrystring, ref = ref: update_xml_param_wf(workflow_param, ref, elem, entrystring.get()))
           else:
             entrystring = StringVar()
             entrystring.set(workflow_param[ref][elem][0])
-            entrystring.trace('w', lambda name, index, mode, elem = elem, entrystring = entrystring, ref = ref: update_xml_param(workflow_param, ref, elem, entrystring.get()))                      # if an entry is changed, the new values should immediately be changed in the workflow_param dictionary
+            entrystring.trace('w', lambda name, index, mode, elem = elem, entrystring = entrystring, ref = ref: update_xml_param_wf(workflow_param, ref, elem, entrystring.get()))                      # if an entry is changed, the new values should immediately be changed in the workflow_param dictionary
             x = Entry(fr_wfp, textvariable = entrystring, bg = col.c1)
             x.grid(row = irow, column = 1, padx = 3, pady = 2, sticky = 'e')
             CreateToolTip(x, text = workflow_param[ref][elem][1])
@@ -166,7 +166,7 @@ def open_gui(wf_param_folder):
             combobox.config(values = ('0', 'Ligka_m5', 'Ligka_m4', 'Ligka_m1', 'Ligka_m2(not yet)'))
           else:
             combobox.config(values = ('0', workflow_param[ref][elem][0]))
-          entrystring.trace('w', lambda name, index, mode, elem = elem, entrystring = entrystring, ref = act_ref: update_xml_param(workflow_param, ref, elem, entrystring.get()))
+          entrystring.trace('w', lambda name, index, mode, elem = elem, entrystring = entrystring, ref = act_ref: update_xml_param_wf(workflow_param, ref, elem, entrystring.get()))
           irow += 1
     
     ## BUTTONS 
