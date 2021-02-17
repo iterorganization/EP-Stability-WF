@@ -4,10 +4,10 @@ import xml.etree.ElementTree as ET
 
 from helena_imas.wrapper import helena_imas_actor
 from ligka.wrapper import ligka_actor
-#from chease.wrapper import chease_actor
+# from chease.wrapper import chease_actor
 from hagis1.wrapper import hagis1_actor
-from hagis2.wrapper import hagis2_actor
-from finder9.wrapper import finder9_actor
+# from hagis2.wrapper import hagis2_actor
+# from finder9.wrapper import finder9_actor
 from workflow.functions_wf import parameters_workflow, read_timestep
 from imas import imasdef
 
@@ -98,7 +98,7 @@ def hagis_1(current_config_folder,param, user, time_runs):
 
   input.close()
 
-
+'''
 def hagis_2(current_config_folder,param, user, time_runs):
 
   # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
@@ -143,7 +143,7 @@ def hagis_2(current_config_folder,param, user, time_runs):
     print('*************************************')
 
   input.close()
-
+'''
 
 def ligka_mode_1(current_config_folder,param, user, time_runs):
 
@@ -317,7 +317,7 @@ def ligka_mode_4(current_config_folder,param, user, time_runs):
     print('*************************************')
 
   input.close()
-
+'''
 def finder(current_config_folder,param, user, time_runs):
 
   # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
@@ -352,3 +352,4 @@ def finder(current_config_folder,param, user, time_runs):
     print('*************************************')
 
   input.close()
+'''
