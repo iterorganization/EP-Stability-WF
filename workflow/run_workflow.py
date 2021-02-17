@@ -17,16 +17,17 @@ sys.path.append('input')
 
 
 
-def run_HL_noKEP(current_config_folder):
+def workflow_EP(current_config_folder):
 
-    # IMPORT PARAMETERS FROM WORKFLOW AND LIGKA XML --------------------------------------
-    print('----- WF PARAMETERS ----')
+    # IMPORT PARAMETERS FROM WORKFLOW XML--------------------------------------
     param = parameters_workflow(current_config_folder+'/input_workflow_default.xml')
-    print('----- LIGKA PARAMETERS ----')
-    param_ligka = parameters_workflow(current_config_folder+'/z_ligka.xml')
-    wfp_ref_l = list(param_ligka.keys())
-    print('----- HAGIS 1 PARAMETERS ----')
-    param_hagis1 = parameters_workflow(current_config_folder+'/hagis1.xml')
+
+    # CHECK FOR EXISTING DB
+    output_folder = os.getenv('HOME')+'/public/imasdb/'+param['machine_out']+'/3/0'
+    if os.path.isdir(output_folder) == False:
+      print('-- Create local database for output file '+output_folder, file=sys.stdout)
+      os.makedirs(output_folder)
+    
     if param['pulse_list'] == 1:
       with open("shots.dat") as f:
         pulse_list = eval(f.read())
@@ -41,29 +42,15 @@ def run_HL_noKEP(current_config_folder):
     user = os.getenv('USER')
     version = os.getenv('IMAS_VERSION')[0]
     for i in pulse_list:
-        print('=======================TEST ============= ',pulse_list)
         if len(pulse_list) == 1:
-            print('The workflow will now run with one shot/run as input.')
+            print('The workflow will now run with one shot/run as input: ',pulse_list)
         else:
-            print('The Workflow will run with the same settings (and update the required ones) for all selected shots/runs as input.')
+            print('The Workflow will run with the same settings (and update the required ones) for all selected shots/runs as input: ',pulse_list)
             update_xml_param_on_run(param, 'shot_nr', i[0])
             save_xml_param_to_file_on_run(current_config_folder+'/input_workflow_default.xml', 'shot_nr', str(i[0]))
             update_xml_param_on_run(param, 'run_in', i[1])
             save_xml_param_to_file_on_run(current_config_folder+'/input_workflow_default.xml', 'run_in', str(i[1]))
             param = parameters_workflow(current_config_folder+'/input_workflow_default.xml')
-
-        # MODIFY LIGKA XML TO TAKE NSPEC automatically!!
-        print('Now modifying LIGKA XML by taking the species present in core_profiles IDS')
-        curr_str, nspec, nback, nhot = profiles_get(param)
-        update_xml_param_on_run(param_ligka, 'spec_str', curr_str)
-        save_xml_param_to_file_on_run(current_config_folder+'/z_ligka.xml', 'spec_str', str(curr_str))
-        update_xml_param_on_run(param_ligka, 'nspec', nspec)
-        save_xml_param_to_file_on_run(current_config_folder+'/z_ligka.xml', 'nspec', str(nspec))
-        update_xml_param_on_run(param_ligka, 'nback', nback)
-        save_xml_param_to_file_on_run(current_config_folder+'/z_ligka.xml', 'nback', str(nback))
-        update_xml_param_on_run(param_ligka, 'nhot', nhot)
-        save_xml_param_to_file_on_run(current_config_folder+'/z_ligka.xml', 'nhot', str(nhot))
-        param_ligka = parameters_workflow(current_config_folder+'/z_ligka.xml')
 
         if param['ligka_541'] == 1:
             if param['Equilibrium_code'] == 'Helena':
@@ -75,7 +62,21 @@ def run_HL_noKEP(current_config_folder):
             else:
                 print('Equilibrium code was not selected, skip and run LIGKA MODE 5.')
 
-            
+             # MODIFY LIGKA XML TO TAKE NSPEC automatically!!
+            param_ligka = parameters_workflow(current_config_folder+'/z_ligka.xml')
+            print('Now modifying LIGKA XML by taking the species present in core_profiles IDS')
+            curr_str, nspec, nback, nhot = profiles_get(param)
+            update_xml_param_on_run(param_ligka, 'spec_str', curr_str)
+            save_xml_param_to_file_on_run(current_config_folder+'/z_ligka.xml', 'spec_str', str(curr_str))
+            update_xml_param_on_run(param_ligka, 'nspec', nspec)
+            save_xml_param_to_file_on_run(current_config_folder+'/z_ligka.xml', 'nspec', str(nspec))
+            update_xml_param_on_run(param_ligka, 'nback', nback)
+            save_xml_param_to_file_on_run(current_config_folder+'/z_ligka.xml', 'nback', str(nback))
+            update_xml_param_on_run(param_ligka, 'nhot', nhot)
+            save_xml_param_to_file_on_run(current_config_folder+'/z_ligka.xml', 'nhot', str(nhot))
+            param_ligka = parameters_workflow(current_config_folder+'/z_ligka.xml')
+
+
             update_xml_param_on_run(param_ligka, 'modus', '5')
             save_xml_param_to_file_on_run(current_config_folder+'/z_ligka.xml', 'modus', '5')
             param_ligka = parameters_workflow(current_config_folder+'/z_ligka.xml')
@@ -104,7 +105,21 @@ def run_HL_noKEP(current_config_folder):
                 helena(current_config_folder,param, user)
                 print(param['Equilibrium_code'],' done.')
 
-            ## LEAVE PLACE FOR HAGIS 2
+            # MODIFY LIGKA XML TO TAKE NSPEC automatically!!
+            if param['Stability_code'] != '0':
+                param_ligka = parameters_workflow(current_config_folder+'/z_ligka.xml')
+                print('Now modifying LIGKA XML by taking the species present in core_profiles IDS')
+                curr_str, nspec, nback, nhot = profiles_get(param)
+                update_xml_param_on_run(param_ligka, 'spec_str', curr_str)
+                save_xml_param_to_file_on_run(current_config_folder+'/z_ligka.xml', 'spec_str', str(curr_str))
+                update_xml_param_on_run(param_ligka, 'nspec', nspec)
+                save_xml_param_to_file_on_run(current_config_folder+'/z_ligka.xml', 'nspec', str(nspec))
+                update_xml_param_on_run(param_ligka, 'nback', nback)
+                save_xml_param_to_file_on_run(current_config_folder+'/z_ligka.xml', 'nback', str(nback))
+                update_xml_param_on_run(param_ligka, 'nhot', nhot)
+                save_xml_param_to_file_on_run(current_config_folder+'/z_ligka.xml', 'nhot', str(nhot))
+                param_ligka = parameters_workflow(current_config_folder+'/z_ligka.xml')
+
 
             if param['Stability_code'] == 'Ligka_m1':
                 update_xml_param_on_run(param_ligka, 'modus', '1')
@@ -146,3 +161,5 @@ def run_HL_noKEP(current_config_folder):
             if param['Orbit_Finder'] == 'Finder':
                 print('=====================STARTING Finder===================')
                 finder(current_config_folder, param, user, time_runs)
+    
+    print('Workflow Finished.')

@@ -10,7 +10,7 @@ from tkinter import filedialog, ttk
 from lxml import etree
 from datetime import datetime
 from shutil import copy2, copytree, rmtree
-from workflow.run_physics_code_final_no_kep import run_HL_noKEP
+from workflow.run_workflow import workflow_EP
 from workflow.functions_wf import read_timestep
 from interface.create_workflow_param import create_workflow_param_from_file, create_xml_param_from_file, save_xml_param_to_file, update_xml_param, update_xml_param_wf
 from interface.extra_functions import actor_window,analysis_window,scenario_window,load,save
@@ -248,7 +248,7 @@ def open_gui(wf_param_folder):
     def run(current_config_folder):
 
       if current_config_folder is not None:
-          run_HL_noKEP(current_config_folder)
+          workflow_EP(current_config_folder)
       else:
           print('Aborted.')
 

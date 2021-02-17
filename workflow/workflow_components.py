@@ -21,7 +21,6 @@ def helena(current_config_folder, param, user):
   # OPEN INPUT IDS'S AGAIN TO PROCEED WITH GETSLICE
   # NOTE: WE CANNOT USE THE SAME INPUT STRUCTURE FOR BOTH GET AND GETSLICE!!!
   # IF WE DO SO: GETSLICE ALWAYS GET THE FIRST TIME SLICE WHATEVER IS ASKED
-  print('Starting HELENA')
   input = imas.DBEntry(imasdef.MDSPLUS_BACKEND,param['machine'],param['shot_nr'], param['run_in'],param['user'])
   status,_ = input.open()
   if status!=0:

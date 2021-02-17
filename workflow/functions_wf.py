@@ -21,7 +21,7 @@ def parameters_workflow(input_file):
                     param[elem.tag] = elem.text
 
             param['input_path'] = input_file
-            print(elem.tag, ' = ', param[elem.tag])
+            
     return(param)
     
 # WF RUNNING FUNCTIONS
