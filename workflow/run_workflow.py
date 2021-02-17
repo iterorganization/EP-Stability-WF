@@ -9,7 +9,8 @@ from lxml import etree
 import xml.etree.ElementTree as ET
 from workflow.functions_wf import parameters_workflow, profiles_get
 from interface.create_workflow_param import save_xml_param_to_file_on_run, update_xml_param_on_run
-from workflow.workflow_components import helena, hagis_1, hagis_2, ligka_mode_1, ligka_mode_4, ligka_mode_5, finder
+from workflow.workflow_components import helena, hagis_1, ligka_mode_1, ligka_mode_4, ligka_mode_5
+# from workflow.workflow_components import finder, hagis_2
 sys.path.append(os.getcwd())
 sys.path.append('input')
 
@@ -156,10 +157,12 @@ def workflow_EP(current_config_folder):
                 hagis_1(current_config_folder, param, user, time_runs)
             # HAGIS 2 to be added
             if param['Distributions_2'] == 'Hagis_2':
-                print('=====================STARTING HAGIS 2===================')
-                hagis_2(current_config_folder, param, user, time_runs)
+              print('Hagis 2 not available on develop, is being tested')
+                # print('=====================STARTING HAGIS 2===================')
+                # hagis_2(current_config_folder, param, user, time_runs)
             if param['Orbit_Finder'] == 'Finder':
-                print('=====================STARTING Finder===================')
-                finder(current_config_folder, param, user, time_runs)
+              print('Finder not available on develop, is being tested')
+                # print('=====================STARTING Finder===================')
+                # finder(current_config_folder, param, user, time_runs)
     
     print('Workflow Finished.')
