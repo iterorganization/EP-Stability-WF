@@ -159,11 +159,11 @@ def open_gui(wf_param_folder):
           elif elem == 'Distributions_1':
             combobox.config(values = ('0', 'Hagis_1'))
           elif elem == 'Distributions_2':
-            combobox.config(values = ('0', 'Hagis_2'))
+            combobox.config(values = ('0', 'Hagis_2 (testing now)'))
           elif elem == 'Orbit_Finder':
-            combobox.config(values = ('0', 'Finder'))
+            combobox.config(values = ('0', 'Finder (testing now)'))
           elif elem == 'Stability_code':
-            combobox.config(values = ('0', 'Ligka_m5', 'Ligka_m4', 'Ligka_m1', 'Ligka_m2(not yet)'))
+            combobox.config(values = ('0', 'Ligka_m5', 'Ligka_m4', 'Ligka_m1', 'Ligka_m2 (next DD version)'))
           else:
             combobox.config(values = ('0', workflow_param[ref][elem][0]))
           entrystring.trace('w', lambda name, index, mode, elem = elem, entrystring = entrystring, ref = act_ref: update_xml_param_wf(workflow_param, ref, elem, entrystring.get()))
@@ -192,7 +192,7 @@ def open_gui(wf_param_folder):
     button_analysis.grid(row = 52, column = 1, padx = 5, pady = 5, sticky = 'ew')
     button_analysis.configure(command=lambda: load(filedialog.askdirectory(initialdir=os.path.join(os.getcwd(),'user_profiles')),open_gui))
     
-    button_analysis = Button(fr_wfp, text = 'LIGKA Analysis', bg = col.c2)
+    button_analysis = Button(fr_wfp, text = 'LIGKA Analysis (Testing)', bg = col.c2)
     button_analysis.grid(row = 53, column = 1, padx = 5, pady = 5, sticky = 'ew')
     button_analysis.configure(command = lambda: analysis_window(ana_ref, analysis_param, wf_param_folder))
 
