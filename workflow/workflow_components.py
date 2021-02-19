@@ -9,6 +9,7 @@ from hagis1.wrapper import hagis1_actor
 from hagis2.wrapper import hagis2_actor
 from finder9.wrapper import finder9_actor
 from workflow.functions_wf import parameters_workflow, read_timestep
+from interface.create_workflow_param import create_xml_param_from_file
 from imas import imasdef
 
 
@@ -80,7 +81,7 @@ def hagis_1(current_config_folder,param, user, time_runs):
     print('Time = ', time[itime], ' s, itime = ', itime, '/', ntime-1)
 
     equilibrium_in = input.get_slice("equilibrium",time[itime],imasdef.PREVIOUS_SAMPLE)
-    mhd_linear_in = input.get_slice("mhd_linear",time[itime],imasdef.PREVIOUS_SAMPLE,occurrence=2) #Load either Mode 5 data or Mode 1 data
+    mhd_linear_in = input.get_slice("mhd_linear",time[itime],imasdef.PREVIOUS_SAMPLE,occurrence=0) #Load either Mode 5 data or Mode 1 data
 
 
     equilibrium_out, mhd_linear_out = hagis1_actor(equilibrium_in, mhd_linear_in, current_config_folder+'/hagis1.xml')
@@ -104,7 +105,7 @@ def hagis_2(current_config_folder,param, user, time_runs):
   # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
   # AND READ FULL TIME VECTOR OF EQUILIBRIUM IDS TO GET THE TIME BASE
   time, ntime = read_timestep(user, param['machine_out'], param['run_out'], current_config_folder)
-
+  
   # OPEN INPUT IDS'S AGAIN TO PROCEED WITH GETSLICE
   # NOTE: WE CANNOT USE THE SAME INPUT STRUCTURE FOR BOTH GET AND GETSLICE!!!
   # IF WE DO SO: GETSLICE ALWAYS GET THE FIRST TIME SLICE WHATEVER IS ASKED
@@ -126,7 +127,7 @@ def hagis_2(current_config_folder,param, user, time_runs):
 
     equilibrium_in = input.get_slice("equilibrium",time[itime],imasdef.PREVIOUS_SAMPLE,occurrence=1)
     mhd_linear_in = input.get_slice("mhd_linear",time[itime],imasdef.PREVIOUS_SAMPLE,occurrence=3) #Load mhd_linear(3) from hagis 1
-    core_profiles_in = input.get_slice("core_profiles",time[itime],imasdef.PREVIOUS_SAMPLE) #Load mhd_linear(3) from hagis 1
+    core_profiles_in = input.get_slice("core_profiles",time[itime],imasdef.PREVIOUS_SAMPLE)
 
     distributions_in = imas.distributions()
 

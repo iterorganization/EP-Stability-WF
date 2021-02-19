@@ -159,7 +159,15 @@ def workflow_EP(current_config_folder):
                 print('=====================STARTING HAGIS 2===================')
                 hagis_2(current_config_folder, param, user, time_runs)
             if param['Orbit_Finder'] == 'Finder':
-                print('=====================STARTING Finder===================')
-                finder(current_config_folder, param, user, time_runs)
+                print('=====================ADJUSTING FINDER XML===================')
+                param_finder = parameters_workflow(current_config_folder+'/finder_input.xml')
+                species_string = param_ligka['spec_str']
+
+                for i in range(0, len(species_string), 2):
+                    species = species_string[i:i+2]
+                    print('=====================STARTING Finder for '+species+' ===================')
+                    update_xml_param_on_run(param_finder, 'spec', species)
+                    save_xml_param_to_file_on_run(current_config_folder+'/finder_input.xml', 'spec', str(species))
+                    finder(current_config_folder, param, user, time_runs)
     
     print('Workflow Finished.')
