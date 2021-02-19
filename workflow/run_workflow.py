@@ -162,12 +162,26 @@ def workflow_EP(current_config_folder):
                 print('=====================ADJUSTING FINDER XML===================')
                 param_finder = parameters_workflow(current_config_folder+'/finder_input.xml')
                 species_string = param_ligka['spec_str']
+                # ADD NPSI_OUT
+                update_xml_param_on_run(param_finder, 'num_kin_rad', param_ligka['npsi_out'])
+                save_xml_param_to_file_on_run(current_config_folder+'/finder_input.xml', 'num_kin_rad', str(param_ligka['npsi_out']))
+                # ADD min/max n/m
+                update_xml_param_on_run(param_finder, 'n_prop_min', param_ligka['min_n_tor'])
+                save_xml_param_to_file_on_run(current_config_folder+'/finder_input.xml', 'n_prop_min', str(param_ligka['min_n_tor']))
+                update_xml_param_on_run(param_finder, 'n_prop_max', param_ligka['max_n_tor'])
+                save_xml_param_to_file_on_run(current_config_folder+'/finder_input.xml', 'n_prop_max', str(param_ligka['max_n_tor']))
+                update_xml_param_on_run(param_finder, 'm_min_prop', param_ligka['min_m'])
+                save_xml_param_to_file_on_run(current_config_folder+'/finder_input.xml', 'm_min_prop', str(param_ligka['min_m']))
+                update_xml_param_on_run(param_finder, 'm_max_prop', param_ligka['max_m'])
+                save_xml_param_to_file_on_run(current_config_folder+'/finder_input.xml', 'm_max_prop', str(param_ligka['max_m']))
 
                 for i in range(0, len(species_string), 2):
                     species = species_string[i:i+2]
                     print('=====================STARTING Finder for '+species+' ===================')
+                    # ADD SPECIES
                     update_xml_param_on_run(param_finder, 'spec', species)
                     save_xml_param_to_file_on_run(current_config_folder+'/finder_input.xml', 'spec', str(species))
+                
                     finder(current_config_folder, param, user, time_runs)
     
     print('Workflow Finished.')
