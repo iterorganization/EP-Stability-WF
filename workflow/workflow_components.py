@@ -324,7 +324,8 @@ def finder(current_config_folder,param, user, time_runs):
   # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
   # AND READ FULL TIME VECTOR OF EQUILIBRIUM IDS TO GET THE TIME BASE
   time, ntime = read_timestep(user, param['machine_out'], param['run_out'], current_config_folder)
-
+  param_finder = parameters_workflow(current_config_folder+'/finder_input.xml')
+  print(param_finder)
   # OPEN INPUT IDS'S AGAIN TO PROCEED WITH GETSLICE
   # NOTE: WE CANNOT USE THE SAME INPUT STRUCTURE FOR BOTH GET AND GETSLICE!!!
   # IF WE DO SO: GETSLICE ALWAYS GET THE FIRST TIME SLICE WHATEVER IS ASKED

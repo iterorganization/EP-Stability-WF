@@ -28,6 +28,5 @@ export PYTHONPATH=$ACTOR_FOLDER_WF/hagis2_s:$PYTHONPATH
 export PYTHONPATH=$ACTOR_FOLDER_WF/helena_imas:$PYTHONPATH
 export PYTHONPATH=$ACTOR_FOLDER_WF/ligka:$PYTHONPATH
 export PYTHONPATH=$ACTOR_FOLDER_WF/finder9:$PYTHONPATH
-export PYTHONPATH=$ACTOR_FOLDER_WF/finder9_s:$PYTHONPATH
 export PYTHONPATH=$ACTOR_FOLDER_WF/chease:$PYTHONPATH
 export PYTHONPATH="$(perl -e 'print join(":", grep { not $seen{$_}++ } split(/:/, $ENV{PYTHONPATH}))')"
