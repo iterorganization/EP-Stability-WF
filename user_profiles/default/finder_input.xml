@@ -1,93 +1,77 @@
 <parameter display="FINDER PARAMETERS">
-
-  <mamu>1.0000000E+00</mamu>
-  <qc>1.0E+00</qc>
-  <filin>''</filin>
-  <filpin>'part.dat'</filpin>
-  <scntyp>2</scntyp>
-  <nresy>5</nresy>
-  <orbit_properties_compute>true</orbit_properties_compute>
-  <orbit_properties_norbits>1</orbit_properties_norbits>
-  <wradloc>false</wradloc>
-  <findtpb> true</findtpb>
-
-  <time_option>  4  </time_option>
-  <tmaxi>  1.0E+00</tmaxi>
-  <tmini>  0.0  </tmini>
-  <n_interm>  250  </n_interm >
-  <n_integ_1>    150  </n_integ_1>
-  <n_integ_2>    150  </n_integ_2>
-  <toler_1>   1.0E-7   </toler_1>
-
-  <characteristic_time>  2  </characteristic_time>
-
-  <start0>   0   </start0>
-  <nmrkrs>    10</nmrkrs>
-
-  <ltrap>false</ltrap>
-  <s_load_min>  0.05E0   </s_load_min>
-  <s_load_max>  0.95E0   </s_load_max>
-  <ensmin>3.0E4</ensmin>
-  <ensmax>4.4E6</ensmax>
-
-  <tstpar>0</tstpar>
-  <lpert>false</lpert>
-  <lmodev>false</lmodev>
-  <nomods>0</nomods>
-
-  <parplt>false</parplt>
-  <enplt>false</enplt>
-  <surplt>false</surplt>
-  <amplt>false</amplt>
-  <ptdrft>false</ptdrft>
-  <psiplt>false</psiplt>
-  <vplplt>false</vplplt>
-  <vpeplt>false</vpeplt>
-  <dztplt>false</dztplt>
-  <qplt>false</qplt>
-
-  <n_prop_min> 0</n_prop_min>
-  <n_prop_max> 0</n_prop_max>	
-  <m_min_prop> 0</m_min_prop>	
-  <m_max_prop> 0</m_max_prop>	  		
-  <k_prop>5</k_prop>
-  <num_kin_rad>128</num_kin_rad>
-  <num_kin_lam>20</num_kin_lam>
-  <num_kin_en>10</num_kin_en>	
-
-  <shot_number>130012</shot_number>
-  <run> 12</run>
-  <itime>19</itime>
-  <ids_time>68.0</ids_time>
-  <user>lauberp</user>
-  <machine>helena_test</machine>
-
-
-<basedir>'./'</basedir>
-<hagisdir>'../bin/Linux_MPI_64/'</hagisdir>
-<nenergy>10 </nenergy>
-<nrad> 128 </nrad>
-<nrad_start> 1 </nrad_start>
-<nrad_end> 128</nrad_end>
-
+<mamu>1.0000000E+00</mamu>
+<qc>1.0000000E+00</qc>
+<orbit_properties_compute>true</orbit_properties_compute>
+<orbit_properties_norbits>1</orbit_properties_norbits>
+<wradloc>false</wradloc>
+<findtpb>true </findtpb>
+<filin> </filin>
+<filpin>part.dat</filpin>
+<toler_1>0.10000E-06</toler_1>
+<nmrkrs>10</nmrkrs>
+<scntyp>2</scntyp>
+<nresy>5</nresy>
+<time_option>4</time_option>
+<tmaxi>1.0E0</tmaxi>
+<tmini>0.0</tmini>
+<n_interm>250</n_interm>
+<n_integ_1>150</n_integ_1>
+<n_integ_2>150</n_integ_2>
+<characteristic_time>2</characteristic_time>
+<start0>0</start0>
+<ltrap>false</ltrap>
+<s_load_min>0.05E0</s_load_min>
+<s_load_max>0.95E0</s_load_max>
+<ensmin>3.0E4</ensmin>
+<ensmax>4.4E6</ensmax>
+<tstpar>0</tstpar>
+<lpert>false</lpert>
+<lmodev>false</lmodev>
+<nomods>0</nomods>
+<parplt>false</parplt>
+<enplt>false</enplt>
+<surplt>false</surplt>
+<amplt>false</amplt>
+<ptdrft>false</ptdrft>
+<psiplt>false</psiplt>
+<vplplt>false</vplplt>
+<vpeplt>false</vpeplt>
+<dztplt>false</dztplt>
+<qplt>false</qplt>
+<n_prop_min>10</n_prop_min>
+<n_prop_max>10</n_prop_max>
+<m_min_prop>11</m_min_prop>
+<m_max_prop>11</m_max_prop>
+<k_prop>5</k_prop>
+<num_kin_rad>256</num_kin_rad>
+<num_kin_lam>20</num_kin_lam>
+<num_kin_en>10</num_kin_en>
+<shot_number>130012</shot_number>
+<run>15</run>
+<itimef>60</itimef>
+<ids_time>68.0</ids_time>
+<user>lauberp</user>
+<machine>helena_test</machine>
+<basedir>./</basedir>
+<hagisdir>../bin/Linux_MPI_64/</hagisdir>
+<nenergy>10</nenergy>
+<nrad>128</nrad>
+<nrad_start>1</nrad_start>
+<nrad_end>128</nrad_end>
 <spec>el</spec>
 <temp_birth>25000.0E0</temp_birth>
 <el_mass_ratio>0.0E0</el_mass_ratio>
 <hot>false</hot>
-
 <only_find_tpb>true</only_find_tpb>
 <mastername>master_xx</mastername>
-<np>10 </np>
+<np>10</np>
 <lacc>0.01E0</lacc>
-<radacc>0.01E0</radacc>
+<radacc>0.01</radacc>
 <force>false</force>
 <recalc>false</recalc>
 <only_trap>false</only_trap>
 <par_en>false</par_en>
 <equi_rad>true</equi_rad>
-<hagis_toler_1> 1.0E-7 </hagis_toler_1>
+<hagis_toler_1>1.0E-7</hagis_toler_1>
 <wintprog>true</wintprog>
-  
-  
-
 </parameter>
