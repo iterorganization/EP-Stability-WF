@@ -50,7 +50,10 @@ def create_xml_param_from_file(filepath):
     
     for elem in root.iter():
         if len(elem) == 0 and elem.tag is not etree.Comment:
-            param[name0][elem.tag] = elem.text.strip()
+            if len(elem.text) != '':
+                param[name0][elem.tag] = elem.text.strip()
+            else:
+                param[name0][elem.tag] = elem.text
 
 
     return(param)
