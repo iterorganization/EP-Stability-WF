@@ -41,22 +41,22 @@ $ gmake all
 $ cd src/hagis1
 $ gmake hagis1_wf OPTS=IMAS,WF 
 ```
-6. Compile and run FC2K for HAGIS 2:
+6. Compile and run FC2K for HAGIS 2 MPI:
 ```bash
 $ cd src/hagis2
-$ gmake hagis2_WF OPTS=MPI,IMAS,WF
+$ gmake hagis2_wf OPTS=MPI,IMAS,WF
+```
+6. Compile and run FC2K for HAGIS 2 serial:
+```bash
+$ cd src/hagis2
+$ gmake hagis2_wf_s OPTS=IMAS,WF
 ```
 7. Compile and run FC2K for finder_MPI:
 ```bash
 $ cd ligka/finder/src
 $ gmake finder9_wf OPTS=IMAS,MPI,WF
 ```
-8. Compile and run FC2K for finder_serial:
-```bash
-$ cd ligka/finder/src
-$ gmake finder9_wf_s OPTS=IMAS,WF
-```
-9. After the creation of the actors you should be able to go to **EP Stabiliy WF** and run:
+8. After the creation of the actors you should be able to go to **EP Stabiliy WF** and run:
 ```bash
 $ python gui_HL.py
 ```
