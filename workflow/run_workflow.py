@@ -9,8 +9,7 @@ from lxml import etree
 import xml.etree.ElementTree as ET
 from workflow.functions_wf import parameters_workflow, profiles_get
 from interface.create_workflow_param import save_xml_param_to_file_on_run, update_xml_param_on_run
-from workflow.workflow_components import helena, hagis_1, ligka_mode_1, ligka_mode_4, ligka_mode_5
-from workflow.workflow_components import finder, hagis_2
+from workflow.workflow_components import helena, hagis_1, hagis_2, ligka_mode_1, ligka_mode_4, ligka_mode_5, finder
 sys.path.append(os.getcwd())
 sys.path.append('input')
 
@@ -107,7 +106,7 @@ def workflow_EP(current_config_folder):
                 print(param['Equilibrium_code'],' done.')
 
             # MODIFY LIGKA XML TO TAKE NSPEC automatically!!
-            if str(param['Stability_code']) != '0':
+            if str(param['Stability_code']) != '0' and str(param['Orbit_Finder']) != '0':
                 param_ligka = parameters_workflow(current_config_folder+'/z_ligka.xml')
                 print('Now modifying LIGKA XML by taking the species present in core_profiles IDS')
                 curr_str, nspec, nback, nhot = profiles_get(param)
@@ -157,9 +156,8 @@ def workflow_EP(current_config_folder):
                 hagis_1(current_config_folder, param, user, time_runs)
             # HAGIS 2 to be added
             if param['Distributions_2'] == 'Hagis_2':
-              print('Hagis 2 not available on develop, is being tested')
-                # print('=====================STARTING HAGIS 2===================')
-                # hagis_2(current_config_folder, param, user, time_runs)
+                print('=====================STARTING HAGIS 2===================')
+                hagis_2(current_config_folder, param, user, time_runs)
             if param['Orbit_Finder'] == 'Finder':
                 print('=====================ADJUSTING FINDER XML===================')
                 param_finder = parameters_workflow(current_config_folder+'/finder_input.xml')
