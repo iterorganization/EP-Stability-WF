@@ -180,7 +180,7 @@ def open_gui(wf_param_folder):
     button_saveconfig.grid(row = 52, column = 0, padx = 5, pady = 5, sticky = 'ew')
     button_saveconfig.configure(command = lambda: saved_folder.Save(filedialog.askdirectory(initialdir=os.path.join(os.getcwd(),'user_profiles')),init_folder))
 
-    button_run_nosave = Button(fr_wfp, text = 'Run', bg = col.c2)
+    button_run_nosave = Button(fr_wfp, text = 'Save and Run', bg = col.c2)
     button_run_nosave.grid(row = 51, column = 1, padx = 5, pady = 5, sticky = 'ew')
     button_run_nosave.configure(command = lambda: run(saved_folder.Save(None,init_folder)))
 
@@ -246,7 +246,7 @@ def open_gui(wf_param_folder):
         tree.write(filepath)
     
     def run(current_config_folder):
-
+      saved_folder.Save(None,init_folder)
       if current_config_folder is not None:
           workflow_EP(current_config_folder)
       else:

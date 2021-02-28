@@ -1,9 +1,9 @@
 <parameter display="LIGKA PARAMETERS">
 <modus>1</modus>
-<min_n_tor>8</min_n_tor>
-<max_n_tor>20</max_n_tor>
-<min_m>6</min_m>
-<max_m>25</max_m>
+<min_n_tor>10</min_n_tor>
+<max_n_tor>10</max_n_tor>
+<min_m>10</min_m>
+<max_m>11</max_m>
 <sidebands>4</sidebands>
 <sidebands_asy>0</sidebands_asy>
 <mode_type>1</mode_type>

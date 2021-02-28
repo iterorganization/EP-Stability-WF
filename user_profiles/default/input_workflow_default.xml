@@ -2,16 +2,16 @@
   <workflow_parameters display="WORKFLOW PARAMETERS">
     <user display="User in which the initial data is stored.">public</user>
     <machine display="Name of the database in which the initial data is stored.">ITER</machine>
-    <shot_nr display="Pulse/Shot number of the initial DB.">131025</shot_nr>
-    <run_in display="Run number of the initial DB.">20</run_in>
-    <machine_out display="Name of the output DB.">ligka_modes</machine_out>
-    <run_out display="Run number of the output DB.">19</run_out>
-    <itbegin display="The first time slice number.">0</itbegin>
-    <itend display="The last time slice number.">0</itend>
+    <shot_nr display="Pulse/Shot number of the initial DB.">130012</shot_nr>
+    <run_in display="Run number of the initial DB.">2</run_in>
+    <machine_out display="Name of the output DB.">test_DB</machine_out>
+    <run_out display="Run number of the output DB.">10</run_out>
+    <itbegin display="The first time slice number.">15</itbegin>
+    <itend display="The last time slice number.">16</itend>
   </workflow_parameters>
 
   <further_settings display="FURTHER SETTINGS">
-    <ligka_541 display="Automated way of executing HELENA+L 5/4/1.">1</ligka_541>
+    <ligka_541 display="Automated way of executing HELENA+L 5/4/1.">0</ligka_541>
     <pulse_list display="This option enables multiple shots/runs as input.">0</pulse_list>
     <fast_particles display="Tick this box to take into account the energetic particles.">0</fast_particles>
     <mpi_processes display="How many MPI processes to use for the MPI actors.">8</mpi_processes>
@@ -22,7 +22,7 @@
     <Distributions_1 display="Either to use or not Hagis 1">0</Distributions_1> <!-- 0:NONE, 1:HAGIS1-->
     <Distributions_2 display="Either to use or not Hagis 2 for non linear physics.">0</Distributions_2> <!-- 0:NONE, 1:HAGIS2-->
     <Orbit_Finder display="Either to use or not the finder together with hagis 2.">0</Orbit_Finder> <!-- 0:NONE, 1:Finder-->
-    <Stability_code display="Which mode of LIGKA one wants to use.">0</Stability_code> <!-- 0:NONE, 1:Ligka mode 5, 2: LIGKA mode 4, 3: LIGKA mode 1-->
+    <Stability_code display="Which mode of LIGKA one wants to use.">Ligka_m5</Stability_code> <!-- 0:NONE, 1:Ligka mode 5, 2: LIGKA mode 4, 3: LIGKA mode 1-->
   </actor_selection>
 
 </root>

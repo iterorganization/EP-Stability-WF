@@ -106,7 +106,7 @@ def workflow_EP(current_config_folder):
                 print(param['Equilibrium_code'],' done.')
 
             # MODIFY LIGKA XML TO TAKE NSPEC automatically!!
-            if param['Stability_code'] != '0':
+            if str(param['Stability_code']) != '0':
                 param_ligka = parameters_workflow(current_config_folder+'/z_ligka.xml')
                 print('Now modifying LIGKA XML by taking the species present in core_profiles IDS')
                 curr_str, nspec, nback, nhot = profiles_get(param)
