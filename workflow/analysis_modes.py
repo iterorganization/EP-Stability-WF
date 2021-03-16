@@ -426,11 +426,10 @@ def export_data(wf_param_folder):
   shot_dir = create_shot_dir(shot_nr, run_out)
    
   mhd_linear_in = input.get("mhd_linear",occurrence=occurence)
-  data,time_list, = data_structure(mhd_linear_in)
 
-  for itime, time_val in enumerate(input.mhd_linear.time):
+  for itime, time_val in enumerate(mhd_linear_in.time):
     if itime >= itbegin and itime <= itend:
-      time_slice = input.mhd_linear.time_slice[itime]
+      time_slice = mhd_linear_in.time_slice[itime]
       for imode, mode in enumerate(time_slice.toroidal_mode):
         if mode.n_tor <= n_max and mode.n_tor >= n_min:
           if mode.m_pol_dominant >= m_min and mode.m_pol_dominant <= m_max:
