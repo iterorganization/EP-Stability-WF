@@ -100,7 +100,7 @@ def mode_analysis_ligka(val_plot,wf_param_folder):
                     mode_21_D.append(r_TAE) 
                 else: 
                   data_D[time_val][mode.n_tor][mode.m_pol_dominant] = [None, None, None, None]
-    return data ,data_D, time_list, mode_10, mode_20, mode_21, mode_10_D, mode_20_D, mode_21_D
+    return data ,data_D, time_list
 
   param = parameters_workflow(wf_param_folder+'/analysis.xml')
 
@@ -152,7 +152,7 @@ def mode_analysis_ligka(val_plot,wf_param_folder):
   if param['compare_modes'] == 0:
      # if compare_modes is not selected, only one mode (5, 4 or 1)
     mhd_linear_in = input.get("mhd_linear",occurrence=occurence)
-    data,data_D, time_list, mode_10, mode_20 ,mode_21, mode_10_D, mode_20_D ,mode_21_D= data_structure(mhd_linear_in)
+    data,data_D, time_list = data_structure(mhd_linear_in)
   else:
     # load all data (3 IDSs) (this might take a while to complete)
     mhd_linear_in_5 = input.get("mhd_linear",occurrence=0)
