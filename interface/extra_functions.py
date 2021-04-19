@@ -302,8 +302,12 @@ def analysis_window(ana_ref, analysis_param, wf_param_folder):
   button_analysis.grid(row = 4, column = 3, padx = 5, pady = 5, sticky = 'ew')
   button_analysis.configure(command = lambda: mode_analysis_ligka(4,wf_param_folder))
 
-  button_analysis = Button(fr_ana, text = 'Radial Position for all modes', bg = col.c2)
+  button_analysis = Button(fr_ana, text = 'Mode Structure 2D', bg = col.c2)
   button_analysis.grid(row = 5, column = 3, padx = 5, pady = 5, sticky = 'ew')
+  button_analysis.configure(command = lambda: mode_analysis_ligka(5,wf_param_folder))
+
+  button_analysis = Button(fr_ana, text = 'Radial Position for all modes', bg = col.c2)
+  button_analysis.grid(row = 6, column = 3, padx = 5, pady = 5, sticky = 'ew')
   button_analysis.configure(command = lambda: mode_analysis_ligka(6,wf_param_folder))
 
   # button_analysis = Button(fr_ana, text = 'Rational Surfaces / q - profile', bg = col.c2)

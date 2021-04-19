@@ -43,8 +43,50 @@ def search_nyq(nyq):
 
 def mode_analysis_ligka(val_plot,wf_param_folder):
 
+  def fill_zdata_dict(ydict, sgrid, chigrid, mlist):
+    zdata = np.zeros((sgrid.shape[0], chigrid.shape[0]))
+    harm_data = np.zeros(sgrid.shape[0])
+    nspos = len(sgrid)
+    for mharm in mlist:
+        harm_data[:] = ydict[mharm]
+        for ispos in range(len(sgrid)):
+            zdata[ispos,:] = zdata[ispos,:] + harm_data[ispos] * np.cos(mharm*chigrid[:])
+    return zdata
+  
+  def plot_plane(r, z, data, ghost=False, add_boundary=False, sym=False, **kwargs):
+    fig, ax = plt.subplots()
+    if ghost:
+        r = add_ghost(r, dim=1)
+        z = add_ghost(z, dim=1)
+        data = add_ghost(data, dim=1)
+    im = ax.pcolormesh(r, z, data, **kwargs)
+    if sym:
+        im.set_clim(np.array([-1,1])*np.max(np.abs(im.get_clim())))
+    if add_boundary:
+        ax.plot(r[0,:], z[0,:], 'k-')
+    return fig, ax 
 
-  def data_structure(mhd_linear_in, val_plot):
+  def pert_array_to_dict(ydata, mlist):
+    out_dict = {}
+    for mharm, mdata in zip(mlist, ydata):
+      out_dict[mharm] = mdata
+    return out_dict
+
+  def add_ghost(array, dim=0):
+    new_array = np.zeros((array.shape[0]+(dim==0), array.shape[1]+(dim==1)))
+    if dim == 0:
+        new_array[:-1,:] = array[:,:]
+        new_array[-1,:] = array[0,:]
+    elif dim == 1:
+        new_array[:,:-1] = array[:,:]
+        new_array[:,-1] = array[:,0]
+    return new_array
+
+  def data_structure(mhd_linear_in, val_plot, eq = None):
+    if val_plot == 5:
+      sgrid = np.linspace(0.,1.,256)
+      chigrid = 2.0 * np.pi * np.arange(256)/256
+      y = eq.time_slice[0].profiles_2d[0]
     fig, ax = plt.subplots()
     time_list = []
     freq_dict = collections.defaultdict(list)
@@ -110,6 +152,22 @@ def mode_analysis_ligka(val_plot,wf_param_folder):
                       radius_dict[(mode.n_tor,int(mode.m_pol_dominant))][i] = r_TAE
                     else: 
                       radius_dict[(mode.n_tor,int(mode.m_pol_dominant))][i] = r_TAE
+                      
+                  if val_plot == 5:
+                      freq_m1_r = mode.plasma.phi_potential_perturbed.real
+                      freq_m1_i = mode.plasma.phi_potential_perturbed.imaginary
+                      freq_m1 = freq_m1_r + 1j * freq_m1_i
+                      mlist = [int(i) for i in mode.plasma.grid.dim2]
+                      out_gauss = pert_array_to_dict(freq_m1.T, mlist)
+                      ax.clear()
+                      
+                      zdata = fill_zdata_dict(out_gauss, sgrid, chigrid, mlist)
+                      fig, ax = plot_plane(y.r, y.z, zdata, ghost=True, sym=True, add_boundary=True, cmap='RdBu_r')
+                      ax.set_aspect(1.0)
+                      ax.set_xlabel('R [m]')
+                      ax.set_ylabel('Z [m]')
+                      ax.set_title(r'$\Phi$ perturbation')
+                      fig.savefig(str(shot_dir)+'/'+str(shot_nr)+'_'+str(run_out)+'_n_'+str(mode.n_tor)+'_m_'+str(mode.m_pol_dominant)+'_t_'+str(time_val)+'_2D_structure.png')
 
                   if val_plot == 4:
                     poloidals = []
@@ -299,7 +357,7 @@ def mode_analysis_ligka(val_plot,wf_param_folder):
 
   np.set_printoptions(threshold=sys.maxsize)
 
-
+  # GET MHD_LINEAR/EQUILIBRIUM DATA
   input = imas.DBEntry(imasdef.MDSPLUS_BACKEND,machine_out,shot_nr,run_out,user)
   status,_ = input.open()
   if status!=0:
@@ -309,7 +367,11 @@ def mode_analysis_ligka(val_plot,wf_param_folder):
   if param['compare_modes'] == 0:
      # if compare_modes is not selected, only one mode (5, 4 or 1)
     mhd_linear_in = input.get("mhd_linear",occurrence=occurence)
-    data_structure(mhd_linear_in, val_plot)
+    if val_plot == 5:
+      equilibrium_in = input.get("equilibrium",occurrence=0)
+      data_structure(mhd_linear_in, val_plot, eq = equilibrium_in)
+    else:
+      data_structure(mhd_linear_in, val_plot)
     print('Done, check the results.')
 
   # TO BE ADDED COMPARISON BETWEEN DIFFERENT MODES (mode 5/4/1 LIGKA)
