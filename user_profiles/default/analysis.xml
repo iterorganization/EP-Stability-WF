@@ -3,7 +3,8 @@
 <run>19</run>
 <user>popaa</user>
 <machine>ligka_modes</machine>
-<n>10</n>
+<n_min>10</n_min>
+<n_max>10</n_max>
 <m_min>10</m_min>
 <m_max>20</m_max>
 <r_TAE_min>0.2</r_TAE_min>
@@ -11,4 +12,5 @@
 <itbegin>1</itbegin>
 <itend>1</itend>
 <mode>4</mode>
+<compare_modes>1</compare_modes>
 </parameter>

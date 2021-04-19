@@ -216,7 +216,7 @@ def actor_window(wfp_ref_l, ligka_param, wf_param_folder, l):
 
 
 
-    ## FUNCTION NEW ANALYSIS WINDOW 
+## FUNCTION NEW ANALYSIS WINDOW 
 def analysis_window(ana_ref, analysis_param, wf_param_folder):
   #create analysis directory if none exists
   analysis_dir = ('workflow/Analysis')
@@ -261,12 +261,20 @@ def analysis_window(ana_ref, analysis_param, wf_param_folder):
           combobox.config(values = ('5', '4', '1'))
           entrystring.trace('w', lambda name, index, mode, elem = elem, entrystring = entrystring, ref = ref: update_xml_param(analysis_param, ref, elem, entrystring.get()))
           irow += 1
+        elif elem == 'compare_modes':
+          entrystring = StringVar()
+          entrystring.set(analysis_param[ref][elem])
+          c = Checkbutton(fr_ana, variable = entrystring)
+          c.grid(row = irow, column = 1, padx = 3, pady = 2, sticky = 'e')
+          entrystring.trace('w', lambda name, index, mode, elem = elem, entrystring = entrystring, ref = ref: update_xml_param(analysis_param, ref, elem, entrystring.get()))
         else:
           entrystring = StringVar()
           entrystring.set(analysis_param[ref][elem])
           entrystring.trace('w', lambda name, index, mode, elem = elem, entrystring = entrystring, ref = ref: update_xml_param(analysis_param, ref, elem, entrystring.get()))                      # if an entry is changed, the new values should immediately be changed in the workflow_param dictionary
           Entry(fr_ana, textvariable = entrystring, bg = col.c1).grid(row = irow, column = 1, padx = 3, pady = 2, sticky = 'e')
           irow += 1
+
+  # LEFT SIDE BOTTOM
 
   button_saveconfig = Button(fr_ana, text = 'Export Data', bg = col.c2)
   button_saveconfig.grid(row = 51, column = 0, padx = 5, pady = 5, sticky = 'ew')
@@ -276,7 +284,7 @@ def analysis_window(ana_ref, analysis_param, wf_param_folder):
   button_saveconfig.grid(row = 52, column = 0, padx = 5, pady = 5, sticky = 'ew')
   button_saveconfig.configure(command = lambda: save_xml_param_to_file(analysis_param, wf_param_folder+'/analysis.xml'))
 
-  # # RIGHT SIDE
+  # RIGHT SIDE TOP
 
   button_analysis = Button(fr_ana, text = 'Frequency', bg = col.c2)
   button_analysis.grid(row = 1, column = 3, padx = 5, pady = 5, sticky = 'ew')
@@ -293,6 +301,14 @@ def analysis_window(ana_ref, analysis_param, wf_param_folder):
   button_analysis = Button(fr_ana, text = 'Mode Structure', bg = col.c2)
   button_analysis.grid(row = 4, column = 3, padx = 5, pady = 5, sticky = 'ew')
   button_analysis.configure(command = lambda: mode_analysis_ligka(4,wf_param_folder))
+
+  button_analysis = Button(fr_ana, text = 'Mode Structure 2D', bg = col.c2)
+  button_analysis.grid(row = 5, column = 3, padx = 5, pady = 5, sticky = 'ew')
+  button_analysis.configure(command = lambda: mode_analysis_ligka(5,wf_param_folder))
+
+  button_analysis = Button(fr_ana, text = 'Radial Position for all modes', bg = col.c2)
+  button_analysis.grid(row = 6, column = 3, padx = 5, pady = 5, sticky = 'ew')
+  button_analysis.configure(command = lambda: mode_analysis_ligka(6,wf_param_folder))
 
   # button_analysis = Button(fr_ana, text = 'Rational Surfaces / q - profile', bg = col.c2)
   # button_analysis.grid(row = 4, column = 3, padx = 5, pady = 5, sticky = 'ew')
