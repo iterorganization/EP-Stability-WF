@@ -9,7 +9,7 @@ from lxml import etree
 import xml.etree.ElementTree as ET
 from workflow.functions_wf import parameters_workflow, profiles_get
 from interface.create_workflow_param import save_xml_param_to_file_on_run, update_xml_param_on_run
-from workflow.workflow_components import helena, hagis_1, hagis_2, ligka_mode_1, ligka_mode_4, ligka_mode_5, finder
+from workflow.workflow_components import helena, hagis_1, hagis_2, ligka_mode_1, ligka_mode_4, ligka_mode_5, ligka_mode_6, finder
 sys.path.append(os.getcwd())
 sys.path.append('input')
 
@@ -141,7 +141,13 @@ def workflow_EP(current_config_folder):
                 param_ligka = parameters_workflow(current_config_folder+'/z_ligka.xml')
                 print('=====================STARTING LIGKA MODE 5===================')
                 ligka_mode_5(current_config_folder, param, user, time_runs)
-            
+
+            if param['Stability_code'] == 'Ligka_m6':
+                update_xml_param_on_run(param_ligka, 'modus', '6')
+                save_xml_param_to_file_on_run(current_config_folder+'/z_ligka.xml', 'modus', '6')
+                param_ligka = parameters_workflow(current_config_folder+'/z_ligka.xml')
+                print('=====================STARTING LIGKA MODE 6===================')
+                ligka_mode_6(current_config_folder, param, user, time_runs)
             # if param['Stability_code'] == 'Ligka_m2':
             #     update_xml_param_on_run(param_ligka, 'modus', '2')
             #     save_xml_param_to_file_on_run(current_config_folder+'/z_ligka.xml', 'modus', '2')

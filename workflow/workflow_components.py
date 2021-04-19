@@ -275,6 +275,44 @@ def ligka_mode_5(current_config_folder,param, user, time_runs):
 
   input.close()
 
+def ligka_mode_6(current_config_folder,param, user, time_runs):
+  # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
+  # AND READ FULL TIME VECTOR OF EQUILIBRIUM IDS TO GET THE TIME BASE
+  time, ntime = read_timestep(user, param['machine_out'], param['run_out'], current_config_folder)
+
+  # OPEN INPUT IDS'S AGAIN TO PROCEED WITH GETSLICE
+  # NOTE: WE CANNOT USE THE SAME INPUT STRUCTURE FOR BOTH GET AND GETSLICE!!!
+  # IF WE DO SO: GETSLICE ALWAYS GET THE FIRST TIME SLICE WHATEVER IS ASKED
+  input = imas.DBEntry(imasdef.MDSPLUS_BACKEND,param['machine_out'],param['shot_nr'], param['run_out'],user)
+  status,_ = input.open()
+  if status!=0:
+      print("Can't open the selected dataset!", file=sys.stderr)
+      sys.exit(1)
+
+  input.delete_data("mhd_linear",occurrence=5)
+
+  for itime in range(0, time_runs + 1):
+
+    # EXECUTE PHYSICS CODE
+    print('Time = ', time[itime], ' s, itime = ', itime, '/', ntime-1)
+
+    equilibrium_in = input.get_slice("equilibrium",time[itime],imasdef.PREVIOUS_SAMPLE)
+    core_profiles_in = input.get_slice("core_profiles",time[itime],imasdef.PREVIOUS_SAMPLE)
+
+    mhd_linear_in = imas.mhd_linear()
+
+    mhd_linear_out = ligka_actor(equilibrium_in, core_profiles_in, mhd_linear_in, current_config_folder+'/z_ligka.xml', 'mpi_local')
+
+    input.put_slice(mhd_linear_out,occurrence=5)
+
+    print('*************************************')
+    print('Output time = ', mhd_linear_out.time[0])
+    print('OUTPUT ITIME = ', itime)
+    print('Saved mhd_linear mode 6 under oc 5')
+    print('*************************************')
+
+  input.close()
+
 
 
 def ligka_mode_4(current_config_folder,param, user, time_runs):
