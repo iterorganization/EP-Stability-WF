@@ -1,6 +1,6 @@
 module purge
 module load libcerf/1.5-intel-2018a
-module load IMAS/3.30.0-4.8.5
+module load IMAS/3.32.0-4.9.0
 module load netCDF-Fortran/4.4.4-intel-2018a
 module load PSPLINE/20181008-intel-2018a
 module load MUMPS/5.1.2-intel-2018a-metis/
