@@ -163,7 +163,7 @@ def open_gui(wf_param_folder):
           elif elem == 'Orbit_Finder':
             combobox.config(values = ('0', 'Finder (testing now)'))
           elif elem == 'Stability_code':
-            combobox.config(values = ('0', 'Ligka_m5', 'Ligka_m4', 'Ligka_m1', 'Ligka_m6', 'Ligka_m2 (next DD version)'))
+            combobox.config(values = ('0', 'Ligka_m5', 'Ligka_m4', 'Ligka_m1', 'Ligka_m2', 'Ligka_m6'))
           else:
             combobox.config(values = ('0', workflow_param[ref][elem][0]))
           entrystring.trace('w', lambda name, index, mode, elem = elem, entrystring = entrystring, ref = act_ref: update_xml_param_wf(workflow_param, ref, elem, entrystring.get()))

@@ -184,58 +184,45 @@ def ligka_mode_1(current_config_folder,param, user, time_runs):
 
   input.close()
 
-# Advised not to use mode 2, no room to hold another occurence of mhd_linear ( to wait until next dd version)
-# def ligka_mode_2(current_config_folder,param, user, time_runs):
-#   # SETTINGS
-#   run_out = 2
+def ligka_mode_2(current_config_folder,param, user, time_runs):
 
-#   # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
-#   # AND READ FULL TIME VECTOR OF EQUILIBRIUM IDS TO GET THE TIME BASE
-#   time, ntime = read_timestep(user, param['machine_out'], param['run_out'], current_config_folder)
+  # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
+  # AND READ FULL TIME VECTOR OF EQUILIBRIUM IDS TO GET THE TIME BASE
+  time, ntime = read_timestep(user, param['machine_out'], param['run_out'], current_config_folder)
 
-#   # OPEN INPUT IDS'S AGAIN TO PROCEED WITH GETSLICE
-#   # NOTE: WE CANNOT USE THE SAME INPUT STRUCTURE FOR BOTH GET AND GETSLICE!!!
-#   # IF WE DO SO: GETSLICE ALWAYS GET THE FIRST TIME SLICE WHATEVER IS ASKED
-#   input = imas.DBEntry(imasdef.MDSPLUS_BACKEND,param['machine_out'],param['shot_nr'], param['run_out'],user)
-#   status,_ = input.open()
-#   if status!=0:
-#       print("Can't open the selected dataset!", file=sys.stderr)
-#       sys.exit(1)
+  # OPEN INPUT IDS'S AGAIN TO PROCEED WITH GETSLICE
+  # NOTE: WE CANNOT USE THE SAME INPUT STRUCTURE FOR BOTH GET AND GETSLICE!!!
+  # IF WE DO SO: GETSLICE ALWAYS GET THE FIRST TIME SLICE WHATEVER IS ASKED
+  input = imas.DBEntry(imasdef.MDSPLUS_BACKEND,param['machine_out'],param['shot_nr'], param['run_out'],user)
+  status,_ = input.open()
+  if status!=0:
+      print("Can't open the selected dataset!", file=sys.stderr)
+      sys.exit(1)
 
-#   input.delete_data("mhd_linear",occurrence=6)
+  input.delete_data("mhd_linear",occurrence=6)
 
-#   for itime in range(0, time_runs + 1):
+  for itime in range(0, time_runs + 1):
 
-#     # EXECUTE PHYSICS CODE
-#     print('Time = ', time[itime], ' s, itime = ', itime, '/', ntime-1)
+    # EXECUTE PHYSICS CODE
+    print('Time = ', time[itime], ' s, itime = ', itime, '/', ntime-1)
     
-#     equilibrium_in = input.get_slice("equilibrium",time[itime],imasdef.PREVIOUS_SAMPLE)
-#     core_profiles_in = input.get_slice("core_profiles",time[itime],imasdef.PREVIOUS_SAMPLE)
-#     mhd_linear_in = input.get_slice("mhd_linear",time[itime],imasdef.PREVIOUS_SAMPLE,occurrence=6)
-#     input.mhd_linear.setPulseCtx(idx_in)
-#     input.mhd_linear.getSlice(time[itime], 1, 2)
-#     input.equilibrium.setPulseCtx(idx_in)
-#     input.equilibrium.getSlice(time[itime], 1)
-#     input.core_profiles.setPulseCtx(idx_in)
-#     input.core_profiles.getSlice(time[itime], 1)
-#     #idx_out = output.mhd_linear.getPulseCtx()
+    equilibrium_in = input.get_slice("equilibrium",time[itime],imasdef.PREVIOUS_SAMPLE)
+    core_profiles_in = input.get_slice("core_profiles",time[itime],imasdef.PREVIOUS_SAMPLE)
+    mhd_linear_in = input.get_slice("mhd_linear",time[itime],imasdef.PREVIOUS_SAMPLE,occurrence=1)
 
 
-#     output.mhd_linear = ligka_actor(input.equilibrium, input.core_profiles,input.mhd_linear, current_config_folder+'/z_ligka.xml', 'mpi_local', mpi_processes= param['mpi_processes'])
-   
-#     # input.mhd_linear.copyValues(output.mhd_linear)
-#     # input.mhd_linear.setPulseCtx(idx_in)
+    mhd_linear_out = ligka_actor(equilibrium_in, core_profiles_in, mhd_linear_in, current_config_folder+'/z_ligka.xml', 'mpi_local', mpi_processes= param['mpi_processes'])
 
 
-#     input.mhd_linear.putSlice(3)
+    input.put_slice(mhd_linear_out,occurrence=6)
 
-#     print('*************************************')
-#     print('Output time = ', input.mhd_linear.time[0])
-#     print('OUTPUT ITIME = ', itime)
-#     print('Saved mhd_linear mode 2 under oc 3')
-#     print('*************************************')
+    print('*************************************')
+    print('Output time = ', mhd_linear_out.time[0])
+    print('OUTPUT ITIME = ', itime)
+    print('Saved mhd_linear mode 2 under oc 6')
+    print('*************************************')
 
-#   input.close()
+  input.close()
 
 def ligka_mode_5(current_config_folder,param, user, time_runs):
   # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
