@@ -250,7 +250,7 @@ def ligka_mode_5(current_config_folder,param, user, time_runs):
 
     mhd_linear_in = imas.mhd_linear()
 
-    mhd_linear_out = ligka_actor(equilibrium_in, core_profiles_in, mhd_linear_in, current_config_folder+'/z_ligka.xml', 'mpi_local')
+    mhd_linear_out = ligka_actor(equilibrium_in, core_profiles_in, mhd_linear_in, current_config_folder+'/z_ligka.xml', 'mpi_local', mpi_params=[('-np', param['mpi_processes']), ('-wdir','/home/ITER/popaa/develop/workflow_develop/ep-stability-wf/')])
 
     input.put_slice(mhd_linear_out)
 
@@ -285,10 +285,9 @@ def ligka_mode_6(current_config_folder,param, user, time_runs):
 
     equilibrium_in = input.get_slice("equilibrium",time[itime],imasdef.PREVIOUS_SAMPLE)
     core_profiles_in = input.get_slice("core_profiles",time[itime],imasdef.PREVIOUS_SAMPLE)
+    mhd_linear_in = input.get_slice("mhd_linear",time[itime],imasdef.PREVIOUS_SAMPLE)
 
-    mhd_linear_in = imas.mhd_linear()
-
-    mhd_linear_out = ligka_actor(equilibrium_in, core_profiles_in, mhd_linear_in, current_config_folder+'/z_ligka.xml', 'mpi_local')
+    mhd_linear_out = ligka_actor(equilibrium_in, core_profiles_in, mhd_linear_in, current_config_folder+'/z_ligka.xml', 'mpi_local', mpi_processes= param['mpi_processes'])
 
     input.put_slice(mhd_linear_out,occurrence=5)
 
