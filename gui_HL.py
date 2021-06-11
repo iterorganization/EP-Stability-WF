@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import os, sys
 import subprocess
 sys.path.append(os.getcwd())
@@ -123,7 +124,7 @@ def open_gui(wf_param_folder):
         for elem in workflow_param[ref]:  
             
           Label(fr_wfp, text = elem, bg = col.c3).grid(row = irow,  column = 0, padx = 3, pady = 2, sticky = 'w')
-          if elem == 'ligka_541' or elem == 'pulse_list' or elem == 'fast_particles':
+          if elem in ['ligka_541', 'pulse_list', 'fast_particles']:
             entrystring = StringVar()
             entrystring.set(workflow_param[ref][elem][0])
             c = Checkbutton(fr_wfp, variable = entrystring)

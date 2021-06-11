@@ -9,7 +9,23 @@ from lxml import etree
 import xml.etree.ElementTree as ET
 from workflow.functions_wf import parameters_workflow, profiles_get
 from interface.create_workflow_param import save_xml_param_to_file_on_run, update_xml_param_on_run
-from workflow.workflow_components import helena, hagis_1, hagis_2, ligka_mode_1, ligka_mode_4, ligka_mode_5, ligka_mode_6, ligka_mode_2, finder
+from workflow.workflow_components import helena, ligka_mode_1, ligka_mode_4, ligka_mode_5, ligka_mode_6, ligka_mode_2
+no_actor = {}
+try:
+    from workflow.workflow_components import hagis_1
+except:
+    no_actor['hagis_1'] = 1
+try:
+    from workflow.workflow_components import hagis_2
+except:
+    no_actor['hagis_2'] = 1
+try:
+    from workflow.workflow_components import finder
+except:
+    no_actor['finder'] = 1
+if len(list(no_actor.keys())) != 0:
+    for code in no_actor:
+        print('    actor: {} was not imported')
 sys.path.append(os.getcwd())
 sys.path.append('input')
 
@@ -159,14 +175,14 @@ def workflow_EP(current_config_folder):
             # For now it is moved here, because it runs after LIGKA m 5/4/1. 
             # Soon, automatic way of checking who to run first, but after a first version of the wf is ready
             # i.e all actors are established. 
-            if param['Distributions_1'] == 'Hagis_1':
+            if param['Distributions_1'] == 'Hagis_1' and 'hagis_1' not in no_actor:
                 print('=====================STARTING HAGIS 1===================')
                 hagis_1(current_config_folder, param, user, time_runs)
             # HAGIS 2 to be added
-            if param['Distributions_2'] == 'Hagis_2':
+            if param['Distributions_2'] == 'Hagis_2' and 'hagis_2' not in no_actor:
                 print('=====================STARTING HAGIS 2===================')
                 hagis_2(current_config_folder, param, user, time_runs)
-            if param['Orbit_Finder'] == 'Finder':
+            if param['Orbit_Finder'] == 'Finder' and 'finder' not in no_actor:
                 print('=====================ADJUSTING FINDER XML===================')
                 param_finder = parameters_workflow(current_config_folder+'/finder_input.xml')
                 species_string = param_ligka['spec_str']
