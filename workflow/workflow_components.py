@@ -4,10 +4,28 @@ import xml.etree.ElementTree as ET
 
 from helena_imas.wrapper import helena_imas_actor
 from ligka.wrapper import ligka_actor
-#from chease.wrapper import chease_actor
-from hagis1.wrapper import hagis1_actor
-from hagis2.wrapper import hagis2_actor
-from finder9.wrapper import finder9_actor
+no_actor = {}
+try:
+    from hagis1.wrapper import hagis1_actor
+except:
+    no_actor['hagis1'] = True
+#try:
+#    from chease.wrapper import chease_actor
+#except:
+#    no_actor['chease'] = True
+try:
+    from hagis2.wrapper import hagis2_actor
+except:
+    no_actor['hagis2'] = True
+try:
+    from finder9.wrapper import finder9_actor
+except:
+    no_actor['finder'] = True
+if len(list(no_actor.keys())) > 0:
+    print('Cannot import:')
+    for key in no_actor:
+        print('    {}'.format(key))
+    print('Continuing without the above actors')
 from workflow.functions_wf import parameters_workflow, read_timestep
 from interface.create_workflow_param import create_xml_param_from_file
 from imas import imasdef
@@ -58,7 +76,8 @@ def helena(current_config_folder, param, user):
   input.close()
 
 def hagis_1(current_config_folder,param, user, time_runs):
-
+  if 'hagis_1' in no_actor:
+    return
   # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
   # AND READ FULL TIME VECTOR OF EQUILIBRIUM IDS TO GET THE TIME BASE
   time, ntime = read_timestep(user, param['machine_out'], param['run_out'], current_config_folder)
@@ -100,7 +119,8 @@ def hagis_1(current_config_folder,param, user, time_runs):
   input.close()
 
 def hagis_2(current_config_folder,param, user, time_runs):
-
+  if 'hagis_2' in no_actor:
+    return
   # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
   # AND READ FULL TIME VECTOR OF EQUILIBRIUM IDS TO GET THE TIME BASE
   time, ntime = read_timestep(user, param['machine_out'], param['run_out'], current_config_folder)
@@ -342,7 +362,8 @@ def ligka_mode_4(current_config_folder,param, user, time_runs):
   input.close()
 
 def finder(current_config_folder,param, user, time_runs):
-
+  if 'finder' in no_actor:
+    return
   # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
   # AND READ FULL TIME VECTOR OF EQUILIBRIUM IDS TO GET THE TIME BASE
   time, ntime = read_timestep(user, param['machine_out'], param['run_out'], current_config_folder)
