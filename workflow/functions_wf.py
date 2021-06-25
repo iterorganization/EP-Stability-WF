@@ -38,7 +38,7 @@ def read_timestep(user, database, run, current_config_folder):
     input.close()
     return(time, ntime)
 
-def profiles_get(param):
+def profiles_get(param, species_input):
   # Needs to be updated to the new AL
     print('=> Open input datafile and read the numer of species and other neccesary inputs for LIGKA')
     input_species = imas.ids(param['shot_nr'], param['run_in'], 0, 0)
@@ -89,22 +89,22 @@ def profiles_get(param):
         print('Density over electron density: ', format('%.10f' % nspec_over_ne[ispecies]))
         # ALL THERMAL PARTICLES:
         if species[ispecies] == 'H' or species[ispecies] == 'H+':
-          if nspec_over_ntot[ispecies] > 2E-2:
+          if nspec_over_ntot[ispecies] >= float(species_input["H"]):
             curr_str = curr_str + 'hh'
             nspec = nspec + 1
             nback = nback + 1
         if species[ispecies] == 'D'  or species[ispecies] == 'D+':
-          if nspec_over_ntot[ispecies] > 2E-2:
+          if nspec_over_ntot[ispecies] >= float(species_input["D"]):
             curr_str = curr_str + 'dd'
             nspec = nspec + 1
             nback = nback + 1
         if species[ispecies] == 'T'  or species[ispecies] == 'T+':
-          if nspec_over_ntot[ispecies] > 2E-2:
+          if nspec_over_ntot[ispecies] >= float(species_input["T"]):
             curr_str = curr_str + 'tt'
             nspec = nspec + 1
             nback = nback + 1
         if species[ispecies] == 'He3'  or species[ispecies] == 'He3+2':
-          if nspec_over_ntot[ispecies] > 2E-2:
+          if nspec_over_ntot[ispecies] >= float(species_input["He3"]):
             curr_str = curr_str + 'he'
             nspec = nspec + 1
             nback = nback + 1
@@ -114,7 +114,7 @@ def profiles_get(param):
         #     nspec = nspec + 1
         #     nback = nback + 1
         if species[ispecies] == 'C' or species[ispecies] == 'C+':
-          if nspec_over_ntot[ispecies] > 2E-2:
+          if nspec_over_ntot[ispecies] >= float(species_input["C"]):
             curr_str = curr_str + 'ca'
             nspec = nspec + 1
             nback = nback + 1

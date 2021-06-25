@@ -50,6 +50,7 @@ def open_gui(wf_param_folder):
     hagis2_param = create_xml_param_from_file(wf_param_folder+'/hagis2.xml')
     finder_param = create_xml_param_from_file(wf_param_folder+'/finder_input.xml')
     analysis_param = create_xml_param_from_file(wf_param_folder+'/analysis.xml')
+    species_param = create_xml_param_from_file(wf_param_folder+'/actor_settings.xml')
 
     fr_wfp = Frame(window, width = 300, height = 500, background = col.c3)
     fr_wfp.grid(row = 0, column = 0, rowspan = 2,  sticky = 'nwes', padx = 3, pady = 3)
@@ -73,6 +74,7 @@ def open_gui(wf_param_folder):
     wfp_ref_h2 = list(hagis2_param.keys())
     wfp_ref_f = list(finder_param.keys())
     ana_ref = list(analysis_param.keys())[0]
+    species_ref = list(species_param.keys())
     
   
 
@@ -210,23 +212,27 @@ def open_gui(wf_param_folder):
 
     button_saveconfig = Button(fr_as, text = 'HELENA Parameters', bg = col.c2)
     button_saveconfig.grid(row = 53, column = 0, padx = 5, pady = 5, sticky = 'ew')
-    button_saveconfig.configure(command = lambda: actor_window(wfp_ref_hel, helena_param, wf_param_folder, 3))
+    button_saveconfig.configure(command = lambda: actor_window(wfp_ref_hel, wf_param_folder, 3))
 
     button_saveconfig = Button(fr_as, text = 'LIGKA Parameters', bg = col.c2)
     button_saveconfig.grid(row = 54, column = 0, padx = 5, pady = 5, sticky = 'ew')
-    button_saveconfig.configure(command = lambda: actor_window(wfp_ref_l, ligka_param, wf_param_folder, 0))
+    button_saveconfig.configure(command = lambda: actor_window(wfp_ref_l, wf_param_folder, 0))
 
     button_saveconfig = Button(fr_as, text = 'HAGIS 1 Parameters', bg = col.c2)
     button_saveconfig.grid(row = 55, column = 0, padx = 5, pady = 5, sticky = 'ew')
-    button_saveconfig.configure(command = lambda: actor_window(wfp_ref_h, hagis1_param, wf_param_folder, 1))
+    button_saveconfig.configure(command = lambda: actor_window(wfp_ref_h, wf_param_folder, 1))
 
     button_saveconfig = Button(fr_as, text = 'HAGIS 2 Parameters', bg = col.c2)
     button_saveconfig.grid(row = 56, column = 0, padx = 5, pady = 5, sticky = 'ew')
-    button_saveconfig.configure(command = lambda: actor_window(wfp_ref_h2, hagis2_param, wf_param_folder, 2))
+    button_saveconfig.configure(command = lambda: actor_window(wfp_ref_h2, wf_param_folder, 2))
 
     button_saveconfig = Button(fr_as, text = 'FINDER Parameters', bg = col.c2)
     button_saveconfig.grid(row = 57, column = 0, padx = 5, pady = 5, sticky = 'ew')
-    button_saveconfig.configure(command = lambda: actor_window(wfp_ref_f, finder_param, wf_param_folder, 4))
+    button_saveconfig.configure(command = lambda: actor_window(wfp_ref_f, wf_param_folder, 4))
+
+    button_saveconfig = Button(fr_as, text = 'Species Settings', bg = col.c2)
+    button_saveconfig.grid(row = 58, column = 0, padx = 5, pady = 5, sticky = 'ew')
+    button_saveconfig.configure(command = lambda: actor_window(species_ref, wf_param_folder, 5))
 
     
      ## FUNCTIONS - SAVING & UPDATING

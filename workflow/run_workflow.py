@@ -37,6 +37,8 @@ def workflow_EP(current_config_folder):
 
     # IMPORT PARAMETERS FROM WORKFLOW XML--------------------------------------
     param = parameters_workflow(current_config_folder+'/input_workflow_default.xml')
+    # IMPORT SPECIES THRESHOLD FOR LIGKA---------------------------------------
+    species_input = parameters_workflow(current_config_folder+'/actor_settings.xml')
 
     # CHECK FOR EXISTING DB
     output_folder = os.getenv('HOME')+'/public/imasdb/'+param['machine_out']+'/3/0'
@@ -81,7 +83,7 @@ def workflow_EP(current_config_folder):
              # MODIFY LIGKA XML TO TAKE NSPEC automatically!!
             param_ligka = parameters_workflow(current_config_folder+'/z_ligka.xml')
             print('Now modifying LIGKA XML by taking the species present in core_profiles IDS')
-            curr_str, nspec, nback, nhot = profiles_get(param)
+            curr_str, nspec, nback, nhot = profiles_get(param, species_input)
             update_xml_param_on_run(param_ligka, 'spec_str', curr_str)
             save_xml_param_to_file_on_run(current_config_folder+'/z_ligka.xml', 'spec_str', str(curr_str))
             update_xml_param_on_run(param_ligka, 'nspec', nspec)
@@ -125,7 +127,7 @@ def workflow_EP(current_config_folder):
             if str(param['Stability_code']) != '0' or str(param['Orbit_Finder']) != '0':
                 param_ligka = parameters_workflow(current_config_folder+'/z_ligka.xml')
                 print('Now modifying LIGKA XML by taking the species present in core_profiles IDS')
-                curr_str, nspec, nback, nhot = profiles_get(param)
+                curr_str, nspec, nback, nhot = profiles_get(param, species_input)
                 update_xml_param_on_run(param_ligka, 'spec_str', curr_str)
                 save_xml_param_to_file_on_run(current_config_folder+'/z_ligka.xml', 'spec_str', str(curr_str))
                 update_xml_param_on_run(param_ligka, 'nspec', nspec)
