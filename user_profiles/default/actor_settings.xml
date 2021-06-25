@@ -1,7 +1,7 @@
 <parameter display="SPECIES SETTINGS">
-  <H>100</H>
-  <D>1001</D>
-  <T>100</T>
+  <H>0.02</H>
+  <D>0.02</D>
+  <T>0.02</T>
   <He3>0.02</He3>
   <C>0.02</C>
 </parameter>
