@@ -120,7 +120,7 @@ def profiles_get(param, species_input):
             nback = nback + 1
         if species[ispecies] == 'Ne' or species[ispecies] == 'Ne+':
           if nspec_over_ntot[ispecies] > float(species_input["Ne"]):
-            curr_str = curr_str + 'ca'
+            curr_str = curr_str + 'ne'
             nspec = nspec + 1
             nback = nback + 1  
         # ALL FAST PARTICLES
