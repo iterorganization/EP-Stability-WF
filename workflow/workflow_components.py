@@ -13,8 +13,6 @@ def actor_call(actor_name, config_folder_path, system_params):
         actor_name: str - name of the actor to run
         config_folder_path: str - path to the general config folder
         system_params: Dict - I/O system configuration
-        actor_params: Dict - actor's specific config params
-        user: str - current workflow user
   '''
 
   # Check if the actor exists (properly imported):
