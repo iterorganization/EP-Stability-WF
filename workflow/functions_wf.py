@@ -108,21 +108,21 @@ def profiles_get(param, species_input):
             curr_str = curr_str + 'he'
             nspec = nspec + 1
             nback = nback + 1
-        # if species[ispecies] == 'Be'  or species[ispecies] == 'Be+':
-        #   if nspec_over_ntot[ispecies] > 2E-2:
-        #     curr_str = curr_str + 'be'
-        #     nspec = nspec + 1
-        #     nback = nback + 1
+        if species[ispecies] == 'Be'  or species[ispecies] == 'Be+':
+          if nspec_over_ntot[ispecies] > float(species_input["Be"]):
+            curr_str = curr_str + 'be'
+            nspec = nspec + 1
+            nback = nback + 1
         if species[ispecies] == 'C' or species[ispecies] == 'C+':
           if nspec_over_ntot[ispecies] >= float(species_input["C"]):
             curr_str = curr_str + 'ca'
             nspec = nspec + 1
             nback = nback + 1
-        # if species[ispecies] == 'Ne' or species[ispecies] == 'Ne+':
-        #   if nspec_over_ntot[ispecies] > 2E-2:
-        #     curr_str = curr_str + 'ca'
-        #     nspec = nspec + 1
-        #     nback = nback + 1  
+        if species[ispecies] == 'Ne' or species[ispecies] == 'Ne+':
+          if nspec_over_ntot[ispecies] > float(species_input["Ne"]):
+            curr_str = curr_str + 'ca'
+            nspec = nspec + 1
+            nback = nback + 1  
         # ALL FAST PARTICLES
     if param['fast_particles'] == 1:
       # if species[ispecies] == 'He4' or species[ispecies] == 'He4+2':
