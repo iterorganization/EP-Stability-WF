@@ -143,7 +143,6 @@ def actor_window(wfp_ref_l, wf_param_folder, l):
   if l == 0:
     window_a.title('LIGKA PARAMETERS')
     ligka_param = create_xml_param_from_file(wf_param_folder+'/z_ligka.xml')
-    print(ligka_param)
   elif l == 1:
     window_a.title('HAGIS 1 PARAMETERS')
     ligka_param = create_xml_param_from_file(wf_param_folder+'/hagis1.xml')
