@@ -2,397 +2,138 @@ import os, imas, sys, pdb, random, copy
 from lxml import etree
 import xml.etree.ElementTree as ET
 
-from helena_imas.wrapper import helena_imas_actor
-from ligka.wrapper import ligka_actor
-no_actor = {}
-try:
-    from hagis1.wrapper import hagis1_actor
-except:
-    no_actor['hagis1'] = True
-#try:
-#    from chease.wrapper import chease_actor
-#except:
-#    no_actor['chease'] = True
-try:
-    from hagis2.wrapper import hagis2_actor
-except:
-    no_actor['hagis2'] = True
-try:
-    from finder9.wrapper import finder9_actor
-except:
-    no_actor['finder'] = True
-if len(list(no_actor.keys())) > 0:
-    print('Cannot import:')
-    for key in no_actor:
-        print('    {}'.format(key))
-    print('Continuing without the above actors')
-from workflow.functions_wf import parameters_workflow, read_timestep
+from workflow.functions_wf import parameters_workflow, read_timestep, actor_settings, imports_check
 from interface.create_workflow_param import create_xml_param_from_file
 from imas import imasdef
 
 
+def actor_call(actor_name, config_folder_path, system_params):
+  ''' This method initializes and runs an workflow actor
+      Params:
+        actor_name: str - name of the actor to run
+        config_folder_path: str - path to the general config folder
+        system_params: Dict - I/O system configuration
+        actor_params: Dict - actor's specific config params
+        user: str - current workflow user
+  '''
 
-def helena(current_config_folder, param, user):
-  # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
-  # AND READ FULL TIME VECTOR OF EQUILIBRIUM IDS TO GET THE TIME BASE
-  time, ntime = read_timestep(param['user'], param['machine'], param['run_in'], current_config_folder)
-
-  # OPEN INPUT IDS'S AGAIN TO PROCEED WITH GETSLICE
-  # NOTE: WE CANNOT USE THE SAME INPUT STRUCTURE FOR BOTH GET AND GETSLICE!!!
-  # IF WE DO SO: GETSLICE ALWAYS GET THE FIRST TIME SLICE WHATEVER IS ASKED
-  input = imas.DBEntry(imasdef.MDSPLUS_BACKEND,param['machine'],param['shot_nr'], param['run_in'],param['user'])
-  status,_ = input.open()
-  if status!=0:
-      print("Can't open the selected dataset!", file=sys.stderr)
-      sys.exit(1)
-
-  # OPEN OUTPUT OBJECT, IN VIEW OF SAVING RESULTS TO LOCAL DB
-  print('=> Create output datafile')
-  output = imas.DBEntry(imasdef.MDSPLUS_BACKEND,param['machine_out'],param['shot_nr'], param['run_out'],user)
-  output.create()
-
-  for itime in range(param['itbegin'], param['itend'] + 1):
-      
-    # EXECUTE PHYSICS CODE
-    print('Time = ', time[itime], ' s, itime = ', itime, '/', ntime-1)
-
-    equilibrium_in = input.get_slice("equilibrium",time[itime],imasdef.PREVIOUS_SAMPLE)
-    core_profiles_in = input.get_slice("core_profiles",time[itime],imasdef.PREVIOUS_SAMPLE)
-
-    if param['Equilibrium_code'] == 'Helena':
-        equilibrium_out = helena_imas_actor(equilibrium_in, current_config_folder+'/helena.xml')
-    #else:
-        #output.equilibrium = chease_actor(
-            #input.equilibrium, current_config_folder+'/chease_input_choices_default.xml')
-
-    output.put_slice(equilibrium_out)
-    output.put_slice(core_profiles_in)
-
-    print('*************************************')
-    print('Output time = ', equilibrium_out.time[0])
-    print('Saved helena equilibrium and core_profiles')
-    print('*************************************')
-  output.close()   
-  input.close()
-
-def hagis_1(current_config_folder,param, user, time_runs):
-  if 'hagis_1' in no_actor:
+  # Check if the actor exists (properly imported):
+  if imports_check(actor_name) == 0:
     return
+
+  print('*************************************')
+  print('Starting ' + actor_name)
+  print('*************************************')
+
+  actor_params = actor_settings(actor_name)
+ 
+  input_ids = actor_params['input_ids']
+  output_ids = actor_params['output_ids']
+
+  database = None
+  run = None
+  user = None
+  slice_begin = 0
+  slice_end = system_params['itend'] - system_params['itbegin']
+  shot_no = system_params['shot_nr']
+
+  if actor_params['entrypoint_actor']:
+    database = system_params['machine']
+    database_out = system_params['machine_out']
+    run = system_params['run_in']
+    run_out = system_params['run_out']
+    user = system_params['user']
+    slice_begin = system_params['itbegin']
+    slice_end = system_params['itend']
+  else:
+    database = system_params['machine_out']
+    run = system_params['run_out']
+    user = os.getenv('USER')
+
   # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
   # AND READ FULL TIME VECTOR OF EQUILIBRIUM IDS TO GET THE TIME BASE
-  time, ntime = read_timestep(user, param['machine_out'], param['run_out'], current_config_folder)
+  time, ntime = read_timestep(user = user,
+                              database = database,
+                              run = run,
+                              current_config_folder = config_folder_path)
 
-  # OPEN INPUT IDS'S AGAIN TO PROCEED WITH GETSLICE
-  # NOTE: WE CANNOT USE THE SAME INPUT STRUCTURE FOR BOTH GET AND GETSLICE!!!
-  # IF WE DO SO: GETSLICE ALWAYS GET THE FIRST TIME SLICE WHATEVER IS ASKED
-  input = imas.DBEntry(imasdef.MDSPLUS_BACKEND,param['machine_out'],param['shot_nr'], param['run_out'],user)
-  status,_ = input.open()
-  if status!=0:
-      print("Can't open the selected dataset!", file=sys.stderr)
-      sys.exit(1)
-
-  input.delete_data("mhd_linear",occurrence=3)
-  input.delete_data("equilibrium",occurrence=1)
-
-  for itime in range(0, time_runs + 1):
-
-    # EXECUTE PHYSICS CODE
-    print('Time = ', time[itime], ' s, itime = ', itime, '/', ntime-1)
-
-    equilibrium_in = input.get_slice("equilibrium",time[itime],imasdef.PREVIOUS_SAMPLE)
-    mhd_linear_in = input.get_slice("mhd_linear",time[itime],imasdef.PREVIOUS_SAMPLE,occurrence=0) #Load either Mode 5 data or Mode 1 data
-
-
-    equilibrium_out, mhd_linear_out = hagis1_actor(equilibrium_in, mhd_linear_in, current_config_folder+'/hagis1.xml')
-
-    
-    input.put_slice(equilibrium_out,occurrence=1)
-    input.put_slice(mhd_linear_out,occurrence=3)
-
-    print('*************************************')
-    print('Output time = ', equilibrium_out.time[0])
-    print('OUTPUT ITIME = ', itime)
-    print('Saved equilibrium from HAGIS 1 under oc 1')
-    print('Saved mhd_linear from HAGIS 1 under oc 3')
-    print('*************************************')
-
-  input.close()
-
-def hagis_2(current_config_folder,param, user, time_runs):
-  if 'hagis_2' in no_actor:
-    return
   # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
-  # AND READ FULL TIME VECTOR OF EQUILIBRIUM IDS TO GET THE TIME BASE
-  time, ntime = read_timestep(user, param['machine_out'], param['run_out'], current_config_folder)
-  
-  # OPEN INPUT IDS'S AGAIN TO PROCEED WITH GETSLICE
-  # NOTE: WE CANNOT USE THE SAME INPUT STRUCTURE FOR BOTH GET AND GETSLICE!!!
-  # IF WE DO SO: GETSLICE ALWAYS GET THE FIRST TIME SLICE WHATEVER IS ASKED
-  input = imas.DBEntry(imasdef.MDSPLUS_BACKEND,param['machine_out'],param['shot_nr'], param['run_out'],user)
-  status,_ = input.open()
+  input = imas.DBEntry(imasdef.MDSPLUS_BACKEND, database, shot_no, run , user)
+  status, _ = input.open()
   if status!=0:
-      print("Can't open the selected dataset!", file=sys.stderr)
-      sys.exit(1)
+    print("Can't open the selected dataset!", file=sys.stderr)
+    sys.exit(1)
 
-  input.delete_data("distributions")
-  input.delete_data("mhd_linear",occurrence=4)
+  if actor_params['entrypoint_actor']:
+    # OPEN OUTPUT OBJECT, IN VIEW OF SAVING RESULTS TO LOCAL DB
+    print('=> Create output datafile')
+    output = imas.DBEntry(imasdef.MDSPLUS_BACKEND, database_out, shot_no, run_out, os.getenv('USER'))
+    output.create()
+  else:
+    output = input
+    for ids_name, ids_occ in output_ids.items():
+      input.delete_data(ids_name ,occurrence=ids_occ)
 
   
-
-  for itime in range(0, time_runs + 1):
-
+  for itime in range(slice_begin, slice_end + 1):
     # EXECUTE PHYSICS CODE
     print('Time = ', time[itime], ' s, itime = ', itime, '/', ntime-1)
 
-    equilibrium_in = input.get_slice("equilibrium",time[itime],imasdef.PREVIOUS_SAMPLE,occurrence=1)
-    mhd_linear_in = input.get_slice("mhd_linear",time[itime],imasdef.PREVIOUS_SAMPLE,occurrence=3) #Load mhd_linear(3) from hagis 1
-    core_profiles_in = input.get_slice("core_profiles",time[itime],imasdef.PREVIOUS_SAMPLE)
-
-    distributions_in = imas.distributions()
-
-    mhd_linear_out, distributions_out  = hagis2_actor(equilibrium_in, mhd_linear_in, core_profiles_in, distributions_in, current_config_folder+'/hagis2.xml','mpi_local', mpi_processes = param['mpi_processes'])
-
-    input.put_slice(distributions_out)
-    input.put_slice(mhd_linear_out,occurrence=4)
-
-    print('*************************************')
-    print('Output time = ', mhd_linear_out.time[0])
-    print('OUTPUT ITIME = ', itime)
-    print('Saved distributions from HAGIS 2 under oc 0')
-    print('Saved mhd_linear from HAGIS 2 under oc 5')
-    print('*************************************')
-
-  input.close()
-
-def ligka_mode_1(current_config_folder,param, user, time_runs):
-
-  # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
-  # AND READ FULL TIME VECTOR OF EQUILIBRIUM IDS TO GET THE TIME BASE
-  time, ntime = read_timestep(user, param['machine_out'], param['run_out'], current_config_folder)
-
-  # OPEN INPUT IDS'S AGAIN TO PROCEED WITH GETSLICE
-  # NOTE: WE CANNOT USE THE SAME INPUT STRUCTURE FOR BOTH GET AND GETSLICE!!!
-  # IF WE DO SO: GETSLICE ALWAYS GET THE FIRST TIME SLICE WHATEVER IS ASKED
-  input = imas.DBEntry(imasdef.MDSPLUS_BACKEND,param['machine_out'],param['shot_nr'], param['run_out'],user)
-  status,_ = input.open()
-  if status!=0:
-      print("Can't open the selected dataset!", file=sys.stderr)
-      sys.exit(1)
-
-  input.delete_data("mhd_linear",occurrence=2)
-
-  for itime in range(0, time_runs + 1):
-
-    # EXECUTE PHYSICS CODE
-    print('Time = ', time[itime], ' s, itime = ', itime, '/', ntime-1)
-    
-    equilibrium_in = input.get_slice("equilibrium",time[itime],imasdef.PREVIOUS_SAMPLE)
-    core_profiles_in = input.get_slice("core_profiles",time[itime],imasdef.PREVIOUS_SAMPLE)
-    mhd_linear_in = input.get_slice("mhd_linear",time[itime],imasdef.PREVIOUS_SAMPLE,occurrence=1)
-
-
-    mhd_linear_out = ligka_actor(equilibrium_in, core_profiles_in, mhd_linear_in, current_config_folder+'/z_ligka.xml', 'mpi_local', mpi_processes= param['mpi_processes'])
-
-
-    input.put_slice(mhd_linear_out,occurrence=2)
-
-    print('*************************************')
-    print('Output time = ', mhd_linear_out.time[0])
-    print('OUTPUT ITIME = ', itime)
-    print('Saved mhd_linear mode 1 under oc 2')
-    print('*************************************')
-
-  input.close()
-
-def ligka_mode_2(current_config_folder,param, user, time_runs):
-
-  # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
-  # AND READ FULL TIME VECTOR OF EQUILIBRIUM IDS TO GET THE TIME BASE
-  time, ntime = read_timestep(user, param['machine_out'], param['run_out'], current_config_folder)
-
-  # OPEN INPUT IDS'S AGAIN TO PROCEED WITH GETSLICE
-  # NOTE: WE CANNOT USE THE SAME INPUT STRUCTURE FOR BOTH GET AND GETSLICE!!!
-  # IF WE DO SO: GETSLICE ALWAYS GET THE FIRST TIME SLICE WHATEVER IS ASKED
-  input = imas.DBEntry(imasdef.MDSPLUS_BACKEND,param['machine_out'],param['shot_nr'], param['run_out'],user)
-  status,_ = input.open()
-  if status!=0:
-      print("Can't open the selected dataset!", file=sys.stderr)
-      sys.exit(1)
-
-  input.delete_data("mhd_linear",occurrence=6)
-
-  for itime in range(0, time_runs + 1):
-
-    # EXECUTE PHYSICS CODE
-    print('Time = ', time[itime], ' s, itime = ', itime, '/', ntime-1)
-    
-    equilibrium_in = input.get_slice("equilibrium",time[itime],imasdef.PREVIOUS_SAMPLE)
-    core_profiles_in = input.get_slice("core_profiles",time[itime],imasdef.PREVIOUS_SAMPLE)
-    mhd_linear_in = input.get_slice("mhd_linear",time[itime],imasdef.PREVIOUS_SAMPLE,occurrence=1)
-
-
-    mhd_linear_out = ligka_actor(equilibrium_in, core_profiles_in, mhd_linear_in, current_config_folder+'/z_ligka.xml', 'mpi_local', mpi_processes= param['mpi_processes'])
-
-
-    input.put_slice(mhd_linear_out,occurrence=6)
-
-    print('*************************************')
-    print('Output time = ', mhd_linear_out.time[0])
-    print('OUTPUT ITIME = ', itime)
-    print('Saved mhd_linear mode 2 under oc 6')
-    print('*************************************')
-
-  input.close()
-
-def ligka_mode_5(current_config_folder,param, user, time_runs):
-  # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
-  # AND READ FULL TIME VECTOR OF EQUILIBRIUM IDS TO GET THE TIME BASE
-  time, ntime = read_timestep(user, param['machine_out'], param['run_out'], current_config_folder)
-
-  # OPEN INPUT IDS'S AGAIN TO PROCEED WITH GETSLICE
-  # NOTE: WE CANNOT USE THE SAME INPUT STRUCTURE FOR BOTH GET AND GETSLICE!!!
-  # IF WE DO SO: GETSLICE ALWAYS GET THE FIRST TIME SLICE WHATEVER IS ASKED
-  input = imas.DBEntry(imasdef.MDSPLUS_BACKEND,param['machine_out'],param['shot_nr'], param['run_out'],user)
-  status,_ = input.open()
-  if status!=0:
-      print("Can't open the selected dataset!", file=sys.stderr)
-      sys.exit(1)
-
-  input.delete_data("mhd_linear",occurrence=0)
-
-  for itime in range(0, time_runs + 1):
-
-    # EXECUTE PHYSICS CODE
-    print('Time = ', time[itime], ' s, itime = ', itime, '/', ntime-1)
-
-    equilibrium_in = input.get_slice("equilibrium",time[itime],imasdef.PREVIOUS_SAMPLE)
-    core_profiles_in = input.get_slice("core_profiles",time[itime],imasdef.PREVIOUS_SAMPLE)
-
+    equilibrium_in = imas.equilibrium()
+    equilibrium_occ = 0
+    core_profiles_in = imas.core_profiles()
+    core_profiles_occ = 0
     mhd_linear_in = imas.mhd_linear()
+    mhd_linear_occ = 0
+    distributions_in = imas.distributions()
+    distributions_occ = 0
 
-    mhd_linear_out = ligka_actor(equilibrium_in, core_profiles_in, mhd_linear_in, current_config_folder+'/z_ligka.xml', 'mpi_local', mpi_processes= param['mpi_processes'])
+    for ids_name, ids_occ in input_ids.items():
+      if ids_name == 'equilibrium':
+        equilibrium_in = input.get_slice(ids_name, time[itime], imasdef.PREVIOUS_SAMPLE, occurrence=ids_occ)
+        equilibrium_occ = ids_occ
+      if ids_name == 'mhd_linear':
+        mhd_linear_in = input.get_slice(ids_name, time[itime], imasdef.PREVIOUS_SAMPLE, occurrence=ids_occ)
+        mhd_linear_occ = ids_occ
+      if ids_name == 'core_profiles':
+        core_profiles_in = input.get_slice(ids_name, time[itime], imasdef.PREVIOUS_SAMPLE, occurrence=ids_occ)
+        core_profiles_occ = ids_occ
 
-    input.put_slice(mhd_linear_out)
+    
+    equilibrium_out, mhd_linear_out, core_profiles_out, distributions_out = actor_params['wrapper'](equilibrium_in,
+                                                              core_profiles_in,
+                                                              mhd_linear_in,
+                                                              distributions_in,
+                                                              config_folder_path + actor_params['config_file_name'],
+                                                              'mpi_local',
+                                                              mpi_processes = system_params['mpi_processes'])
 
-    print('*************************************')
-    print('Output time = ', mhd_linear_out.time[0])
-    print('OUTPUT ITIME = ', itime)
-    print('Saved mhd_linear mode 5 under oc 0')
-    print('*************************************')
+    if equilibrium_out:
+      output.put_slice(equilibrium_out, occurrence=equilibrium_occ)
+      print('*************************************')
+      print('Output time = ', equilibrium_out.time[0])
+      print('Saved '+ actor_name +' equilibrium under occurrence ' + str(equilibrium_occ))
+      print('*************************************')
+      
+    if mhd_linear_out:
+      output.put_slice(mhd_linear_out, occurrence=mhd_linear_occ)
+      print('*************************************')
+      print('Output time = ', mhd_linear_out.time[0])
+      print('Saved '+ actor_name +' mhd_linear under occurrence ' + str(mhd_linear_occ))
+      print('*************************************')
 
-  input.close()
+    if core_profiles_out:
+      output.put_slice(core_profiles_out, occurrence=core_profiles_occ)
+      print('*************************************')
+      print('Output time = ', core_profiles_out.time[0])
+      print('Saved '+ actor_name +' core_profiles under occurrence ' + str(core_profiles_occ))
+      print('*************************************')
 
-def ligka_mode_6(current_config_folder,param, user, time_runs):
-  # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
-  # AND READ FULL TIME VECTOR OF EQUILIBRIUM IDS TO GET THE TIME BASE
-  time, ntime = read_timestep(user, param['machine_out'], param['run_out'], current_config_folder)
-
-  # OPEN INPUT IDS'S AGAIN TO PROCEED WITH GETSLICE
-  # NOTE: WE CANNOT USE THE SAME INPUT STRUCTURE FOR BOTH GET AND GETSLICE!!!
-  # IF WE DO SO: GETSLICE ALWAYS GET THE FIRST TIME SLICE WHATEVER IS ASKED
-  input = imas.DBEntry(imasdef.MDSPLUS_BACKEND,param['machine_out'],param['shot_nr'], param['run_out'],user)
-  status,_ = input.open()
-  if status!=0:
-      print("Can't open the selected dataset!", file=sys.stderr)
-      sys.exit(1)
-
-  input.delete_data("mhd_linear",occurrence=5)
-
-  for itime in range(0, time_runs + 1):
-
-    # EXECUTE PHYSICS CODE
-    print('Time = ', time[itime], ' s, itime = ', itime, '/', ntime-1)
-
-    equilibrium_in = input.get_slice("equilibrium",time[itime],imasdef.PREVIOUS_SAMPLE)
-    core_profiles_in = input.get_slice("core_profiles",time[itime],imasdef.PREVIOUS_SAMPLE)
-    mhd_linear_in = input.get_slice("mhd_linear",time[itime],imasdef.PREVIOUS_SAMPLE)
-
-    mhd_linear_out = ligka_actor(equilibrium_in, core_profiles_in, mhd_linear_in, current_config_folder+'/z_ligka.xml', 'mpi_local', mpi_processes= param['mpi_processes'])
-
-    input.put_slice(mhd_linear_out,occurrence=5)
-
-    print('*************************************')
-    print('Output time = ', mhd_linear_out.time[0])
-    print('OUTPUT ITIME = ', itime)
-    print('Saved mhd_linear mode 6 under oc 5')
-    print('*************************************')
-
-  input.close()
-
-
-
-def ligka_mode_4(current_config_folder,param, user, time_runs):
-
-  # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
-  # AND READ FULL TIME VECTOR OF EQUILIBRIUM IDS TO GET THE TIME BASE
-  time, ntime = read_timestep(user, param['machine_out'], param['run_out'], current_config_folder)
-
-  # OPEN INPUT IDS'S AGAIN TO PROCEED WITH GETSLICE
-  # NOTE: WE CANNOT USE THE SAME INPUT STRUCTURE FOR BOTH GET AND GETSLICE!!!
-  # IF WE DO SO: GETSLICE ALWAYS GET THE FIRST TIME SLICE WHATEVER IS ASKED
-  input = imas.DBEntry(imasdef.MDSPLUS_BACKEND,param['machine_out'],param['shot_nr'], param['run_out'],user)
-  status,_ = input.open()
-  if status!=0:
-      print("Can't open the selected dataset!", file=sys.stderr)
-      sys.exit(1)
-
-  input.delete_data("mhd_linear",occurrence=1)
-
-  for itime in range(0, time_runs + 1):
-
-    # EXECUTE PHYSICS CODE
-    print('Time = ', time[itime], ' s, itime = ', itime, '/', ntime-1)
-
-
-    equilibrium_in = input.get_slice("equilibrium",time[itime],imasdef.PREVIOUS_SAMPLE)
-    core_profiles_in = input.get_slice("core_profiles",time[itime],imasdef.PREVIOUS_SAMPLE)
-    mhd_linear_in = input.get_slice("mhd_linear",time[itime],imasdef.PREVIOUS_SAMPLE)
-
-    mhd_linear_out = ligka_actor(equilibrium_in, core_profiles_in, mhd_linear_in, current_config_folder+'/z_ligka.xml', 'mpi_local', mpi_processes= param['mpi_processes'])
-
-
-    input.put_slice(mhd_linear_out,occurrence=1)
-
-    print('*************************************')
-    print('Output time = ', mhd_linear_out.time[0])
-    print('OUTPUT ITIME = ', itime)
-    print('Saved mhd_linear mode 4 under oc 1')
-    print('*************************************')
-
-  input.close()
-
-def finder(current_config_folder,param, user, time_runs):
-  if 'finder' in no_actor:
-    return
-  # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
-  # AND READ FULL TIME VECTOR OF EQUILIBRIUM IDS TO GET THE TIME BASE
-  time, ntime = read_timestep(user, param['machine_out'], param['run_out'], current_config_folder)
-
-  # OPEN INPUT IDS'S AGAIN TO PROCEED WITH GETSLICE
-  # NOTE: WE CANNOT USE THE SAME INPUT STRUCTURE FOR BOTH GET AND GETSLICE!!!
-  # IF WE DO SO: GETSLICE ALWAYS GET THE FIRST TIME SLICE WHATEVER IS ASKED
-  input = imas.DBEntry(imasdef.MDSPLUS_BACKEND,param['machine_out'],param['shot_nr'], param['run_out'],user)
-  status,_ = input.open()
-  if status!=0:
-      print("Can't open the selected dataset!", file=sys.stderr)
-      sys.exit(1)
-
-
-  for itime in range(0, time_runs + 1):
-
-    # EXECUTE PHYSICS CODE
-    print('Time = ', time[itime], ' s, itime = ', itime, '/', ntime-1)
-
-    equilibrium_in = input.get_slice("equilibrium",time[itime],imasdef.PREVIOUS_SAMPLE,occurrence=1)
-   
-    distributions_out = finder9_actor(equilibrium_in, current_config_folder+'/finder_input.xml', 'mpi_local', mpi_processes= param['mpi_processes'])
-
-    input.put_slice(distributions_out,occurrence=1)
-
-    print('*************************************')
-    print('Output time = ', distributions_out.time[0])
-    print('OUTPUT ITIME = ', itime)
-    print('Saved data from finder9 under oc 1')
-    print('*************************************')
+    if distributions_out:
+      output.put_slice(distributions_out, occurrence=distributions_occ)
+      print('*************************************')
+      print('Output time = ', distributions_out.time[0])
+      print('Saved '+ actor_name +' distributions under occurrence ' + str(distributions_occ))
+      print('*************************************')
 
   input.close()

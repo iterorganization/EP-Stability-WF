@@ -3,6 +3,32 @@ from lxml import etree
 import xml.etree.ElementTree as ET
 from imas import imasdef
 
+from helena_imas.wrapper import helena_imas_actor
+from ligka.wrapper import ligka_actor
+no_actor = {}
+try:
+    from hagis1.wrapper import hagis1_actor
+except:
+    no_actor['Hagis_1'] = True
+#try:
+#    from chease.wrapper import chease_actor
+#except:
+#    no_actor['chease'] = True
+try:
+    from hagis2.wrapper import hagis2_actor
+except:
+    no_actor['Hagis_2'] = True
+try:
+    from finder9.wrapper import finder9_actor
+except:
+    no_actor['Finder'] = True
+if len(list(no_actor.keys())) > 0:
+    print('Cannot import:')
+    for key in no_actor:
+        print('    {}'.format(key))
+    print('Continuing without the above actors')
+
+
 # IMPORT PARAMETERS FROM WORKFLOW AND LIGKA XML --------------------------------------
 def parameters_workflow(input_file):
     tree = ET.parse(input_file)
@@ -26,6 +52,7 @@ def parameters_workflow(input_file):
     
 # WF RUNNING FUNCTIONS
 def read_timestep(user, database, run, current_config_folder):
+    
     param = parameters_workflow(current_config_folder + '/input_workflow_default.xml')
     print('=> Open input datafile and read total equilibrium IDS for timesteps.')
     input = imas.DBEntry(imasdef.MDSPLUS_BACKEND,database, param['shot_nr'], run ,user)
@@ -120,7 +147,7 @@ def profiles_get(param):
             nback = nback + 1
         # if species[ispecies] == 'Ne' or species[ispecies] == 'Ne+':
         #   if nspec_over_ntot[ispecies] > 2E-2:
-        #     curr_str = curr_str + 'ca'
+        #     curr_str = curr_str + 'ne'
         #     nspec = nspec + 1
         #     nback = nback + 1  
         # ALL FAST PARTICLES
@@ -134,3 +161,133 @@ def profiles_get(param):
     # NEED TO IMPLEMENT FAST HYDROGEN NBI, FAST DEUTERIUM NBI, RUNAWAYS ELECTRONS, DT combined
     input_species.close()
     return curr_str, nspec, nback, nhot
+
+def imports_check(actor_name):
+  if actor_name in no_actor:
+    print(actor_name + ' is not imported, cannot continue.')
+    return 0 
+
+def helena_imas_actor_wf_wrapper(equilibrium_in,
+                                core_profiles_in,
+                                mhd_linear_in,
+                                distributions_in,
+                                config_file_path,
+                                run_mode,
+                                mpi_processes):
+    
+  equilibrium_out = helena_imas_actor(equilibrium_in,
+                                      config_file_path)
+
+  return equilibrium_out, None, core_profiles_in, None
+
+def hagis1_actor_wf_wrapper(equilibrium_in,
+                            core_profiles_in,
+                            mhd_linear_in,
+                            distributions_in,
+                            config_file_path,
+                            run_mode,
+                            mpi_processes):
+
+  equilibrium_out, mhd_linear_out = hagis1_actor(equilibrium_in, mhd_linear_in, config_file_path)
+
+  return equilibrium_out, mhd_linear_out, None, None
+
+def hagis2_actor_wf_wrapper(equilibrium_in,
+                            core_profiles_in,
+                            mhd_linear_in,
+                            distributions_in,
+                            config_file_path,
+                            run_mode,
+                            mpi_processes):
+
+  mhd_linear_out, distributions_out  = hagis2_actor(equilibrium_in, mhd_linear_in, core_profiles_in, distributions_in, config_file_path ,'mpi_local', mpi_processes = mpi_processes)
+
+  return None, mhd_linear_out, None, distributions_out
+
+def ligka_actor_wf_wrapper(equilibrium_in,
+                            core_profiles_in,
+                            mhd_linear_in,
+                            distributions_in,
+                            config_file_path,
+                            run_mode,
+                            mpi_processes):
+
+  mhd_linear_out = ligka_actor(equilibrium_in, core_profiles_in, mhd_linear_in, config_file_path, 'mpi_local', mpi_processes = mpi_processes)
+
+  return None, mhd_linear_out, None, None
+
+def finder_actor_wf_wrapper(equilibrium_in,
+                            core_profiles_in,
+                            mhd_linear_in,
+                            distributions_in,
+                            config_file_path,
+                            run_mode,
+                            mpi_processes):
+
+  distributions_out = finder9_actor(equilibrium_in, config_file_path, 'mpi_local', mpi_processes = mpi_processes)
+
+  return None, None, None, distributions_out
+
+def actor_settings(actor):
+  actor_params = {}
+  input_ids = {}
+  output_ids = {}
+  if actor == "Helena":
+    actor_params["entrypoint_actor"] = True
+    actor_params["wrapper"] = helena_imas_actor_wf_wrapper
+    actor_params["config_file_name"] = "/helena.xml"
+    input_ids = {"equilibrium" : 0, "core_profiles" : 0}
+    output_ids = {"equilibrium" : 0, "core_profiles" : 0}
+  if actor == "Ligka_m5":
+    actor_params["entrypoint_actor"] = False
+    actor_params["wrapper"] = ligka_actor_wf_wrapper
+    actor_params["config_file_name"] = "/z_ligka.xml"
+    input_ids = {"equilibrium" : 0, "core_profiles" : 0}
+    output_ids = {"mhd_linear" : 0}
+  if actor == "Ligka_m4":
+    actor_params["entrypoint_actor"] = False
+    actor_params["wrapper"] = ligka_actor_wf_wrapper
+    actor_params["config_file_name"] = "/z_ligka.xml"
+    input_ids = {"equilibrium" : 0, "core_profiles" : 0, "mhd_linear" : 0}
+    output_ids = {"mhd_linear" : 1}
+  if actor == "Ligka_m1":
+    actor_params["entrypoint_actor"] = False
+    actor_params["wrapper"] = ligka_actor_wf_wrapper
+    actor_params["config_file_name"] = "/z_ligka.xml"
+    input_ids = {"equilibrium" : 0, "core_profiles" : 0, "mhd_linear" : 1}
+    output_ids = {"mhd_linear" : 2}
+  if actor == "Ligka_m6":
+    actor_params["entrypoint_actor"] = False
+    actor_params["wrapper"] = ligka_actor_wf_wrapper
+    actor_params["config_file_name"] = "/z_ligka.xml"
+    input_ids = {"equilibrium" : 0, "core_profiles" : 0, "mhd_linear" : 0}
+    output_ids = {"mhd_linear" : 5}
+  if actor == "Ligka_m2":
+    actor_params["entrypoint_actor"] = False
+    actor_params["wrapper"] = ligka_actor_wf_wrapper
+    actor_params["config_file_name"] = "/z_ligka.xml"
+    input_ids = {"equilibrium" : 0, "core_profiles" : 0, "mhd_linear" : 1}
+    output_ids = {"mhd_linear" : 6}
+  if actor == "Hagis_1":
+    actor_params["entrypoint_actor"] = False
+    actor_params["wrapper"] = hagis1_actor_wf_wrapper
+    actor_params["config_file_name"] = "/hagis1.xml"
+    input_ids = {"equilibrium" : 0, "mhd_linear" : 0}
+    output_ids = {"equilibrium" : 1, "mhd_linear" : 3}
+  if actor == "Hagis_2":
+    actor_params["entrypoint_actor"] = False
+    actor_params["wrapper"] = hagis2_actor_wf_wrapper
+    actor_params["config_file_name"] = "/hagis2.xml"
+    input_ids = {"equilibrium" : 1, "mhd_linear" : 3, "core_profiles" : 0}
+    output_ids = {"distributions" : 0, "mhd_linear" : 4}
+  if actor == "Finder":
+    actor_params["entrypoint_actor"] = False
+    actor_params["wrapper"] = finder_actor_wf_wrapper
+    actor_params["config_file_name"] = "/finder_input.xml"
+    input_ids = {"equilibrium" : 1}
+    output_ids = {"distributions" : 1}
+
+  actor_params["input_ids"] = input_ids 
+  actor_params["output_ids"] = output_ids
+
+  return actor_params
