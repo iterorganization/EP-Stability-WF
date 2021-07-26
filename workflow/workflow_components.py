@@ -2,12 +2,12 @@ import os, imas, sys, pdb, random, copy
 from lxml import etree
 import xml.etree.ElementTree as ET
 
-from workflow.functions_wf import parameters_workflow, read_timestep, actor_settings, imports_check
+from workflow.functions_wf import parameters_workflow, read_timestep, actor_settings, imports_check, scenario_mod
 from interface.create_workflow_param import create_xml_param_from_file
 from imas import imasdef
 
 
-def actor_call(actor_name, config_folder_path, system_params):
+def actor_call(actor_name, config_folder_path, system_params, curr_str = None, scenario_params = None):
   ''' This method initializes and runs an workflow actor
       Params:
         actor_name: str - name of the actor to run
@@ -96,6 +96,10 @@ def actor_call(actor_name, config_folder_path, system_params):
       if ids_name == 'core_profiles':
         core_profiles_in = input.get_slice(ids_name, time[itime], imasdef.PREVIOUS_SAMPLE, occurrence=ids_occ)
         core_profiles_occ = ids_occ
+        if actor_params['entrypoint_actor']:
+          core_profiles_in = scenario_mod(core_profiles_in, curr_str, scenario_params)
+          
+
 
     
     equilibrium_out, mhd_linear_out, core_profiles_out, distributions_out = actor_params['wrapper'](equilibrium_in,

@@ -1,0 +1,18 @@
+<parameter display="SCENARIO PARAMETERS (multipliers)">
+  <n_e>1</n_e>
+  <n_H>1</n_H>
+  <n_D>1</n_D>
+  <n_T>1</n_T>
+  <n_Be>1</n_Be>
+  <n_C>1</n_C>
+  <n_Ne>1</n_Ne>
+  <n_He4>1</n_He4>
+  <T_e>1</T_e>
+  <T_H>1</T_H>
+  <T_D>1</T_D>
+  <T_T>1</T_T>
+  <T_Be>1</T_Be>
+  <T_C>1</T_C>
+  <T_Ne>1</T_Ne>
+  <T_He4>1</T_He4>
+</parameter>

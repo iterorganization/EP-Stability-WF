@@ -2,6 +2,7 @@ import os, imas, sys, pdb, random, copy
 from lxml import etree
 import xml.etree.ElementTree as ET
 from imas import imasdef
+import numpy as np
 
 from helena_imas.wrapper import helena_imas_actor
 from ligka.wrapper import ligka_actor
@@ -161,6 +162,63 @@ def profiles_get(param):
     # NEED TO IMPLEMENT FAST HYDROGEN NBI, FAST DEUTERIUM NBI, RUNAWAYS ELECTRONS, DT combined
     input_species.close()
     return curr_str, nspec, nback, nhot
+
+def scenario_mod(core_profiles_in, curr_str, scenario_params):
+  print('Updating core_profiles according to the scenario modification parameters.')
+  curr_str_split = []
+  while curr_str:
+      curr_str_split.append(curr_str[:2])
+      curr_str = curr_str[2:]
+      
+  if 'el' in curr_str_split:
+    core_profiles_in.profiles_1d[0].electrons.density = np.array(core_profiles_in.profiles_1d[0].electrons.density) * scenario_params['n_e']
+    core_profiles_in.profiles_1d[0].electrons.temperature = np.array(core_profiles_in.profiles_1d[0].electrons.temperature) * scenario_params['T_e'] 
+  
+  for i in range(len(core_profiles_in.profiles_1d[0].ion)):
+    if core_profiles_in.profiles_1d[0].ion[i].label == 'H+' or core_profiles_in.profiles_1d[0].ion[i].label == 'H':
+      if 'hh' in curr_str_split:
+        core_profiles_in.profiles_1d[0].ion[i].density = np.array(core_profiles_in.profiles_1d[0].ion[i].density) * scenario_params['n_H']
+        core_profiles_in.profiles_1d[0].ion[i].temperature = np.array(core_profiles_in.profiles_1d[0].ion[i].temperature) * scenario_params['T_H']
+
+    if core_profiles_in.profiles_1d[0].ion[i].label == 'D+' or core_profiles_in.profiles_1d[0].ion[i].label == 'D':
+      if 'dd' in curr_str_split:
+        core_profiles_in.profiles_1d[0].ion[i].density = np.array(core_profiles_in.profiles_1d[0].ion[i].density) * scenario_params['n_D']
+        core_profiles_in.profiles_1d[0].ion[i].temperature = np.array(core_profiles_in.profiles_1d[0].ion[i].temperature) * scenario_params['T_D']
+
+    if core_profiles_in.profiles_1d[0].ion[i].label == 'T+' or core_profiles_in.profiles_1d[0].ion[i].label == 'T':
+      if 'tt' in curr_str_split:
+        core_profiles_in.profiles_1d[0].ion[i].density = np.array(core_profiles_in.profiles_1d[0].ion[i].density) * scenario_params['n_T']
+        core_profiles_in.profiles_1d[0].ion[i].temperature = np.array(core_profiles_in.profiles_1d[0].ion[i].temperature) * scenario_params['T_T']
+    
+    if core_profiles_in.profiles_1d[0].ion[i].label == 'Be+' or core_profiles_in.profiles_1d[0].ion[i].label == 'Be':
+      if 'be' in curr_str_split:
+        core_profiles_in.profiles_1d[0].ion[i].density = np.array(core_profiles_in.profiles_1d[0].ion[i].density) * scenario_params['n_Be']
+        core_profiles_in.profiles_1d[0].ion[i].temperature = np.array(core_profiles_in.profiles_1d[0].ion[i].temperature) * scenario_params['T_Be']
+
+    if core_profiles_in.profiles_1d[0].ion[i].label == 'C+' or core_profiles_in.profiles_1d[0].ion[i].label == 'C':
+      if 'ca' in curr_str_split:
+        core_profiles_in.profiles_1d[0].ion[i].density = np.array(core_profiles_in.profiles_1d[0].ion[i].density) * scenario_params['n_C']
+        core_profiles_in.profiles_1d[0].ion[i].temperature = np.array(core_profiles_in.profiles_1d[0].ion[i].temperature) * scenario_params['T_C']
+
+    if core_profiles_in.profiles_1d[0].ion[i].label == 'Ne+' or core_profiles_in.profiles_1d[0].ion[i].label == 'Ne':
+      if 'ne' in curr_str_split:
+        core_profiles_in.profiles_1d[0].ion[i].density = np.array(core_profiles_in.profiles_1d[0].ion[i].density) * scenario_params['n_Ne']
+        core_profiles_in.profiles_1d[0].ion[i].temperature = np.array(core_profiles_in.profiles_1d[0].ion[i].temperature) * scenario_params['T_Ne']
+    
+    if core_profiles_in.profiles_1d[0].ion[i].label == 'He4+2' or core_profiles_in.profiles_1d[0].ion[i].label == 'He4':
+      if 'al' in curr_str_split:
+        core_profiles_in.profiles_1d[0].ion[i].density_fast = np.array(core_profiles_in.profiles_1d[0].ion[i].density_fast) * scenario_params['n_He4']
+        core_profiles_in.profiles_1d[0].ion[i].temperature = np.array(core_profiles_in.profiles_1d[0].ion[i].temperature) * scenario_params['T_He4']
+
+
+
+
+
+
+
+  return core_profiles_in
+
+
 
 def imports_check(actor_name):
   if actor_name in no_actor:

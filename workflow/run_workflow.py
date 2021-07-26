@@ -19,7 +19,9 @@ def workflow_EP(current_config_folder):
     
     # IMPORT PARAMETERS FROM WORKFLOW XML--------------------------------------
     param = parameters_workflow(current_config_folder+'/input_workflow_default.xml')
+    scenario_params = parameters_workflow(current_config_folder+'/scenario.xml')
 
+    curr_str = None # for avioding 
     # CHECK FOR EXISTING DB
     output_folder = os.getenv('HOME')+'/public/imasdb/'+param['machine_out']+'/3/0'
     if os.path.isdir(output_folder) == False:
@@ -46,7 +48,9 @@ def workflow_EP(current_config_folder):
         if param['ligka_541'] == 1:
             print('=================Starting HELENA and LIGKA mode 5 - 4 - 1=================')
             if param['Equilibrium_code'] == 'Helena':
-                actor_call("Helena", current_config_folder, param)
+                print('Now modifying SCENARIO/LIGKA XML by taking the species present in core_profiles IDS')
+                curr_str, nspec, nback, nhot = profiles_get(param)
+                actor_call("Helena", current_config_folder, param, curr_str, scenario_params)
 
                 print(param['Equilibrium_code'],' done. STARTING LIGKA MODE 5')
             else:
@@ -54,8 +58,9 @@ def workflow_EP(current_config_folder):
 
              # MODIFY LIGKA XML TO TAKE NSPEC automatically!!
             param_ligka = parameters_workflow(current_config_folder+'/z_ligka.xml')
-            print('Now modifying LIGKA XML by taking the species present in core_profiles IDS')
-            curr_str, nspec, nback, nhot = profiles_get(param)
+            if not curr_str:
+                print('Now modifying LIGKA XML by taking the species present in core_profiles IDS')
+                curr_str, nspec, nback, nhot = profiles_get(param)
             update_xml_param_on_run(param_ligka, 'spec_str', curr_str)
             save_xml_param_to_file_on_run(current_config_folder+'/z_ligka.xml', 'spec_str', str(curr_str))
             update_xml_param_on_run(param_ligka, 'nspec', nspec)
@@ -94,13 +99,16 @@ def workflow_EP(current_config_folder):
 
         else:
             if param['Equilibrium_code'] == 'Helena':
-                actor_call("Helena", current_config_folder, param)
+                print('Now modifying SCENARIO by taking the species present in core_profiles IDS')
+                curr_str, nspec, nback, nhot = profiles_get(param)
+                actor_call("Helena", current_config_folder, param, curr_str, scenario_params)
 
             # MODIFY LIGKA XML TO TAKE NSPEC automatically!!
             if str(param['Stability_code']) != '0' or str(param['Orbit_Finder']) != '0':
                 param_ligka = parameters_workflow(current_config_folder+'/z_ligka.xml')
-                print('Now modifying LIGKA XML by taking the species present in core_profiles IDS')
-                curr_str, nspec, nback, nhot = profiles_get(param)
+                if not curr_str:
+                    print('Now modifying LIGKA XML by taking the species present in core_profiles IDS')
+                    curr_str, nspec, nback, nhot = profiles_get(param)
                 update_xml_param_on_run(param_ligka, 'spec_str', curr_str)
                 save_xml_param_to_file_on_run(current_config_folder+'/z_ligka.xml', 'spec_str', str(curr_str))
                 update_xml_param_on_run(param_ligka, 'nspec', nspec)

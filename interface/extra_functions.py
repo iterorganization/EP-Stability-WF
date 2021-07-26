@@ -68,7 +68,7 @@ def copy_workflow_param_to_file(previous_folder,current_wf_param_folder,wf_param
     # Copy the actors xml files into the current dir
     # Only in case of saveAs, because the individual .xml of the actors are saved separately
     if saveAs == 1:
-      for ep_files in ['analysis.xml','finder_input.xml','hagis1.xml','hagis2.xml','helena.xml','z_ligka.xml']:
+      for ep_files in ['analysis.xml','finder_input.xml','hagis1.xml','hagis2.xml','helena.xml','z_ligka.xml','scenario.xml']:
         if previous_folder is not None:
           copy2(previous_folder+'/'+ep_files,current_wf_param_folder,follow_symlinks=True)
         else:
@@ -88,7 +88,7 @@ def load(chosen_folder,open_gui):
         print('The selected folder '+chosen_folder+' does not appear to be a proper', file=sys.stderr)
         print('configuration folder since it contains no input_workflow_default.xml file '+'--> Nothing loaded.', file=sys.stderr)
         return
-    for ep_files in ['analysis.xml','finder_input.xml','hagis1.xml','hagis2.xml','helena.xml','z_ligka.xml']:
+    for ep_files in ['analysis.xml','finder_input.xml','hagis1.xml','hagis2.xml','helena.xml','z_ligka.xml','scenario.xml']:
         if not os.path.exists(chosen_folder+'/'+ep_files):
             print('The selected folder '+chosen_folder+' does not appear to be a proper', file=sys.stderr)
             print('configuration folder since it contains no '+ep_files+' file '+'--> Nothing loaded.', file=sys.stderr)
@@ -150,6 +150,8 @@ def actor_window(wfp_ref_l, ligka_param, wf_param_folder, l):
     window_a.title('HELENA PARAMETERS')
   elif l == 4:
     window_a.title('FINDER PARAMETERS')
+  elif l == 6:
+    window_a.title('SCENARIO PARAMETERS')
   window_a.configure(bg = col.c1)
 
   try:
@@ -213,7 +215,10 @@ def actor_window(wfp_ref_l, ligka_param, wf_param_folder, l):
     button_saveconfig = Button(fr_l, text = 'Save FINDER Configuration', bg = col.c2)
     button_saveconfig.grid(row = 52, column = 0, padx = 5, pady = 5, sticky = 'ew')
     button_saveconfig.configure(command = lambda: save_xml_param_to_file(ligka_param, wf_param_folder+'/finder_input.xml'))
-
+  elif l == 6:
+    button_saveconfig = Button(fr_l, text = 'Save SCENARIO Configuration', bg = col.c2)
+    button_saveconfig.grid(row = 52, column = 0, padx = 5, pady = 5, sticky = 'ew')
+    button_saveconfig.configure(command = lambda: save_xml_param_to_file(ligka_param, wf_param_folder+'/scenario.xml'))
 
 
 ## FUNCTION NEW ANALYSIS WINDOW 

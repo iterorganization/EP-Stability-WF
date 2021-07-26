@@ -50,6 +50,7 @@ def open_gui(wf_param_folder):
     hagis2_param = create_xml_param_from_file(wf_param_folder+'/hagis2.xml')
     finder_param = create_xml_param_from_file(wf_param_folder+'/finder_input.xml')
     analysis_param = create_xml_param_from_file(wf_param_folder+'/analysis.xml')
+    scenario_param = create_xml_param_from_file(wf_param_folder+'/scenario.xml')
 
     fr_wfp = Frame(window, width = 300, height = 500, background = col.c3)
     fr_wfp.grid(row = 0, column = 0, rowspan = 2,  sticky = 'nwes', padx = 3, pady = 3)
@@ -73,6 +74,7 @@ def open_gui(wf_param_folder):
     wfp_ref_h2 = list(hagis2_param.keys())
     wfp_ref_f = list(finder_param.keys())
     ana_ref = list(analysis_param.keys())[0]
+    scen_ref = list(scenario_param.keys())
     
   
 
@@ -227,6 +229,10 @@ def open_gui(wf_param_folder):
     button_saveconfig = Button(fr_as, text = 'FINDER Parameters', bg = col.c2)
     button_saveconfig.grid(row = 57, column = 0, padx = 5, pady = 5, sticky = 'ew')
     button_saveconfig.configure(command = lambda: actor_window(wfp_ref_f, finder_param, wf_param_folder, 4))
+
+    button_saveconfig = Button(fr_as, text = 'SCENARIO Parameters', bg = col.c2)
+    button_saveconfig.grid(row = 59, column = 0, padx = 5, pady = 5, sticky = 'ew')
+    button_saveconfig.configure(command = lambda: actor_window(scen_ref, scenario_param, wf_param_folder, 6))
 
     
      ## FUNCTIONS - SAVING & UPDATING
