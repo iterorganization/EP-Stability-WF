@@ -180,15 +180,20 @@ def scenario_mod(core_profiles_in, curr_str, scenario_params):
         core_profiles_in.profiles_1d[0].ion[i].density = np.array(core_profiles_in.profiles_1d[0].ion[i].density) * scenario_params['n_H']
         core_profiles_in.profiles_1d[0].ion[i].temperature = np.array(core_profiles_in.profiles_1d[0].ion[i].temperature) * scenario_params['T_H']
 
-    if core_profiles_in.profiles_1d[0].ion[i].label == 'D+' or core_profiles_in.profiles_1d[0].ion[i].label == 'D':
-      if 'dd' in curr_str_split:
-        core_profiles_in.profiles_1d[0].ion[i].density = np.array(core_profiles_in.profiles_1d[0].ion[i].density) * scenario_params['n_D']
-        core_profiles_in.profiles_1d[0].ion[i].temperature = np.array(core_profiles_in.profiles_1d[0].ion[i].temperature) * scenario_params['T_D']
+    if scenario_params['DT'] == 1:
+      if core_profiles_in.profiles_1d[0].ion[i].label == 'D+' or core_profiles_in.profiles_1d[0].ion[i].label == 'D':
+          core_profiles_in.profiles_1d[0].ion[i].density = np.array(core_profiles_in.profiles_1d[0].ion[i].density) * scenario_params['n_D']
+          core_profiles_in.profiles_1d[0].ion[i].temperature = np.array(core_profiles_in.profiles_1d[0].ion[i].temperature) * scenario_params['T_D']
+    else:
+      if core_profiles_in.profiles_1d[0].ion[i].label == 'D+' or core_profiles_in.profiles_1d[0].ion[i].label == 'D':
+        if 'dd' in curr_str_split:
+          core_profiles_in.profiles_1d[0].ion[i].density = np.array(core_profiles_in.profiles_1d[0].ion[i].density) * scenario_params['n_D']
+          core_profiles_in.profiles_1d[0].ion[i].temperature = np.array(core_profiles_in.profiles_1d[0].ion[i].temperature) * scenario_params['T_D']
 
-    if core_profiles_in.profiles_1d[0].ion[i].label == 'T+' or core_profiles_in.profiles_1d[0].ion[i].label == 'T':
-      if 'tt' in curr_str_split:
-        core_profiles_in.profiles_1d[0].ion[i].density = np.array(core_profiles_in.profiles_1d[0].ion[i].density) * scenario_params['n_T']
-        core_profiles_in.profiles_1d[0].ion[i].temperature = np.array(core_profiles_in.profiles_1d[0].ion[i].temperature) * scenario_params['T_T']
+      if core_profiles_in.profiles_1d[0].ion[i].label == 'T+' or core_profiles_in.profiles_1d[0].ion[i].label == 'T':
+        if 'tt' in curr_str_split:
+          core_profiles_in.profiles_1d[0].ion[i].density = np.array(core_profiles_in.profiles_1d[0].ion[i].density) * scenario_params['n_T']
+          core_profiles_in.profiles_1d[0].ion[i].temperature = np.array(core_profiles_in.profiles_1d[0].ion[i].temperature) * scenario_params['T_T']
     
     if core_profiles_in.profiles_1d[0].ion[i].label == 'Be+' or core_profiles_in.profiles_1d[0].ion[i].label == 'Be':
       if 'be' in curr_str_split:

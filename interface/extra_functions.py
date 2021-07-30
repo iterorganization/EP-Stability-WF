@@ -179,13 +179,21 @@ def actor_window(wfp_ref_l, ligka_param, wf_param_folder, l):
       irow += 1
 
       for elem in ligka_param[ref]:
-          
-          Label(canvasFrame, text = elem, bg = col.c3).grid(row = irow,  column = 0, padx = 3, pady = 2, sticky = 'w')
 
-          entrystring = StringVar()
-          entrystring.set(ligka_param[ref][elem])
-          entrystring.trace('w', lambda name, index, mode, elem = elem, entrystring = entrystring, ref = ref: update_xml_param(ligka_param, ref, elem, entrystring.get()))                      # if an entry is changed, the new values should immediately be changed in the workflow_param dictionary
-          Entry(canvasFrame, textvariable = entrystring, bg = col.c1).grid(row = irow, column = 1, padx = 3, pady = 2, sticky = 'e')
+          Label(canvasFrame, text = elem, bg = col.c3).grid(row = irow,  column = 0, padx = 3, pady = 2, sticky = 'w')
+          if elem == 'DT':
+            entrystring = StringVar()
+            entrystring.set(ligka_param[ref][elem])
+            c = Checkbutton(canvasFrame, variable = entrystring)
+            c.grid(row = irow, column = 1, padx = 3, pady = 2, sticky = 'e')
+            entrystring.trace('w', lambda name, index, mode, elem = elem, entrystring = entrystring, ref = ref: update_xml_param(ligka_param, ref, elem, entrystring.get()))
+
+          else:
+
+            entrystring = StringVar()
+            entrystring.set(ligka_param[ref][elem])
+            entrystring.trace('w', lambda name, index, mode, elem = elem, entrystring = entrystring, ref = ref: update_xml_param(ligka_param, ref, elem, entrystring.get()))                      # if an entry is changed, the new values should immediately be changed in the workflow_param dictionary
+            Entry(canvasFrame, textvariable = entrystring, bg = col.c1).grid(row = irow, column = 1, padx = 3, pady = 2, sticky = 'e')
           irow += 1
 
   scroll = Scrollbar(fr_l, orient=VERTICAL)
