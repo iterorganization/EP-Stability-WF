@@ -111,31 +111,31 @@ def actor_call(actor_name, config_folder_path, system_params, curr_str = None, s
                                                               mpi_processes = system_params['mpi_processes'])
 
     if equilibrium_out:
-      output.put_slice(equilibrium_out, occurrence=equilibrium_occ)
+      output.put_slice(equilibrium_out, occurrence=output_ids['equilibrium'])
       print('*************************************')
       print('Output time = ', equilibrium_out.time[0])
-      print('Saved '+ actor_name +' equilibrium under occurrence ' + str(equilibrium_occ))
+      print('Saved '+ actor_name +' equilibrium under occurrence ' + str(output_ids['equilibrium']))
       print('*************************************')
       
     if mhd_linear_out:
-      output.put_slice(mhd_linear_out, occurrence=mhd_linear_occ)
+      output.put_slice(mhd_linear_out, occurrence=output_ids['mhd_linear'])
       print('*************************************')
       print('Output time = ', mhd_linear_out.time[0])
-      print('Saved '+ actor_name +' mhd_linear under occurrence ' + str(mhd_linear_occ))
+      print('Saved '+ actor_name +' mhd_linear under occurrence ' + str(output_ids['mhd_linear']))
       print('*************************************')
 
     if core_profiles_out:
-      output.put_slice(core_profiles_out, occurrence=core_profiles_occ)
+      output.put_slice(core_profiles_out, occurrence=output_ids['core_profiles'])
       print('*************************************')
       print('Output time = ', core_profiles_out.time[0])
-      print('Saved '+ actor_name +' core_profiles under occurrence ' + str(core_profiles_occ))
+      print('Saved '+ actor_name +' core_profiles under occurrence ' + str(output_ids['core_profiles']))
       print('*************************************')
 
     if distributions_out:
-      output.put_slice(distributions_out, occurrence=distributions_occ)
+      output.put_slice(distributions_out, occurrence=output_ids['distributions'])
       print('*************************************')
       print('Output time = ', distributions_out.time[0])
-      print('Saved '+ actor_name +' distributions under occurrence ' + str(distributions_occ))
+      print('Saved '+ actor_name +' distributions under occurrence ' + str(output_ids['distributions']))
       print('*************************************')
 
   input.close()
