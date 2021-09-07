@@ -26,7 +26,7 @@ if [[ $HOSTNAME == sdcc* ]]; then
     module load IMAS/3.32.0-4.9.0-2020b
     module load FFTW/3.3.8-intel-2020b
     module load netCDF-Fortran/4.5.3-iimpi-2020b
-    module load PSPLINE/2.0.0-iimpi-2020b 
+    module load PSPLINE/2.0.0-iimpi-2020b
     module load MUMPS/5.3.5-intel-2020b-metis
     module load NAG/26-intel-2020b
     module load PPPLIB/16.5.26-iccifort-2020.4.304
@@ -42,8 +42,6 @@ if [[ $HOSTNAME == sdcc* ]]; then
     module load ParMETIS/4.0.3-iimpi-2020b
     module load libdierckx/1993-GCCcore-10.2.0
     export EZSPLINE_NO_SUFF=TRUE
-    
-
 fi
 
 
