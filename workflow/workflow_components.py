@@ -61,7 +61,7 @@ def actor_call(actor_name, config_folder_path, system_params, curr_str=None, sce
                                 current_config_folder=config_folder_path)
 
     # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
-    input = imas.DBEntry(imasdef.MDSPLUS_BACKEND, database, shot_no, run, user)
+    input = imas.DBEntry(imasdef.HDF5_BACKEND, database, shot_no, run, user)
     status, _ = input.open()
     if status != 0:
         print("Can't open the selected dataset!", file=sys.stderr)
@@ -70,7 +70,7 @@ def actor_call(actor_name, config_folder_path, system_params, curr_str=None, sce
     if actor_params['entrypoint_actor']:
         # OPEN OUTPUT OBJECT, IN VIEW OF SAVING RESULTS TO LOCAL DB
         print('=> Create output datafile')
-        output = imas.DBEntry(imasdef.MDSPLUS_BACKEND,
+        output = imas.DBEntry(imasdef.HDF5_BACKEND,
                               database_out, shot_no, run_out, os.getenv('USER'))
         output.create()
     else:
@@ -118,7 +118,7 @@ def actor_call(actor_name, config_folder_path, system_params, curr_str=None, sce
                                                                                                         mpi_processes=system_params['mpi_processes'])
 
         if equilibrium_out:
-            output.put_slice(
+            output.put(
                 equilibrium_out, occurrence=output_ids['equilibrium'])
             print('*************************************')
             print('Output time = ', equilibrium_out.time[0])
@@ -127,7 +127,7 @@ def actor_call(actor_name, config_folder_path, system_params, curr_str=None, sce
             print('*************************************')
 
         if mhd_linear_out:
-            output.put_slice(
+            output.put(
                 mhd_linear_out, occurrence=output_ids['mhd_linear'])
             print('*************************************')
             print('Output time = ', mhd_linear_out.time[0])
@@ -136,7 +136,7 @@ def actor_call(actor_name, config_folder_path, system_params, curr_str=None, sce
             print('*************************************')
 
         if core_profiles_out:
-            output.put_slice(core_profiles_out,
+            output.put(core_profiles_out,
                              occurrence=output_ids['core_profiles'])
             print('*************************************')
             print('Output time = ', core_profiles_out.time[0])
@@ -145,7 +145,7 @@ def actor_call(actor_name, config_folder_path, system_params, curr_str=None, sce
             print('*************************************')
 
         if distributions_out:
-            output.put_slice(distributions_out,
+            output.put(distributions_out,
                              occurrence=output_ids['distributions'])
             print('*************************************')
             print('Output time = ', distributions_out.time[0])
@@ -154,3 +154,4 @@ def actor_call(actor_name, config_folder_path, system_params, curr_str=None, sce
             print('*************************************')
 
     input.close()
+    output.close()

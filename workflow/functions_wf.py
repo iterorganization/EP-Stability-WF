@@ -64,7 +64,7 @@ def read_timestep(user, database, run, current_config_folder):
     param = parameters_workflow(
         current_config_folder + '/input_workflow_default.xml')
     print('=> Open input datafile and read total equilibrium IDS for timesteps.')
-    input = imas.DBEntry(imasdef.MDSPLUS_BACKEND, database,
+    input = imas.DBEntry(imasdef.HDF5_BACKEND, database,
                          param['shot_nr'], run, user)
     status, _ = input.open()
     if status != 0:
@@ -79,18 +79,17 @@ def read_timestep(user, database, run, current_config_folder):
 def profiles_get(param, species_input, scenario_input):
     # Needs to be updated to the new AL
     print('=> Open input datafile and read the numer of species and other neccesary inputs for LIGKA')
-    input_species = imas.ids(param['shot_nr'], param['run_in'], 0, 0)
-    input_species.open_env(param['user'], param['machine'], '3')
-    core_profiles = input_species.core_profiles
-    time = core_profiles.partialGet('time')
+    # input_species = imas.ids(param['shot_nr'], param['run_in'], 0, 0)
+    input_species = imas.DBEntry(imasdef.HDF5_BACKEND, param['machine_out'], param['shot_nr'], param['run_out'], os.getenv('USER'))
+    input_species.open()
+    core_profiles = input_species.get('core_profiles')
+    time = core_profiles.time
     ntime = len(time)
 
-    core_profiles.profiles_1d.resize(1)
-    if ntime > 1:  # if NOT ASTRA shot
-        core_profiles.profiles_1d[0] = input_species.core_profiles.partialGet(
-            'profiles_1d('+str(int(time[1]))+')')
-    else:
-        input_species.core_profiles.get()
+    # core_profiles.profiles_1d.resize(1)
+    # if ntime > 1:  # if NOT ASTRA shot
+    #     core_profiles.profiles_1d[0] = input_species.partial_get('core_profiles',
+    #         'profiles_1d('+str(int(time[1]))+')')
     nspecies = len(core_profiles.profiles_1d[0].ion)
 
     species = []
@@ -106,8 +105,8 @@ def profiles_get(param, species_input, scenario_input):
 
     ne = sum(volume*core_profiles.profiles_1d[0].electrons.density)
 
-    nspec_over_ntot = species_density/ntot
-    nspec_over_ne = species_density/ne
+    nspec_over_ntot = [val/ntot for val in species_density]
+    nspec_over_ne = [val/ne for val in species_density]
 
     for ispecies in range(nspecies):
         for jspecies in range(nspecies):
