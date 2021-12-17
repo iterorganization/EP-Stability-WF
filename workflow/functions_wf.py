@@ -59,12 +59,12 @@ def parameters_workflow(input_file):
 # WF RUNNING FUNCTIONS
 
 
-def read_timestep(user, database, run, current_config_folder):
+def read_timestep(user, database, run, current_config_folder, backend):
 
     param = parameters_workflow(
         current_config_folder + '/input_workflow_default.xml')
     print('=> Open input datafile and read total equilibrium IDS for timesteps.')
-    input = imas.DBEntry(imasdef.HDF5_BACKEND, database,
+    input = imas.DBEntry(backend, database,
                          param['shot_nr'], run, user)
     status, _ = input.open()
     if status != 0:
@@ -80,8 +80,13 @@ def profiles_get(param, species_input, scenario_input):
 
     print('=> Open input datafile and read the numer of species and other neccesary inputs for LIGKA')
 
+    if param['hdf5'] == 1:
+        backend = imasdef.HDF5_BACKEND
+    else:
+        backend = imasdef.MDSPLUS_BACKEND
+
     input_species = imas.DBEntry(
-        imasdef.HDF5_BACKEND, param['machine'], param['shot_nr'], param['run_in'], param['user'])
+        backend, param['machine'], param['shot_nr'], param['run_in'], param['user'])
     input_species.open()
     core_profiles = input_species.get('core_profiles')
     time = core_profiles.time

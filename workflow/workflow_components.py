@@ -34,6 +34,11 @@ def actor_call(actor_name, config_folder_path, system_params, curr_str=None, sce
     slice_end = system_params['itend'] - system_params['itbegin']
     shot_no = system_params['shot_nr']
 
+    if system_params['hdf5'] == 1:
+        backend = imasdef.HDF5_BACKEND
+    else:
+        backend = imasdef.MDSPLUS_BACKEND
+
     if actor_params['entrypoint_actor']:
         database = system_params['machine']
         database_out = system_params['machine_out']
@@ -52,10 +57,10 @@ def actor_call(actor_name, config_folder_path, system_params, curr_str=None, sce
     time, ntime = read_timestep(user=user,
                                 database=database,
                                 run=run,
-                                current_config_folder=config_folder_path)
+                                current_config_folder=config_folder_path, backend=backend)
 
     # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
-    input = imas.DBEntry(imasdef.HDF5_BACKEND, database, shot_no, run, user)
+    input = imas.DBEntry(backend, database, shot_no, run, user)
     status, _ = input.open()
     if status != 0:
         print("Can't open the selected dataset!", file=sys.stderr)
@@ -64,7 +69,7 @@ def actor_call(actor_name, config_folder_path, system_params, curr_str=None, sce
     if actor_params['entrypoint_actor']:
         # OPEN OUTPUT OBJECT, IN VIEW OF SAVING RESULTS TO LOCAL DB
         print('=> Create output datafile')
-        output = imas.DBEntry(imasdef.HDF5_BACKEND,
+        output = imas.DBEntry(backend,
                               database_out, shot_no, run_out, os.getenv('USER'))
         output.create()
     else:

@@ -134,7 +134,7 @@ def open_gui(wf_param_folder):
 
             Label(fr_wfp, text=elem, bg=col.c3).grid(
                 row=irow,  column=0, padx=3, pady=2, sticky='w')
-            if elem in ['ligka_541', 'pulse_list', 'fast_particles']:
+            if elem in ['ligka_541', 'pulse_list', 'fast_particles', 'hdf5']:
                 entrystring = StringVar()
                 entrystring.set(workflow_param[ref][elem][0])
                 c = Checkbutton(fr_wfp, variable=entrystring)
