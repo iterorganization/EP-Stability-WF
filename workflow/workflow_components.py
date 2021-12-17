@@ -1,14 +1,8 @@
 import os
 import imas
 import sys
-import pdb
-import random
-import copy
-from lxml import etree
-import xml.etree.ElementTree as ET
 
-from workflow.functions_wf import parameters_workflow, read_timestep, actor_settings, imports_check, scenario_mod
-from interface.create_workflow_param import create_xml_param_from_file
+from workflow.functions_wf import read_timestep, actor_settings, imports_check, scenario_mod
 from imas import imasdef
 
 
@@ -87,6 +81,7 @@ def actor_call(actor_name, config_folder_path, system_params, curr_str=None, sce
         core_profiles_in = imas.core_profiles()
         core_profiles_occ = 0
         mhd_linear_in = imas.mhd_linear()
+        mhd_linear_in.ids_properties.homogeneousTime = 1
         mhd_linear_occ = 0
         distributions_in = imas.distributions()
         distributions_occ = 0
@@ -114,11 +109,10 @@ def actor_call(actor_name, config_folder_path, system_params, curr_str=None, sce
                                                                                                         distributions_in,
                                                                                                         config_folder_path +
                                                                                                         actor_params['config_file_name'],
-                                                                                                        'mpi_local',
                                                                                                         mpi_processes=system_params['mpi_processes'])
 
         if equilibrium_out:
-            output.put(
+            output.put_slice(
                 equilibrium_out, occurrence=output_ids['equilibrium'])
             print('*************************************')
             print('Output time = ', equilibrium_out.time[0])
@@ -127,8 +121,12 @@ def actor_call(actor_name, config_folder_path, system_params, curr_str=None, sce
             print('*************************************')
 
         if mhd_linear_out:
-            output.put(
-                mhd_linear_out, occurrence=output_ids['mhd_linear'])
+            if itime == 0:  # Fix until mhd_linear is also independent of put/put_slice PR #600
+                output.put(
+                    mhd_linear_out, occurrence=output_ids['mhd_linear'])
+            else:
+                output.put_slice(
+                    mhd_linear_out, occurrence=output_ids['mhd_linear'])
             print('*************************************')
             print('Output time = ', mhd_linear_out.time[0])
             print('Saved ' + actor_name +
@@ -136,7 +134,7 @@ def actor_call(actor_name, config_folder_path, system_params, curr_str=None, sce
             print('*************************************')
 
         if core_profiles_out:
-            output.put(core_profiles_out,
+            output.put_slice(core_profiles_out,
                              occurrence=output_ids['core_profiles'])
             print('*************************************')
             print('Output time = ', core_profiles_out.time[0])
@@ -145,7 +143,7 @@ def actor_call(actor_name, config_folder_path, system_params, curr_str=None, sce
             print('*************************************')
 
         if distributions_out:
-            output.put(distributions_out,
+            output.put_slice(distributions_out,
                              occurrence=output_ids['distributions'])
             print('*************************************')
             print('Output time = ', distributions_out.time[0])

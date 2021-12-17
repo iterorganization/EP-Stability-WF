@@ -77,19 +77,16 @@ def read_timestep(user, database, run, current_config_folder):
 
 
 def profiles_get(param, species_input, scenario_input):
-    # Needs to be updated to the new AL
+
     print('=> Open input datafile and read the numer of species and other neccesary inputs for LIGKA')
-    # input_species = imas.ids(param['shot_nr'], param['run_in'], 0, 0)
-    input_species = imas.DBEntry(imasdef.HDF5_BACKEND, param['machine_out'], param['shot_nr'], param['run_out'], os.getenv('USER'))
+
+    input_species = imas.DBEntry(
+        imasdef.HDF5_BACKEND, param['machine'], param['shot_nr'], param['run_in'], param['user'])
     input_species.open()
     core_profiles = input_species.get('core_profiles')
     time = core_profiles.time
     ntime = len(time)
 
-    # core_profiles.profiles_1d.resize(1)
-    # if ntime > 1:  # if NOT ASTRA shot
-    #     core_profiles.profiles_1d[0] = input_species.partial_get('core_profiles',
-    #         'profiles_1d('+str(int(time[1]))+')')
     nspecies = len(core_profiles.profiles_1d[0].ion)
 
     species = []
@@ -272,7 +269,6 @@ def helena_imas_actor_wf_wrapper(equilibrium_in,
                                  mhd_linear_in,
                                  distributions_in,
                                  config_file_path,
-                                 run_mode,
                                  mpi_processes):
 
     equilibrium_out = helena_imas_actor(equilibrium_in,
@@ -286,7 +282,6 @@ def hagis1_actor_wf_wrapper(equilibrium_in,
                             mhd_linear_in,
                             distributions_in,
                             config_file_path,
-                            run_mode,
                             mpi_processes):
 
     equilibrium_out, mhd_linear_out = hagis1_actor(
@@ -300,7 +295,6 @@ def hagis2_actor_wf_wrapper(equilibrium_in,
                             mhd_linear_in,
                             distributions_in,
                             config_file_path,
-                            run_mode,
                             mpi_processes):
 
     mhd_linear_out, distributions_out = hagis2_actor(
@@ -314,7 +308,6 @@ def ligka_actor_wf_wrapper(equilibrium_in,
                            mhd_linear_in,
                            distributions_in,
                            config_file_path,
-                           run_mode,
                            mpi_processes):
 
     mhd_linear_out = ligka_actor(equilibrium_in, core_profiles_in, mhd_linear_in,
@@ -328,7 +321,6 @@ def finder_actor_wf_wrapper(equilibrium_in,
                             mhd_linear_in,
                             distributions_in,
                             config_file_path,
-                            run_mode,
                             mpi_processes):
 
     distributions_out = finder9_actor(

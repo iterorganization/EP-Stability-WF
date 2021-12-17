@@ -26,8 +26,7 @@ if [[ $HOSTNAME == sdcc* ]]; then
     # sdcc-login
     echo "Loading sdcc modules..."
     module load libcerf/1.14-iccifort-2020.4.304
-    module load IMAS/3.33.0-4.9.2-2020b
-    # module load IMAS/3.32.0-4.9.0-2020b
+    module load IMAS/3.34.0-4.9.3-2020b
     module load FFTW/3.3.8-intel-2020b
     module load netCDF-Fortran/4.5.3-iimpi-2020b
     module load PSPLINE/2.0.0-iimpi-2020b
@@ -35,6 +34,7 @@ if [[ $HOSTNAME == sdcc* ]]; then
     module load NAG/26-intel-2020b
     module load PPPLIB/16.5.26-iccifort-2020.4.304
     module load FC2K/4.14.0-Java-11
+    module switch PyAL/1.3.5-GCCcore-10.2.0
     # module load FC2K/4.13.5-Java-11
     module load XMLlib/3.3.1-intel-2020b
     module load lxml/4.6.2-GCCcore-10.2.0
@@ -46,6 +46,9 @@ if [[ $HOSTNAME == sdcc* ]]; then
     module load ParMETIS/4.0.3-iimpi-2020b
     module load libdierckx/1993-GCCcore-10.2.0
     export EZSPLINE_NO_SUFF=TRUE
+    export DIERCKX_HOME=$EBROOTLIBDIERCKX
+    export HELENA_XML=helena_imas.xml
+    export HDF5_USE_FILE_LOCKING=FALSE #HDF5 locking off, so one can read from 2 or more workers the same ids at the same time.
 fi
 echo "Done loading modules."
 
@@ -55,7 +58,7 @@ echo "Done loading modules."
 export ACTOR_FOLDER=${HOME}/public/imas_actors_sdcc #edit this line to best suit your needs
 export HAGIS2PATH_s=$ACTOR_FOLDER/hagis2_s/hagis2_s/native_wrapper/lib/def  # DO NOT CHANGE THIS LINE! (required by the finder)
 
-mkdir -p ~/$ACTOR_FOLDER
+mkdir -p $ACTOR_FOLDER
 
 # EXTEND PYTHON PATH AND AVOID DOUBLONS (where the actors are under the form: "/actor_name/version(if any)"
 export PYTHONPATH=$ACTOR_FOLDER/hagis1:$PYTHONPATH
