@@ -39,6 +39,11 @@ def actor_call(actor_name, config_folder_path, system_params, curr_str=None, sce
     else:
         backend = imasdef.MDSPLUS_BACKEND
 
+    if actor_name == 'Ligka_m5':
+        mpi_processes = 1
+    else:
+        mpi_processes = system_params['mpi_processes']
+
     if actor_params['entrypoint_actor']:
         database = system_params['machine']
         database_out = system_params['machine_out']
@@ -114,7 +119,7 @@ def actor_call(actor_name, config_folder_path, system_params, curr_str=None, sce
                                                                                                         distributions_in,
                                                                                                         config_folder_path +
                                                                                                         actor_params['config_file_name'],
-                                                                                                        mpi_processes=system_params['mpi_processes'])
+                                                                                                        mpi_processes=mpi_processes)
 
         if equilibrium_out:
             output.put_slice(
@@ -129,14 +134,19 @@ def actor_call(actor_name, config_folder_path, system_params, curr_str=None, sce
             if itime == 0:  # Fix until mhd_linear is also independent of put/put_slice PR #600
                 output.put(
                     mhd_linear_out, occurrence=output_ids['mhd_linear'])
+                print('*************************************')
+                print('Initial Output')
+                print('Saved ' + actor_name +
+                      ' mhd_linear under occurrence ' + str(output_ids['mhd_linear']))
+                print('*************************************')
             else:
                 output.put_slice(
                     mhd_linear_out, occurrence=output_ids['mhd_linear'])
-            print('*************************************')
-            print('Output time = ', mhd_linear_out.time[0])
-            print('Saved ' + actor_name +
-                  ' mhd_linear under occurrence ' + str(output_ids['mhd_linear']))
-            print('*************************************')
+                print('*************************************')
+                print('Output time = ', mhd_linear_out.time[0])
+                print('Saved ' + actor_name +
+                      ' mhd_linear under occurrence ' + str(output_ids['mhd_linear']))
+                print('*************************************')
 
         if core_profiles_out:
             output.put_slice(core_profiles_out,

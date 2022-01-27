@@ -131,6 +131,10 @@ def workflow_EP(current_config_folder):
 
         else:
             if param['Equilibrium_code'] == 'Helena':
+                print(
+                    'Now modifying SCENARIO by taking the species present in core_profiles IDS')
+                curr_str, nspec, nback, nhot = profiles_get(
+                    param, species_input, scenario_params)
                 actor_call("Helena", current_config_folder,
                            param, curr_str, scenario_params)
 
@@ -139,10 +143,11 @@ def workflow_EP(current_config_folder):
                 param_ligka = parameters_workflow(
                     current_config_folder+'/z_ligka.xml')
 
-                print(
-                    'Now modifying SCENARIO by taking the species present in core_profiles IDS')
-                curr_str, nspec, nback, nhot = profiles_get(
-                    param, species_input, scenario_params)
+                if not curr_str:
+                    print(
+                        'Now modifying LIGKA XML by taking the species present in core_profiles IDS')
+                    curr_str, nspec, nback, nhot = profiles_get(
+                        param, species_input, scenario_params)
                 update_xml_param_on_run(param_ligka, 'spec_str', curr_str)
                 save_xml_param_to_file_on_run(
                     current_config_folder+'/z_ligka.xml', 'spec_str', str(curr_str))
