@@ -31,17 +31,18 @@ def converter(backend_from, backend_to, database_from, database_to, shot_no, run
     output.close()
 
 
-backend_from = imasdef.HDF5_BACKEND
-backend_to = imasdef.MDSPLUS_BACKEND
-database_from = ''
-database_to = ''
-shot_no = 0
-run_from = 0
-run_to = 0
-user_from = ''
+if __name__ == "__main__":
+    backend_from = imasdef.HDF5_BACKEND
+    backend_to = imasdef.MDSPLUS_BACKEND
+    database_from = ''
+    database_to = ''
+    shot_no = 0
+    run_from = 0
+    run_to = 0
+    user_from = ''
 
-# FORM OF THE DICT IS: IDS NAME as key, first entry IDS_OCCURRENCE IN and second entry IDS_OCCURRENCE OUT.
-ids_dict = {'equilibrium': (0, 1), 'mhd_linear': (0, 1)}
+    # FORM OF THE DICT IS: IDS NAME as key, first entry IDS_OCCURRENCE IN and second entry IDS_OCCURRENCE OUT.
+    ids_dict = {'equilibrium': (0, 1), 'mhd_linear': (0, 1)}
 
-converter(backend_from, backend_to, database_from, database_to,
-          shot_no, run_from, run_to, user_from, ids_dict)
+    converter(backend_from, backend_to, database_from, database_to,
+              shot_no, run_from, run_to, user_from, ids_dict)
