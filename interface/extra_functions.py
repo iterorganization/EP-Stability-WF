@@ -77,7 +77,7 @@ def copy_workflow_param_to_file(previous_folder, current_wf_param_folder, wf_par
     # Copy the actors xml files into the current dir
     # Only in case of saveAs, because the individual .xml of the actors are saved separately
     if saveAs == 1:
-        for ep_files in ['analysis.xml', 'finder_input.xml', 'hagis1.xml', 'hagis2.xml', 'helena.xml', 'z_ligka.xml', 'actor_settings.xml', 'scenario.xml']:
+        for ep_files in ['analysis.xml', 'finder_input.xml', 'hagis1.xml', 'hagis2.xml', 'helena.xml', 'z_ligka.xml', 'actor_settings.xml', 'scenario.xml', 'ids_merge.xml']:
             if previous_folder is not None:
                 copy2(previous_folder+'/'+ep_files,
                       current_wf_param_folder, follow_symlinks=True)
@@ -101,7 +101,7 @@ def load(chosen_folder, open_gui):
         print('configuration folder since it contains no input_workflow_default.xml file ' +
               '--> Nothing loaded.', file=sys.stderr)
         return
-    for ep_files in ['analysis.xml', 'finder_input.xml', 'hagis1.xml', 'hagis2.xml', 'helena.xml', 'z_ligka.xml', 'actor_settings.xml', 'scenario.xml']:
+    for ep_files in ['analysis.xml', 'finder_input.xml', 'hagis1.xml', 'hagis2.xml', 'helena.xml', 'z_ligka.xml', 'actor_settings.xml', 'scenario.xml', 'ids_merge.xml']:
         if not os.path.exists(chosen_folder+'/'+ep_files):
             print('The selected folder '+chosen_folder +
                   ' does not appear to be a proper', file=sys.stderr)

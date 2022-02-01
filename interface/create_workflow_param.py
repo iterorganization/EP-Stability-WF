@@ -68,6 +68,31 @@ def save_xml_param_to_file(ligka_param, filepath):
     tree.write(filepath)
 
 
+def save_xml_param_to_file_multiple(ligka_param, filepath):
+
+    tree = etree.parse(filepath)
+    root = tree.getroot()
+
+    name0 = root[0].attrib['display']
+    name1 = root[1].attrib['display']
+    name2 = root[2].attrib['display']
+
+    for elem in root[0].iter():
+        if len(elem) == 0 and elem.tag is not etree.Comment:
+            elem.text = ligka_param[name0][elem.tag][0]
+
+    for elem in root[1].iter():
+        if len(elem) == 0 and elem.tag is not etree.Comment:
+            elem.text = ligka_param[name1][elem.tag][0]
+
+    for elem in root[2].iter():
+        if len(elem) == 0 and elem.tag is not etree.Comment:
+            elem.text = ligka_param[name2][elem.tag][0]
+
+    tree.write(filepath)
+    print('Saved Tree to XML!')
+
+
 def save_xml_param_to_file_on_run(filepath, variable, value):
 
     tree = etree.parse(filepath)

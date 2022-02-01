@@ -3,16 +3,15 @@ from interface.extra_functions import actor_window, analysis_window, scenario_wi
 from tkinter import *
 from interface.extra_functions import CreateToolTip
 import interface.colour_definitions as col
-from interface.create_workflow_param import create_workflow_param_from_file, create_xml_param_from_file, save_xml_param_to_file, update_xml_param, update_xml_param_wf
-from workflow.functions_wf import read_timestep
+from interface.create_workflow_param import create_workflow_param_from_file, create_xml_param_from_file, update_xml_param_wf
+from ids_merge.merge_gui import ids_window
 from workflow.run_workflow import workflow_EP
-from shutil import copy2, copytree, rmtree
-from datetime import datetime
+
 from lxml import etree
 from tkinter import filedialog, ttk
 import os
 import sys
-import subprocess
+
 sys.path.append(os.getcwd())
 sys.path.append('workflow')
 sys.path.append('interface')
@@ -58,6 +57,8 @@ def open_gui(wf_param_folder):
         wf_param_folder+'/actor_settings.xml')
     scenario_param = create_xml_param_from_file(
         wf_param_folder+'/scenario.xml')
+    ids_merge_param = create_workflow_param_from_file(
+        wf_param_folder+'/ids_merge.xml')
 
     fr_wfp = Frame(window, width=300, height=500, background=col.c3)
     fr_wfp.grid(row=0, column=0, rowspan=2,  sticky='nwes', padx=3, pady=3)
@@ -83,6 +84,7 @@ def open_gui(wf_param_folder):
     ana_ref = list(analysis_param.keys())[0]
     species_ref = list(species_param.keys())
     scen_ref = list(scenario_param.keys())
+    ids_merge_ref = list(ids_merge_param.keys())
 
     # Class to not re-generate a new folder name between two 'save' statements
 
@@ -267,6 +269,11 @@ def open_gui(wf_param_folder):
     button_saveconfig.grid(row=59, column=0, padx=5, pady=5, sticky='ew')
     button_saveconfig.configure(
         command=lambda: actor_window(scen_ref, wf_param_folder, 6))
+
+    button_saveconfig = Button(fr_as, text='IDS Merge', bg=col.c2)
+    button_saveconfig.grid(row=60, column=0, padx=5, pady=5, sticky='ew')
+    button_saveconfig.configure(
+        command=lambda: ids_window(ids_merge_ref, wf_param_folder))
 
     ## FUNCTIONS - SAVING & UPDATING
 
