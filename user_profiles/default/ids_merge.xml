@@ -1,6 +1,6 @@
 <root>
 
-  <input display="Inputs:">
+  <input display="Inputs">
     <user_in_1 display="User 1 Input">0</user_in_1>
     <machine_in_1 display="Machine 1 Input">0</machine_in_1>
     <shot_in_1 display="Shot 1 Input">0</shot_in_1>
@@ -13,7 +13,7 @@
     <HDF5_2 display="Use HDF5 backend for second IDS">0</HDF5_2>
   </input>
 
-  <output display="Output:">
+  <output display="Output">
     <user_out display="User Output">0</user_out>
     <machine_out display="User Output">0</machine_out>
     <shot_out display="User Output">0</shot_out>
@@ -21,7 +21,7 @@
     <HDF5_out display="Use HDF5 backend for output">0</HDF5_out>
   </output>
 
-  <settings display="Settings:">
+  <settings display="Settings">
     <itime display="Time Index">15-17,19</itime>
     <ne display="Activate electron density">0</ne>
     <Te display="Activate electron temperature">0</Te>

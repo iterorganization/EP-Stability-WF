@@ -39,7 +39,7 @@ def ids_window(ids_ref, wf_param_folder):
 
     irow = 0
     for ref in ids_ref:
-        if ref == 'Inputs:' or ref == 'Output:':
+        if ref == 'Inputs' or ref == 'Output':
             Label(fr_l, text=ref, bg=col.c3, font='15').grid(
                 row=irow, column=0, columnspan=2, pady=5, padx=5, sticky='we')
             irow += 1
