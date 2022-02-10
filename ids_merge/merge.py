@@ -32,13 +32,13 @@ def data_retrieve(ids_merge_param):
     Returns:
         [ids]: [for now only core_profiles]
     """
-    if ids_merge_param['Inputs']['HDF5_1'] == 1:
+    if ids_merge_param['Inputs']['HDF5_1'][0] == 1:
         backend = imasdef.HDF5_BACKEND
     else:
         backend = imasdef.MDSPLUS_BACKEND
 
-    input_1 = imas.DBEntry(backend,
-                           ids_merge_param['Inputs']['machine_in_1'], ids_merge_param['Inputs']['shot_in_1'], ids_merge_param['Inputs']['run_in_1'], ids_merge_param['Inputs']['user_in_1'])
+    input_1 = imas.DBEntry(backend, ids_merge_param['Inputs']['machine_in_1'][0], int(ids_merge_param['Inputs']
+                                                                                      ['shot_in_1'][0]), int(ids_merge_param['Inputs']['run_in_1'][0]), ids_merge_param['Inputs']['user_in_1'][0])
     status, _ = input_1.open()
     if status != 0:
         print("Can't open the first selected dataset!", file=sys.stderr)
@@ -46,13 +46,13 @@ def data_retrieve(ids_merge_param):
 
     time = input_1.partial_get('core_profiles', 'time')
 
-    if ids_merge_param['Inputs']['HDF5_2'] == 1:
+    if ids_merge_param['Inputs']['HDF5_2'][0] == 1:
         backend = imasdef.HDF5_BACKEND
     else:
         backend = imasdef.MDSPLUS_BACKEND
 
     input_2 = imas.DBEntry(backend,
-                           ids_merge_param['Inputs']['machine_in_2'], ids_merge_param['Inputs']['shot_in_2'], ids_merge_param['Inputs']['run_in_2'], ids_merge_param['Inputs']['user_in_2'])
+                           ids_merge_param['Inputs']['machine_in_2'][0], int(ids_merge_param['Inputs']['shot_in_2'][0]), int(ids_merge_param['Inputs']['run_in_2'][0]), ids_merge_param['Inputs']['user_in_2'][0])
     status, _ = input_2.open()
     if status != 0:
         print("Can't open the second selected dataset!", file=sys.stderr)
@@ -63,7 +63,7 @@ def data_retrieve(ids_merge_param):
 
 def data_writeout_create(ids_merge_param):
 
-    if ids_merge_param['Output']['HDF5_out'] == 1:
+    if ids_merge_param['Output']['HDF5_out'][0] == 1:
         backend = imasdef.HDF5_BACKEND
     else:
         backend = imasdef.MDSPLUS_BACKEND
@@ -71,7 +71,7 @@ def data_writeout_create(ids_merge_param):
     # OPEN OUTPUT OBJECT, IN VIEW OF SAVING RESULTS TO LOCAL DB
     print('=> Create output datafile')
     output = imas.DBEntry(backend,
-                          ids_merge_param['Output']['machine_out'], ids_merge_param['Output']['shot_out'], ids_merge_param['Output']['run_out'], ids_merge_param['Output']['user_out'])
+                          ids_merge_param['Output']['machine_out'][0], int(ids_merge_param['Output']['shot_out'][0]), int(ids_merge_param['Output']['run_out'][0]), ids_merge_param['Output']['user_out'][0])
     output.create()
 
     return output
@@ -96,50 +96,50 @@ def profiles_get(core_profiles_in_1, core_profiles_in_2, ids_merge_param):
 
     for ispecies in range(nspecies):
         if species[ispecies] == 'H' or species[ispecies] == 'H+':
-            if ids_merge_param['Settings']['ni_H'] == 1:
+            if ids_merge_param['Settings']['ni_H'][0] == 1:
                 core_profiles_in_1.profiles_1d[0].ion[ispecies].density_thermal = core_profiles_in_2.profiles_1d[0].ion[ispecies].density_thermal
                 print('Replaced density for ', species[ispecies])
-            if ids_merge_param['Settings']['Ti_H'] == 1:
+            if ids_merge_param['Settings']['Ti_H'][0] == 1:
                 core_profiles_in_1.profiles_1d[0].ion[
                     ispecies].temperature = core_profiles_in_2.profiles_1d[0].ion[ispecies].temperature
                 print('Replaced temperature for ', species[ispecies])
         if species[ispecies] == 'T' or species[ispecies] == 'T+':
-            if ids_merge_param['Settings']['ni_T'] == 1:
+            if ids_merge_param['Settings']['ni_T'][0] == 1:
                 core_profiles_in_1.profiles_1d[0].ion[ispecies].density_thermal = core_profiles_in_2.profiles_1d[0].ion[ispecies].density_thermal
                 print('Replaced density for ', species[ispecies])
-            if ids_merge_param['Settings']['Ti_T'] == 1:
+            if ids_merge_param['Settings']['Ti_T'][0] == 1:
                 core_profiles_in_1.profiles_1d[0].ion[
                     ispecies].temperature = core_profiles_in_2.profiles_1d[0].ion[ispecies].temperature
                 print('Replaced temperature for ', species[ispecies])
         if species[ispecies] == 'D' or species[ispecies] == 'D+':
-            if ids_merge_param['Settings']['ni_D'] == 1:
+            if ids_merge_param['Settings']['ni_D'][0] == 1:
                 core_profiles_in_1.profiles_1d[0].ion[ispecies].density_thermal = core_profiles_in_2.profiles_1d[0].ion[ispecies].density_thermal
                 print('Replaced density for ', species[ispecies])
-            if ids_merge_param['Settings']['Ti_D'] == 1:
+            if ids_merge_param['Settings']['Ti_D'][0] == 1:
                 core_profiles_in_1.profiles_1d[0].ion[
                     ispecies].temperature = core_profiles_in_2.profiles_1d[0].ion[ispecies].temperature
                 print('Replaced temperature for ', species[ispecies])
         if species[ispecies] == 'Be' or species[ispecies] == 'Be+':
-            if ids_merge_param['Settings']['ni_Be'] == 1:
+            if ids_merge_param['Settings']['ni_Be'][0] == 1:
                 core_profiles_in_1.profiles_1d[0].ion[ispecies].density_thermal = core_profiles_in_2.profiles_1d[0].ion[ispecies].density_thermal
                 print('Replaced density for ', species[ispecies])
-            if ids_merge_param['Settings']['Ti_Be'] == 1:
+            if ids_merge_param['Settings']['Ti_Be'][0] == 1:
                 core_profiles_in_1.profiles_1d[0].ion[
                     ispecies].temperature = core_profiles_in_2.profiles_1d[0].ion[ispecies].temperature
                 print('Replaced temperature for ', species[ispecies])
         if species[ispecies] == 'C' or species[ispecies] == 'C+':
-            if ids_merge_param['Settings']['ni_C'] == 1:
+            if ids_merge_param['Settings']['ni_C'][0] == 1:
                 core_profiles_in_1.profiles_1d[0].ion[ispecies].density_thermal = core_profiles_in_2.profiles_1d[0].ion[ispecies].density_thermal
                 print('Replaced density for ', species[ispecies])
-            if ids_merge_param['Settings']['Ti_C'] == 1:
+            if ids_merge_param['Settings']['Ti_C'][0] == 1:
                 core_profiles_in_1.profiles_1d[0].ion[
                     ispecies].temperature = core_profiles_in_2.profiles_1d[0].ion[ispecies].temperature
                 print('Replaced temperature for ', species[ispecies])
         if species[ispecies] == 'Ne' or species[ispecies] == 'Ne+':
-            if ids_merge_param['Settings']['ni_Ne'] == 1:
+            if ids_merge_param['Settings']['ni_Ne'][0] == 1:
                 core_profiles_in_1.profiles_1d[0].ion[ispecies].density_thermal = core_profiles_in_2.profiles_1d[0].ion[ispecies].density_thermal
                 print('Replaced density for ', species[ispecies])
-            if ids_merge_param['Settings']['Ti_Ne'] == 1:
+            if ids_merge_param['Settings']['Ti_Ne'][0] == 1:
                 core_profiles_in_1.profiles_1d[0].ion[
                     ispecies].temperature = core_profiles_in_2.profiles_1d[0].ion[ispecies].temperature
                 print('Replaced temperature for ', species[ispecies])
