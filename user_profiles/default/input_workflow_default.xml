@@ -14,6 +14,7 @@
     <ligka_541 display="Automated way of executing HELENA+L 5/4/1.">0</ligka_541>
     <pulse_list display="This option enables multiple shots/runs as input.">0</pulse_list>
     <fast_particles display="Tick this box to take into account the energetic particles.">0</fast_particles>
+    <hdf5 display="If checkend, runs HDF5 backend.">0</hdf5>
     <mpi_processes display="How many MPI processes to use for the MPI actors.">8</mpi_processes>
   </further_settings>
 

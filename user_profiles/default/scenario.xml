@@ -6,7 +6,8 @@
   <n_Be>1</n_Be>
   <n_C>1</n_C>
   <n_Ne>1</n_Ne>
-  <n_He4>1</n_He4>
+  <n_He4_ash>1</n_He4_ash>
+  <n_He4_EP>1</n_He4_EP>
   <T_e>1</T_e>
   <T_H>1</T_H>
   <T_D>1</T_D>
@@ -14,6 +15,7 @@
   <T_Be>1</T_Be>
   <T_C>1</T_C>
   <T_Ne>1</T_Ne>
-  <T_He4>1</T_He4>
+  <T_He4_ash>1</T_He4_ash>
+  <T_He4_EP>1</T_He4_EP>
   <DT>0</DT>
 </parameter>
