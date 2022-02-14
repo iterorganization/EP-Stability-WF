@@ -25,12 +25,11 @@ from matplotlib.transforms import Bbox
 def create_shot_dir(shot_nr, run_out):
     # SEPARATE FOLDERS FOR DIFFERENT RUNS/SHOTS
     # create new directory if none exists
-    shot_dir = (os.path.join(os.getcwd(), 'workflow/Analysis/' +
-                             str(shot_nr)+'_'+str(run_out)))
+    shot_dir = (os.path.join(os.getcwd(), f'workflow/Analysis/{shot_nr}_{run_out}'))
     shot_dir_check = os.path.isdir(shot_dir)
     if not shot_dir_check:
         os.makedirs(shot_dir)
-        print('Shot + run folder: {} was created'.format(shot_dir))
+        print(f'Shot + run folder: {shot_dir} was created')
     return shot_dir
 
 # Directly from ligka output (nyquist array) (as saved in the IDS)
@@ -193,8 +192,9 @@ def mode_analysis_ligka(val_plot, wf_param_folder):
                                         ax.set_xlabel('R [m]')
                                         ax.set_ylabel('Z [m]')
                                         ax.set_title(r'$\Phi$ perturbation')
-                                        fig.savefig(str(shot_dir)+'/'+str(shot_nr)+'_'+str(run_out)+'_n_'+str(
-                                            mode.n_tor)+'_m_'+str(mode.m_pol_dominant)+'_t_'+str(time_val)+'_2D_structure.png')
+                                        plot_filename = os.path.join(shot_dir,
+                                            f'{shot_nr}_{run_out}_n_{mode.n_tor}_m_{mode.m_pol_dominant}_t_{time_val}_2D_structure.png')
+                                        fig.savefig(plot_filename)
 
                                     if val_plot == 4:
                                         poloidals = []
@@ -202,16 +202,16 @@ def mode_analysis_ligka(val_plot, wf_param_folder):
                                         m_list = mode.plasma.grid.dim2
                                         if len(potential) != 0:
                                             for k in m_list:
-                                                poloidals.append(
-                                                    str('m = '+str(int(k))))
+                                                poloidals.append(f'm = {int(k)}')
                                             ax.clear()
                                             ax.plot(s_list, potential)
-                                            ax.set(xlabel='s', ylabel='Electrostatic Potential', title='Mode Structure for n = '+str(
-                                                mode.n_tor)+' m = '+str(mode.m_pol_dominant)+' time = ' + str(time_val))
+                                            plot_title = f'Mode Structure for n = {mode.n_tor} m = {mode.m_pol_dominant} time = {time_val}'
+                                            ax.set(xlabel='s', ylabel='Electrostatic Potential', title=plot_title)
                                             ax.grid()
                                             plt.legend(poloidals)
-                                            fig.savefig(str(shot_dir)+'/'+str(shot_nr)+'_'+str(run_out)+'_n_'+str(
-                                                mode.n_tor)+'_m_'+str(mode.m_pol_dominant)+'_t_'+str(time_val)+'_structure.png')
+                                            plot_filename = os.path.join(shot_dir,
+                                                f'{shot_nr}_{run_out}_n_{mode.n_tor}_m_{mode.m_pol_dominant}_t_{time_val}_structure.png')
+                                            fig.savefig(plot_filename)
 
                 if val_plot == 6:
                     a = np.empty(len(r_TAE_list))
@@ -236,7 +236,7 @@ def mode_analysis_ligka(val_plot, wf_param_folder):
                 for j in m_list:
                     if len(freq_dict[(i, j)]) != 0:
                         line, = ax.plot(time_list, freq_dict[(
-                            i, j)], lw=2, label='n = '+str(i)+' m = '+str(j))
+                            i, j)], lw=2, label=f'n = {i} m = {j}')
                         lines.append(line)
 
             leg = ax.legend(fancybox=True, shadow=True, loc='upper left',
@@ -283,7 +283,7 @@ def mode_analysis_ligka(val_plot, wf_param_folder):
                 for j in m_list:
                     if len(damp_dict[(i, j)]) != 0:
                         line, = ax.plot(time_list, damp_dict[(
-                            i, j)], lw=2, label='n = '+str(i)+' m = '+str(j))
+                            i, j)], lw=2, label=f'n = {i} m = {j}')
                         lines.append(line)
             leg = ax.legend(fancybox=True, shadow=True, loc='upper left',
                             bbox_to_anchor=(1, 1), borderaxespad=0.)
@@ -329,7 +329,7 @@ def mode_analysis_ligka(val_plot, wf_param_folder):
                 for j in m_list:
                     if len(radius_dict[(i, j)]) != 0:
                         line, = ax.plot(time_list, radius_dict[(
-                            i, j)], lw=2, label='n = '+str(i)+' m = '+str(j))
+                            i, j)], lw=2, label=f'n = {i} m = {j}')
                         lines.append(line)
             leg = ax.legend(fancybox=True, shadow=True, loc='upper left',
                             bbox_to_anchor=(1, 1), borderaxespad=0.)
@@ -476,7 +476,7 @@ def export_data(wf_param_folder):
                             nyq = nyq_m5[:, 0, 0]
                             q_TAE, r_TAE = search_nyq(nyq)
                             if r_TAE >= s_min and r_TAE <= s_max:
-                                out_file.write(str(time_val) + " " + str(itime) + " ")
+                                out_file.write(f'{time_val} {itime} ')
                                 out_file.write(" ".join(map(str, nyq))+"\n")
 
     # TODO: CHECK THE FORMATTING OF THE FILE BEING SAVED
