@@ -32,7 +32,7 @@ def data_retrieve(ids_merge_param):
     Returns:
         [ids]: [for now only core_profiles]
     """
-    if ids_merge_param['Inputs']['HDF5_1'][0] == 1:
+    if ids_merge_param['Inputs']['HDF5_1'][0]:
         backend = imasdef.HDF5_BACKEND
     else:
         backend = imasdef.MDSPLUS_BACKEND
@@ -46,7 +46,7 @@ def data_retrieve(ids_merge_param):
 
     time = input_1.partial_get('core_profiles', 'time')
 
-    if ids_merge_param['Inputs']['HDF5_2'][0] == 1:
+    if ids_merge_param['Inputs']['HDF5_2'][0]:
         backend = imasdef.HDF5_BACKEND
     else:
         backend = imasdef.MDSPLUS_BACKEND
@@ -63,7 +63,7 @@ def data_retrieve(ids_merge_param):
 
 def data_writeout_create(ids_merge_param):
 
-    if ids_merge_param['Output']['HDF5_out'][0] == 1:
+    if ids_merge_param['Output']['HDF5_out'][0]:
         backend = imasdef.HDF5_BACKEND
     else:
         backend = imasdef.MDSPLUS_BACKEND
@@ -87,62 +87,29 @@ def data_step_writeout(output, core_profiles_out):
 
 
 def profiles_get(core_profiles_in_1, core_profiles_in_2, ids_merge_param):
-    nspecies = len(core_profiles_in_1.profiles_1d[0].ion)
-    species = []
-    for ispecies in range(nspecies):
-        species.append(
-            core_profiles_in_1.profiles_1d[0].ion[ispecies].label)
+    ion_profs_1 = core_profiles_in_1.profiles_1d[0].ion
+    ion_profs_2 = core_profiles_in_2.profiles_1d[0].ion
+    species = [spec.label for spec in ion_profs_1]
     print('Species present in core_profiles_in_1 are:', species)
 
-    for ispecies in range(nspecies):
-        if species[ispecies] == 'H' or species[ispecies] == 'H+':
-            if ids_merge_param['Settings']['ni_H'][0] == 1:
-                core_profiles_in_1.profiles_1d[0].ion[ispecies].density_thermal = core_profiles_in_2.profiles_1d[0].ion[ispecies].density_thermal
-                print('Replaced density for ', species[ispecies])
-            if ids_merge_param['Settings']['Ti_H'][0] == 1:
-                core_profiles_in_1.profiles_1d[0].ion[
-                    ispecies].temperature = core_profiles_in_2.profiles_1d[0].ion[ispecies].temperature
-                print('Replaced temperature for ', species[ispecies])
-        if species[ispecies] == 'T' or species[ispecies] == 'T+':
-            if ids_merge_param['Settings']['ni_T'][0] == 1:
-                core_profiles_in_1.profiles_1d[0].ion[ispecies].density_thermal = core_profiles_in_2.profiles_1d[0].ion[ispecies].density_thermal
-                print('Replaced density for ', species[ispecies])
-            if ids_merge_param['Settings']['Ti_T'][0] == 1:
-                core_profiles_in_1.profiles_1d[0].ion[
-                    ispecies].temperature = core_profiles_in_2.profiles_1d[0].ion[ispecies].temperature
-                print('Replaced temperature for ', species[ispecies])
-        if species[ispecies] == 'D' or species[ispecies] == 'D+':
-            if ids_merge_param['Settings']['ni_D'][0] == 1:
-                core_profiles_in_1.profiles_1d[0].ion[ispecies].density_thermal = core_profiles_in_2.profiles_1d[0].ion[ispecies].density_thermal
-                print('Replaced density for ', species[ispecies])
-            if ids_merge_param['Settings']['Ti_D'][0] == 1:
-                core_profiles_in_1.profiles_1d[0].ion[
-                    ispecies].temperature = core_profiles_in_2.profiles_1d[0].ion[ispecies].temperature
-                print('Replaced temperature for ', species[ispecies])
-        if species[ispecies] == 'Be' or species[ispecies] == 'Be+':
-            if ids_merge_param['Settings']['ni_Be'][0] == 1:
-                core_profiles_in_1.profiles_1d[0].ion[ispecies].density_thermal = core_profiles_in_2.profiles_1d[0].ion[ispecies].density_thermal
-                print('Replaced density for ', species[ispecies])
-            if ids_merge_param['Settings']['Ti_Be'][0] == 1:
-                core_profiles_in_1.profiles_1d[0].ion[
-                    ispecies].temperature = core_profiles_in_2.profiles_1d[0].ion[ispecies].temperature
-                print('Replaced temperature for ', species[ispecies])
-        if species[ispecies] == 'C' or species[ispecies] == 'C+':
-            if ids_merge_param['Settings']['ni_C'][0] == 1:
-                core_profiles_in_1.profiles_1d[0].ion[ispecies].density_thermal = core_profiles_in_2.profiles_1d[0].ion[ispecies].density_thermal
-                print('Replaced density for ', species[ispecies])
-            if ids_merge_param['Settings']['Ti_C'][0] == 1:
-                core_profiles_in_1.profiles_1d[0].ion[
-                    ispecies].temperature = core_profiles_in_2.profiles_1d[0].ion[ispecies].temperature
-                print('Replaced temperature for ', species[ispecies])
-        if species[ispecies] == 'Ne' or species[ispecies] == 'Ne+':
-            if ids_merge_param['Settings']['ni_Ne'][0] == 1:
-                core_profiles_in_1.profiles_1d[0].ion[ispecies].density_thermal = core_profiles_in_2.profiles_1d[0].ion[ispecies].density_thermal
-                print('Replaced density for ', species[ispecies])
-            if ids_merge_param['Settings']['Ti_Ne'][0] == 1:
-                core_profiles_in_1.profiles_1d[0].ion[
-                    ispecies].temperature = core_profiles_in_2.profiles_1d[0].ion[ispecies].temperature
-                print('Replaced temperature for ', species[ispecies])
+    ion_implement_list = ['H', 'D', 'T', 'Be', 'C', 'Ne']
+    # ion_labels = {f'{ion}+':str(ion) for ion in ion_implement_list}
+
+    for prof_spec_1, prof_spec_2 in zip(ion_profs_1, ion_profs_2):
+        species_label = prof_spec_1.label
+        # species_label_tmp = ion_labels.get(species_label, species_label)
+        species_label_tmp = species_label.split('+')[0]
+
+        # Skip if ions not one of H,D,T,Be,C,Ne
+        if species_label_tmp not in ion_implement_list:
+            continue
+
+        if ids_merge_param['Settings'][f'ni_{species_label_tmp}'][0]:
+            prof_spec_1.density_thermal = prof_spec_2.density_thermal
+            print(f"Replaced density for {species_label}")
+        if ids_merge_param['Settings'][f'Ti_{species_label_tmp}'][0]:
+            prof_spec_1.temperature = prof_spec_2.temperature
+            print(f"Replaced Temperature for {species_label}")
 
     return core_profiles_in_1
 
