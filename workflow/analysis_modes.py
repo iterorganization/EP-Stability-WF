@@ -425,7 +425,7 @@ def mode_analysis_ligka(val_plot, wf_param_folder):
 
 
 def export_data(wf_param_folder):
-    param = parameters_workflow(wf_param_folder+'/analysis.xml')
+    param = parameters_workflow(os.path.join(wf_param_folder, 'analysis.xml'))
 
     user = param['user']
     version = os.getenv('IMAS_VERSION')[0]
@@ -452,38 +452,32 @@ def export_data(wf_param_folder):
     shot_dir = create_shot_dir(shot_nr, run_out)
     now = datetime.now()
     date_time = now.strftime("%m%d%Y_%H_%M_%S")
-    filename = str(shot_dir)+'/exported_'+str(shot_nr) + \
-        '_'+str(run_out)+'_'+str(date_time)+'.txt'
-    f = open(filename, 'w+')
+    filename = os.path.join(shot_dir, f"exported_{shot_nr}_{run_out}_{date_time}.txt")
 
-    f.write(str(user)+" "+str(shot_nr)+" "+str(run_out) +
-            " "+str(machine_out)+" "+str(occurence) + "\n")
+    with open(filename, 'w+') as out_file:
+        out_file.write(f"{user} {shot_nr} {run_out} {machine_out} {occurence}\n")
 
-    input = imas.DBEntry(imasdef.MDSPLUS_BACKEND,
-                         machine_out, shot_nr, run_out, user)
-    status, _ = input.open()
-    if status != 0:
-        print("Can't open the selected dataset!", file=sys.stderr)
-        sys.exit(1)
-    shot_dir = create_shot_dir(shot_nr, run_out)
+        input = imas.DBEntry(imasdef.MDSPLUS_BACKEND,
+                             machine_out, shot_nr, run_out, user)
+        status, _ = input.open()
+        if status != 0:
+            print("Can't open the selected dataset!", file=sys.stderr)
+            sys.exit(1)
 
-    mhd_linear_in = input.get("mhd_linear", occurrence=occurence)
+        mhd_linear_in = input.get("mhd_linear", occurrence=occurence)
 
-    for itime, time_val in enumerate(mhd_linear_in.time):
-        if itime >= itbegin and itime <= itend:
-            time_slice = mhd_linear_in.time_slice[itime]
-            for imode, mode in enumerate(time_slice.toroidal_mode):
-                if mode.n_tor <= n_max and mode.n_tor >= n_min:
-                    if mode.m_pol_dominant >= m_min and mode.m_pol_dominant <= m_max:
-                        nyq_m5 = get_nyq_from_mode(mode)
-                        nyq = nyq_m5[:, 0, 0]
-                        q_TAE, r_TAE = search_nyq(nyq)
-                        if r_TAE >= s_min and r_TAE <= s_max:
-                            f.write(str(time_val) + " " + str(itime) + " ")
-                            f.write(" ".join(map(str, nyq))+"\n")
+        for itime, time_val in enumerate(mhd_linear_in.time):
+            if itime >= itbegin and itime <= itend:
+                time_slice = mhd_linear_in.time_slice[itime]
+                for imode, mode in enumerate(time_slice.toroidal_mode):
+                    if mode.n_tor <= n_max and mode.n_tor >= n_min:
+                        if mode.m_pol_dominant >= m_min and mode.m_pol_dominant <= m_max:
+                            nyq_m5 = get_nyq_from_mode(mode)
+                            nyq = nyq_m5[:, 0, 0]
+                            q_TAE, r_TAE = search_nyq(nyq)
+                            if r_TAE >= s_min and r_TAE <= s_max:
+                                out_file.write(str(time_val) + " " + str(itime) + " ")
+                                out_file.write(" ".join(map(str, nyq))+"\n")
 
-
-# TODO: CHECK THE FORMATTING OF THE FILE BEING SAVED
-
-    f.close()
+    # TODO: CHECK THE FORMATTING OF THE FILE BEING SAVED
     print('Done, data is saved in '+str(filename))
