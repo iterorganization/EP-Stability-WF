@@ -37,8 +37,11 @@ def data_retrieve(ids_merge_param):
     else:
         backend = imasdef.MDSPLUS_BACKEND
 
-    input_1 = imas.DBEntry(backend, ids_merge_param['Inputs']['machine_in_1'][0], int(ids_merge_param['Inputs']
-                                                                                      ['shot_in_1'][0]), int(ids_merge_param['Inputs']['run_in_1'][0]), ids_merge_param['Inputs']['user_in_1'][0])
+    input_1 = imas.DBEntry(backend,
+                           ids_merge_param['Inputs']['machine_in_1'][0],
+                           int(ids_merge_param['Inputs']['shot_in_1'][0]),
+                           int(ids_merge_param['Inputs']['run_in_1'][0]),
+                           ids_merge_param['Inputs']['user_in_1'][0])
     status, _ = input_1.open()
     if status != 0:
         print("Can't open the first selected dataset!", file=sys.stderr)
@@ -52,7 +55,10 @@ def data_retrieve(ids_merge_param):
         backend = imasdef.MDSPLUS_BACKEND
 
     input_2 = imas.DBEntry(backend,
-                           ids_merge_param['Inputs']['machine_in_2'][0], int(ids_merge_param['Inputs']['shot_in_2'][0]), int(ids_merge_param['Inputs']['run_in_2'][0]), ids_merge_param['Inputs']['user_in_2'][0])
+                           ids_merge_param['Inputs']['machine_in_2'][0],
+                           int(ids_merge_param['Inputs']['shot_in_2'][0]),
+                           int(ids_merge_param['Inputs']['run_in_2'][0]),
+                           ids_merge_param['Inputs']['user_in_2'][0])
     status, _ = input_2.open()
     if status != 0:
         print("Can't open the second selected dataset!", file=sys.stderr)
@@ -71,7 +77,10 @@ def data_writeout_create(ids_merge_param):
     # OPEN OUTPUT OBJECT, IN VIEW OF SAVING RESULTS TO LOCAL DB
     print('=> Create output datafile')
     output = imas.DBEntry(backend,
-                          ids_merge_param['Output']['machine_out'][0], int(ids_merge_param['Output']['shot_out'][0]), int(ids_merge_param['Output']['run_out'][0]), ids_merge_param['Output']['user_out'][0])
+                          ids_merge_param['Output']['machine_out'][0],
+                          int(ids_merge_param['Output']['shot_out'][0]),
+                          int(ids_merge_param['Output']['run_out'][0]),
+                          ids_merge_param['Output']['user_out'][0])
     output.create()
 
     return output
@@ -82,7 +91,7 @@ def data_step_writeout(output, core_profiles_out):
     output.put_slice(core_profiles_out, occurrence=0)
 
     print('*************************************')
-    print('Output time = ', core_profiles_out.time[0])
+    print(f'Output time = {core_profiles_out.time[0]}')
     print('*************************************')
 
 
@@ -120,7 +129,7 @@ def ids_compare(ids_merge_param):
     input_1, input_2, time = data_retrieve(ids_merge_param)
     output = data_writeout_create(ids_merge_param)
     for itime in time_index_list:
-        print('Time = ', time[itime], ' s, itime = ', itime, '/', ntime-1)
+        print(f'Time = {time[itime]} s, itime = {itime}/{ntime-1}')
 
         core_profiles_in_1 = input_1.get_slice(
             'core_profiles', time[itime], imasdef.PREVIOUS_SAMPLE, occurrence=0)
