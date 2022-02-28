@@ -1,6 +1,6 @@
 import imas
 from imas import imasdef
-import sys
+import sys, os
 
 
 def time_construction(ids_merge_param):
@@ -32,7 +32,7 @@ def data_retrieve(ids_merge_param):
     Returns:
         [ids]: [for now only core_profiles]
     """
-    if ids_merge_param['Inputs']['HDF5_1'][0]:
+    if ids_merge_param['Inputs']['HDF5_1'][0] == 1:
         backend = imasdef.HDF5_BACKEND
     else:
         backend = imasdef.MDSPLUS_BACKEND
@@ -49,7 +49,7 @@ def data_retrieve(ids_merge_param):
 
     time = input_1.partial_get('core_profiles', 'time')
 
-    if ids_merge_param['Inputs']['HDF5_2'][0]:
+    if ids_merge_param['Inputs']['HDF5_2'][0] == 1:
         backend = imasdef.HDF5_BACKEND
     else:
         backend = imasdef.MDSPLUS_BACKEND
@@ -69,7 +69,15 @@ def data_retrieve(ids_merge_param):
 
 def data_writeout_create(ids_merge_param):
 
-    if ids_merge_param['Output']['HDF5_out'][0]:
+    output_folder = os.getenv("HOME") + "/public/imasdb/" + ids_merge_param['Output']['machine_out'][0] + "/3/0"
+    if os.path.isdir(output_folder) == False:
+        print(
+            "-- Create local database folder for output file " + output_folder,
+            file=sys.stdout,
+        )
+        os.makedirs(output_folder)
+
+    if ids_merge_param['Output']['HDF5_out'][0] == 1:
         backend = imasdef.HDF5_BACKEND
     else:
         backend = imasdef.MDSPLUS_BACKEND
@@ -80,9 +88,12 @@ def data_writeout_create(ids_merge_param):
                           ids_merge_param['Output']['machine_out'][0],
                           int(ids_merge_param['Output']['shot_out'][0]),
                           int(ids_merge_param['Output']['run_out'][0]),
-                          ids_merge_param['Output']['user_out'][0])
-    output.create()
-
+                          os.getenv('USER'))
+    
+    status,_ = output.create()
+    if status!=0:
+        print("Something's wrong, data-entry creation failed")
+    
     return output
 
 
@@ -113,10 +124,10 @@ def profiles_get(core_profiles_in_1, core_profiles_in_2, ids_merge_param):
         if species_label_tmp not in ion_implement_list:
             continue
 
-        if ids_merge_param['Settings'][f'ni_{species_label_tmp}'][0]:
+        if ids_merge_param['Settings'][f'ni_{species_label_tmp}'][0] == 1:
             prof_spec_1.density_thermal = prof_spec_2.density_thermal
             print(f"Replaced density for {species_label}")
-        if ids_merge_param['Settings'][f'Ti_{species_label_tmp}'][0]:
+        if ids_merge_param['Settings'][f'Ti_{species_label_tmp}'][0] == 1:
             prof_spec_1.temperature = prof_spec_2.temperature
             print(f"Replaced Temperature for {species_label}")
 
@@ -142,6 +153,7 @@ def ids_compare(ids_merge_param):
 
         data_step_writeout(output, core_profiles_out)
 
+    print('IDS merge Completed!')
     input_1.close()
     input_2.close()
     output.close()

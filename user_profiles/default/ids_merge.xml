@@ -1,23 +1,22 @@
 <root>
 
   <input display="Inputs">
-    <user_in_1 display="User 1 Input">0</user_in_1>
-    <machine_in_1 display="Machine 1 Input">0</machine_in_1>
-    <shot_in_1 display="Shot 1 Input">0</shot_in_1>
-    <run_in_1 display="Run 1 Input">0</run_in_1>
+    <user_in_1 display="User 1 Input">public</user_in_1>
+    <machine_in_1 display="Machine 1 Input">ITER</machine_in_1>
+    <shot_in_1 display="Shot 1 Input">130012</shot_in_1>
+    <run_in_1 display="Run 1 Input">2</run_in_1>
     <HDF5_1 display="Use HDF5 backend for first IDS">0</HDF5_1>
-    <user_in_2 display="User 2 Input">0</user_in_2>
-    <machine_in_2 display="Machine 2 Input">0</machine_in_2>
-    <shot_in_2 display="Shot 2 Input">0</shot_in_2>
-    <run_in_2 display="Run 2 Input">0</run_in_2>
+    <user_in_2 display="User 2 Input">public</user_in_2>
+    <machine_in_2 display="Machine 2 Input">ITER</machine_in_2>
+    <shot_in_2 display="Shot 2 Input">130012</shot_in_2>
+    <run_in_2 display="Run 2 Input">2</run_in_2>
     <HDF5_2 display="Use HDF5 backend for second IDS">0</HDF5_2>
   </input>
 
   <output display="Output">
-    <user_out display="User Output">0</user_out>
-    <machine_out display="User Output">0</machine_out>
-    <shot_out display="User Output">0</shot_out>
-    <run_out display="User Output">0</run_out>
+    <machine_out display="User Output">TEST_IDS_MERGE</machine_out>
+    <shot_out display="User Output">130012</shot_out>
+    <run_out display="User Output">89</run_out>
     <HDF5_out display="Use HDF5 backend for output">0</HDF5_out>
   </output>
 
