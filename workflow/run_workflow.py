@@ -39,7 +39,7 @@ def workflow_EP(current_config_folder):
               output_folder, file=sys.stdout)
         os.makedirs(output_folder)
 
-    if param['pulse_list'] == 1:
+    if int(param['pulse_list']):
         with open("shots.dat") as f:
             pulse_list = eval(f.read())
     else:
@@ -59,7 +59,7 @@ def workflow_EP(current_config_folder):
             param = parameters_workflow(
                 current_config_folder+'/input_workflow_default.xml')
 
-        if param['ligka_541'] == 1:
+        if int(param['ligka_541']):
             print(
                 '=================Starting HELENA and LIGKA mode 5 - 4 - 1=================')
             if param['Equilibrium_code'] == 'Helena':

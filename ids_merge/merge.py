@@ -32,7 +32,7 @@ def data_retrieve(ids_merge_param):
     Returns:
         [ids]: [for now only core_profiles]
     """
-    if ids_merge_param['Inputs']['HDF5_1'][0] == 1:
+    if int(ids_merge_param['Inputs']['HDF5_1'][0]):
         backend = imasdef.HDF5_BACKEND
     else:
         backend = imasdef.MDSPLUS_BACKEND
@@ -49,7 +49,7 @@ def data_retrieve(ids_merge_param):
 
     time = input_1.partial_get('core_profiles', 'time')
 
-    if ids_merge_param['Inputs']['HDF5_2'][0] == 1:
+    if int(ids_merge_param['Inputs']['HDF5_2'][0]):
         backend = imasdef.HDF5_BACKEND
     else:
         backend = imasdef.MDSPLUS_BACKEND
@@ -69,12 +69,14 @@ def data_retrieve(ids_merge_param):
 
 def data_writeout_create(ids_merge_param):
 
-    if ids_merge_param['Output']['HDF5_out'][0] == 1:
+    if int(ids_merge_param['Output']['HDF5_out'][0]):
         backend = imasdef.HDF5_BACKEND
     else:
         backend = imasdef.MDSPLUS_BACKEND
-        output_folder = os.getenv("HOME") + "/public/imasdb/" + ids_merge_param['Output']['machine_out'][0] + "/3/0"
-        if os.path.isdir(output_folder) == False:
+        machine_out = ids_merge_param['Output']['machine_out'][0]
+        version = os.getenv("IMAS_VERSION")[0]
+        output_folder = os.path.join(os.getenv("HOME"), "public/imasdb/{}/{}/0".format(machine_out, version))
+        if not os.path.isdir(output_folder):
             print(
                 "-- Create local database folder for output file " + output_folder,
                 file=sys.stdout,
@@ -88,11 +90,11 @@ def data_writeout_create(ids_merge_param):
                           int(ids_merge_param['Output']['shot_out'][0]),
                           int(ids_merge_param['Output']['run_out'][0]),
                           os.getenv('USER'))
-    
+
     status,_ = output.create()
-    if status!=0:
+    if status != 0:
         print("Something's wrong, data-entry creation failed")
-    
+
     return output
 
 
@@ -105,7 +107,7 @@ def data_step_writeout(output, core_profiles_out):
     print('*************************************')
 
 
-def profiles_get(core_profiles_in_1, core_profiles_in_2, ids_merge_param):
+def profiles_get_species(core_profiles_in_1, core_profiles_in_2, ids_merge_param):
     ion_profs_1 = core_profiles_in_1.profiles_1d[0].ion
     ion_profs_2 = core_profiles_in_2.profiles_1d[0].ion
     species = [spec.label for spec in ion_profs_1]
@@ -123,10 +125,10 @@ def profiles_get(core_profiles_in_1, core_profiles_in_2, ids_merge_param):
         if species_label_tmp not in ion_implement_list:
             continue
 
-        if ids_merge_param['Settings'][f'ni_{species_label_tmp}'][0] == 1:
+        if int(ids_merge_param['Settings'][f'ni_{species_label_tmp}'][0]):
             prof_spec_1.density_thermal = prof_spec_2.density_thermal
             print(f"Replaced density for {species_label}")
-        if ids_merge_param['Settings'][f'Ti_{species_label_tmp}'][0] == 1:
+        if int(ids_merge_param['Settings'][f'Ti_{species_label_tmp}'][0]):
             prof_spec_1.temperature = prof_spec_2.temperature
             print(f"Replaced Temperature for {species_label}")
 
@@ -147,7 +149,7 @@ def ids_compare(ids_merge_param):
         core_profiles_in_2 = input_2.get_slice(
             'core_profiles', time[itime], imasdef.PREVIOUS_SAMPLE, occurrence=0)
 
-        core_profiles_out = profiles_get(
+        core_profiles_out = profiles_get_species(
             core_profiles_in_1, core_profiles_in_2, ids_merge_param)
 
         data_step_writeout(output, core_profiles_out)

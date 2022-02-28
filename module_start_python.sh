@@ -55,31 +55,29 @@ fi
 if [[ $(dnsdomainname) == galileo.cineca* ]]; then
 #gateway
 module load cineca-dev
-module load imasenv/3.33.0/intel/17.0/1.0
+module load imasenv/3.34.0/intel/17.0/rc
 
-module unload idstools
-module load idstools/1.7.1
+module unload itm-qt/5.8.0
+
 module load  imas-pyal/1.3.5
-module load trview
-#module switch intel/pe-xe-2017--binary intel/pe-xe-2018--binary
-module load gnu
+
 module load nag/mark26--binary
 module load fftw/3.3.4--intelmpi--2017--binary
 module load zlib/1.2.8--gnu--6.1.0
 module load szip/2.1--gnu--6.1.0
 module load hdf5/1.8.17--intel--pe-xe-2017--binary
-#module load hdf5/1.10.4--intelmpi--2018--binary
+
 module load netcdf/4.4.1--intel--pe-xe-2017--binary
 module load netcdff/4.4.4--intel--pe-xe-2017--binary
 module load pspline/20161207
 module load parmetis/4.0.3--intelmpi--2017--binary
 module load metis/5.1.0--intel--pe-xe-2017--binary
 module load mumps/5.0.1--intelmpi--2017--binary
-module load nag/mark26--binary
 
 module load xmllib/3.3.1/intel/17.0
 module load mkl/2017--binary
 module load pspline/20190408
+
 export IPP_USER=pwl
 export PPPLIB_HOME=/afs/eufus.eu/user/g/g2plaube/public/lib/
 export DIERCKX_HOME=/afs/eufus.eu/user/g/g2plaube/public/lib/

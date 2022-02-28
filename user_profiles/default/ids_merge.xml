@@ -26,9 +26,9 @@
     <Te display="Activate electron temperature">0</Te>
     <ni_H display="Activate ion density for Hydrogen">0</ni_H>
     <Ti_H display="Activate ion temperature for Hydrogen">0</Ti_H>
-    <ni_T display="Activate ion density for Tritium">0</ni_T>
+    <ni_T display="Activate ion density for Tritium">1</ni_T>
     <Ti_T display="Activate ion temperature for Tritium">0</Ti_T>
-    <ni_D display="Activate ion density for Deuterium">0</ni_D>
+    <ni_D display="Activate ion density for Deuterium">1</ni_D>
     <Ti_D display="Activate ion temperature for Deuterium">0</Ti_D>
     <ni_Be display="Activate ion density for Beryllium">0</ni_Be>
     <Ti_Be display="Activate ion temperature for Beryllium">0</Ti_Be>

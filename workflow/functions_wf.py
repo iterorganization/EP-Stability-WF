@@ -9,9 +9,20 @@ import xml.etree.ElementTree as ET
 from imas import imasdef
 import numpy as np
 
-from helena_imas.wrapper import helena_imas_actor
-from ligka.wrapper import ligka_actor
 no_actor = {}
+try:
+    from helena_imas.wrapper import helena_imas_actor
+except:
+    no_actor['Helena'] = True
+try:
+    from ligka.wrapper import ligka_actor
+except:
+    no_actor['Ligka_m5'] = True
+    no_actor['Ligka_m4'] = True
+    no_actor['Ligka_m1'] = True
+    no_actor['Ligka_m6'] = True
+    no_actor['Ligka_m2'] = True
+    no_actor['Ligka_m3'] = True
 try:
     from hagis1.wrapper import hagis1_actor
 except:
@@ -80,17 +91,18 @@ def profiles_get(param, species_input, scenario_input):
 
     print('=> Open input datafile and read the numer of species and other neccesary inputs for LIGKA')
 
-    if param['hdf5'] == 1:
+    if int(param['hdf5']):
         backend = imasdef.HDF5_BACKEND
     else:
         backend = imasdef.MDSPLUS_BACKEND
 
     input_species = imas.DBEntry(
-        backend, param['machine'], param['shot_nr'], param['run_in'], param['user'])
-    input_species.open()
+        backend, param['machine'], int(param['shot_nr']), int(param['run_in']), param['user'])
+    status, _ = input_species.open()
+    if status != 0:
+        print("Can't open the selected dataset!", file=sys.stderr)
+        sys.exit(1)
     core_profiles = input_species.get('core_profiles')
-    time = core_profiles.time
-    ntime = len(time)
 
     nspecies = len(core_profiles.profiles_1d[0].ion)
 
@@ -139,7 +151,7 @@ def profiles_get(param, species_input, scenario_input):
                     nspec = nspec + 1
                     nback = nback + 1
             if species[ispecies] == 'D' or species[ispecies] == 'D+':
-                if scenario_input['DT'] == 1:
+                if int(scenario_input['DT']):
                     curr_str = curr_str + 'dt'
                     nspec = nspec + 1
                     nback = nback + 1
@@ -175,7 +187,7 @@ def profiles_get(param, species_input, scenario_input):
                     nspec = nspec + 1
                     nback = nback + 1
             # ALL FAST PARTICLES
-    if param['fast_particles'] == 1:
+    if int(param['fast_particles']):
         curr_str = curr_str + 'al'
         nspec = nspec + 1
         nhot = nhot + 1
@@ -206,7 +218,7 @@ def scenario_mod(core_profiles_in, curr_str, scenario_params):
                 core_profiles_in.profiles_1d[0].ion[i].temperature = np.array(
                     core_profiles_in.profiles_1d[0].ion[i].temperature) * scenario_params['T_H']
 
-        if scenario_params['DT'] == 1:
+        if int(scenario_params['DT']):
             if core_profiles_in.profiles_1d[0].ion[i].label == 'D+' or core_profiles_in.profiles_1d[0].ion[i].label == 'D':
                 core_profiles_in.profiles_1d[0].ion[i].density = np.array(
                     core_profiles_in.profiles_1d[0].ion[i].density) * scenario_params['n_D']
