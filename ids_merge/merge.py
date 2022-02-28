@@ -69,18 +69,17 @@ def data_retrieve(ids_merge_param):
 
 def data_writeout_create(ids_merge_param):
 
-    output_folder = os.getenv("HOME") + "/public/imasdb/" + ids_merge_param['Output']['machine_out'][0] + "/3/0"
-    if os.path.isdir(output_folder) == False:
-        print(
-            "-- Create local database folder for output file " + output_folder,
-            file=sys.stdout,
-        )
-        os.makedirs(output_folder)
-
     if ids_merge_param['Output']['HDF5_out'][0] == 1:
         backend = imasdef.HDF5_BACKEND
     else:
         backend = imasdef.MDSPLUS_BACKEND
+        output_folder = os.getenv("HOME") + "/public/imasdb/" + ids_merge_param['Output']['machine_out'][0] + "/3/0"
+        if os.path.isdir(output_folder) == False:
+            print(
+                "-- Create local database folder for output file " + output_folder,
+                file=sys.stdout,
+            )
+            os.makedirs(output_folder)
 
     # OPEN OUTPUT OBJECT, IN VIEW OF SAVING RESULTS TO LOCAL DB
     print('=> Create output datafile')
