@@ -6,8 +6,7 @@
     <run_in display="Run number of the initial DB.">2</run_in>
     <machine_out display="Name of the output DB.">test_DB</machine_out>
     <run_out display="Run number of the output DB.">10</run_out>
-    <itbegin display="The first time slice number.">15</itbegin>
-    <itend display="The last time slice number.">16</itend>
+    <itime display="Time Index">15-17,19</itime>
   </workflow_parameters>
 
   <further_settings display="FURTHER SETTINGS">

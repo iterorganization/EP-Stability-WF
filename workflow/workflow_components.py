@@ -2,7 +2,7 @@ import os
 import imas
 import sys
 
-from workflow.functions_wf import read_timestep, actor_settings, imports_check, scenario_mod
+from workflow.functions_wf import read_timestep, actor_settings, imports_check, scenario_mod, time_construction
 from imas import imasdef
 
 
@@ -30,8 +30,6 @@ def actor_call(actor_name, config_folder_path, system_params, curr_str=None, sce
     database = None
     run = None
     user = None
-    slice_begin = 0
-    slice_end = system_params['itend'] - system_params['itbegin']
     shot_no = system_params['shot_nr']
 
     if system_params['hdf5'] == 1:
@@ -50,12 +48,12 @@ def actor_call(actor_name, config_folder_path, system_params, curr_str=None, sce
         run = system_params['run_in']
         run_out = system_params['run_out']
         user = system_params['user']
-        slice_begin = system_params['itbegin']
-        slice_end = system_params['itend']
+        time_index_list, _ = time_construction(system_params['itime'])
     else:
         database = system_params['machine_out']
         run = system_params['run_out']
         user = os.getenv('USER')
+        _, time_index_list = time_construction(system_params['itime'])
 
     # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
     # AND READ FULL TIME VECTOR OF EQUILIBRIUM IDS TO GET THE TIME BASE
@@ -82,9 +80,9 @@ def actor_call(actor_name, config_folder_path, system_params, curr_str=None, sce
         for ids_name, ids_occ in output_ids.items():
             input.delete_data(ids_name, occurrence=ids_occ)
 
-    for itime in range(slice_begin, slice_end + 1):
+    for i, itime in enumerate(time_index_list):
         # EXECUTE PHYSICS CODE
-        print('Time = ', time[itime], ' s, itime = ', itime, '/', ntime-1)
+        print(f'Time = {time[itime]} s, itime = {i}/{ntime-1}')
 
         equilibrium_in = imas.equilibrium()
         equilibrium_occ = 0

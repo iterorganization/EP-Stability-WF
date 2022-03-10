@@ -1,29 +1,8 @@
 import imas
 from imas import imasdef
-import sys, os
-
-
-def time_construction(ids_merge_param):
-    time_index = ids_merge_param['Settings']['itime'][0]
-    time_list_initial = time_index.split(",")
-    time_list = []
-    time_list_ligka_auto = []
-    ligka_auto_index = 0
-    for itime in time_list_initial:
-        if "-" in itime:
-            itime = itime.split("-")
-            itime_list = list(range(int(itime[0]), int(itime[1])+1))
-            ligka_auto_index = ligka_auto_index + \
-                int(itime[1]) - int(itime[0]) + 1
-            for i in itime_list:
-                time_list.append(i)
-        else:
-            time_list.append(int(itime))
-            ligka_auto_index = ligka_auto_index + 1
-    for i in range(0, ligka_auto_index):
-        time_list_ligka_auto.append(i)
-
-    return time_list
+import sys
+import os
+from workflow.functions_wf import time_construction
 
 
 def data_retrieve(ids_merge_param):
@@ -75,7 +54,8 @@ def data_writeout_create(ids_merge_param):
         backend = imasdef.MDSPLUS_BACKEND
         machine_out = ids_merge_param['Output']['machine_out'][0]
         version = os.getenv("IMAS_VERSION")[0]
-        output_folder = os.path.join(os.getenv("HOME"), "public/imasdb/{}/{}/0".format(machine_out, version))
+        output_folder = os.path.join(
+            os.getenv("HOME"), "public/imasdb/{}/{}/0".format(machine_out, version))
         if not os.path.isdir(output_folder):
             print(
                 "-- Create local database folder for output file " + output_folder,
@@ -91,7 +71,7 @@ def data_writeout_create(ids_merge_param):
                           int(ids_merge_param['Output']['run_out'][0]),
                           os.getenv('USER'))
 
-    status,_ = output.create()
+    status, _ = output.create()
     if status != 0:
         print("Something's wrong, data-entry creation failed")
 
@@ -136,12 +116,13 @@ def profiles_get_species(core_profiles_in_1, core_profiles_in_2, ids_merge_param
 
 
 def ids_compare(ids_merge_param):
-    time_index_list = time_construction(ids_merge_param)
+    time_index_list, _ = time_construction(
+        ids_merge_param['Settings']['itime'][0])
     ntime = len(time_index_list)
     input_1, input_2, time = data_retrieve(ids_merge_param)
     output = data_writeout_create(ids_merge_param)
-    for itime in time_index_list:
-        print(f'Time = {time[itime]} s, itime = {itime}/{ntime-1}')
+    for i, itime in enumerate(time_index_list):
+        print(f'Time = {time[itime]} s, itime = {i}/{ntime-1}')
 
         core_profiles_in_1 = input_1.get_slice(
             'core_profiles', time[itime], imasdef.PREVIOUS_SAMPLE, occurrence=0)

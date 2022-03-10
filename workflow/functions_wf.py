@@ -70,6 +70,28 @@ def parameters_workflow(input_file):
 # WF RUNNING FUNCTIONS
 
 
+def time_construction(time_index):
+    time_list_initial = time_index.split(",")
+    time_list = []
+    time_list_ligka_auto = []
+    ligka_auto_index = 0
+    for itime in time_list_initial:
+        if "-" in itime:
+            itime = itime.split("-")
+            itime_list = list(range(int(itime[0]), int(itime[1])+1))
+            ligka_auto_index = ligka_auto_index + \
+                int(itime[1]) - int(itime[0]) + 1
+            for i in itime_list:
+                time_list.append(i)
+        else:
+            time_list.append(int(itime))
+            ligka_auto_index = ligka_auto_index + 1
+    for i in range(0, ligka_auto_index):
+        time_list_ligka_auto.append(i)
+
+    return time_list, time_list_ligka_auto
+
+
 def read_timestep(user, database, run, current_config_folder, backend):
 
     param = parameters_workflow(
