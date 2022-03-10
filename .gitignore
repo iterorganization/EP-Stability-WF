@@ -15,3 +15,5 @@ workflow/__pycache__/
 user_profiles/*
 !user_profiles/default
 IMAS_OUT_NR*
+.vscode/
+ids_merge/__pycache__

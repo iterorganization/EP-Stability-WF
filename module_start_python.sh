@@ -24,7 +24,8 @@ if [[ $(hostname) == *"iter.org"* ]] || [[ $(dnsdomainname) == *"iter.org"* ]]; 
         # sdcc-login
         echo "Loading sdcc modules..."
         module load libcerf/1.14-iccifort-2020.4.304
-        module load IMAS/3.34.0-4.9.3-2020b
+        # module load IMAS/3.34.0-4.9.3-2020b
+        module load IMAS/3.35.0-4.10.0-2020b
         module load FFTW/3.3.8-intel-2020b
         module load netCDF-Fortran/4.5.3-iimpi-2020b
         module load PSPLINE/2.0.0-iimpi-2020b
@@ -55,7 +56,7 @@ else
     module load imasenv/3.34.0/intel/17.0/rc
     module unload itm-qt/5.8.0
 
-    module load  imas-pyal/1.3.5
+    module load imas-pyal/1.3.5
     module load nag/mark26--binary
     module load fftw/3.3.4--intelmpi--2017--binary
     module load zlib/1.2.8--gnu--6.1.0
