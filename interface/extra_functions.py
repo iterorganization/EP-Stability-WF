@@ -3,13 +3,12 @@ from tkinter import filedialog, ttk
 from lxml import etree
 import interface.colour_definitions as col
 from interface.create_workflow_param import create_workflow_param_from_file, create_xml_param_from_file, save_xml_param_to_file, update_xml_param, update_xml_param_wf
-from workflow.analysis_modes import mode_analysis_ligka, export_data
+from workflow.analysis_modes import Plot, export_data
+from workflow.functions_wf import parameters_workflow
 import os
 import sys
 import glob
 import yaml
-import argparse
-import re
 from operator import itemgetter
 from shutil import copy2
 from stat import *
@@ -361,34 +360,33 @@ def analysis_window(ana_ref, analysis_param, wf_param_folder):
 
     button_analysis = Button(fr_ana, text='Frequency', bg=col.c2)
     button_analysis.grid(row=1, column=3, padx=5, pady=5, sticky='ew')
-    button_analysis.configure(
-        command=lambda: mode_analysis_ligka(1, wf_param_folder))
+    button_analysis.configure(command=lambda: Plot(
+        parameters_workflow(wf_param_folder+'/analysis.xml')).compare_runs('freq'))
 
     button_analysis = Button(fr_ana, text='Damping', bg=col.c2)
     button_analysis.grid(row=2, column=3, padx=5, pady=5, sticky='ew')
-    button_analysis.configure(
-        command=lambda: mode_analysis_ligka(2, wf_param_folder))
+    button_analysis.configure(command=lambda: Plot(
+        parameters_workflow(wf_param_folder+'/analysis.xml')).compare_runs('growth'))
 
-    button_analysis = Button(fr_ana, text='Radial Position', bg=col.c2)
-    button_analysis.grid(row=3, column=3, padx=5, pady=5, sticky='ew')
-    button_analysis.configure(
-        command=lambda: mode_analysis_ligka(3, wf_param_folder))
+    # button_analysis = Button(fr_ana, text='Radial Position', bg=col.c2)
+    # button_analysis.grid(row=3, column=3, padx=5, pady=5, sticky='ew')
+    # button_analysis.configure(
+    #     command=lambda: Plot(3, wf_param_folder))
 
     button_analysis = Button(fr_ana, text='Mode Structure', bg=col.c2)
     button_analysis.grid(row=4, column=3, padx=5, pady=5, sticky='ew')
-    button_analysis.configure(
-        command=lambda: mode_analysis_ligka(4, wf_param_folder))
+    button_analysis.configure(command=lambda: Plot(
+        parameters_workflow(wf_param_folder+'/analysis.xml')).compare_runs('EFs'))
 
     button_analysis = Button(fr_ana, text='Mode Structure 2D', bg=col.c2)
     button_analysis.grid(row=5, column=3, padx=5, pady=5, sticky='ew')
-    button_analysis.configure(
-        command=lambda: mode_analysis_ligka(5, wf_param_folder))
+    button_analysis.configure(command=lambda: Plot(
+        parameters_workflow(wf_param_folder+'/analysis.xml')).EFs_plot_2d())
 
-    button_analysis = Button(
-        fr_ana, text='Radial Position for all modes', bg=col.c2)
+    button_analysis = Button(fr_ana, text='Denisty Profiles', bg=col.c2)
     button_analysis.grid(row=6, column=3, padx=5, pady=5, sticky='ew')
-    button_analysis.configure(
-        command=lambda: mode_analysis_ligka(6, wf_param_folder))
+    button_analysis.configure(command=lambda: Plot(
+        parameters_workflow(wf_param_folder+'/analysis.xml')).profile_plot())
 
     # button_analysis = Button(fr_ana, text = 'Rational Surfaces / q - profile', bg = col.c2)
     # button_analysis.grid(row = 4, column = 3, padx = 5, pady = 5, sticky = 'ew')
