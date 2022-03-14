@@ -1,6 +1,7 @@
 #!/bin/bash
 
 module purge
+export PYTHONPATH=''
 if [[ $(hostname) == *"iter.org"* ]] || [[ $(dnsdomainname) == *"iter.org"* ]]; then
     OSDESC=`lsb_release -d`
     if [[ $OSDESC == *"CentOS Linux release 7"* ]]; then
@@ -24,7 +25,7 @@ if [[ $(hostname) == *"iter.org"* ]] || [[ $(dnsdomainname) == *"iter.org"* ]]; 
         # sdcc-login
         echo "Loading sdcc modules..."
         module load libcerf/1.14-iccifort-2020.4.304
-        # module load IMAS/3.34.0-4.9.3-2020b
+        #module load IMAS/3.34.0-4.9.3-2020b
         module load IMAS/3.35.0-4.10.0-2020b
         module load FFTW/3.3.8-intel-2020b
         module load netCDF-Fortran/4.5.3-iimpi-2020b
@@ -39,13 +40,14 @@ if [[ $(hostname) == *"iter.org"* ]] || [[ $(dnsdomainname) == *"iter.org"* ]]; 
         module load impi/2019.9.304-iccifort-2020.4.304
         module load PLplot/5.15.0-intel-2020b
         module load SPRNG/2.0b-iimpi-2020b
-        module load SLATEC/4.1-iccifort-2020.4.304
         module load ParMETIS/4.0.3-iimpi-2020b
         module load libdierckx/1993-GCCcore-10.2.0
         export EZSPLINE_NO_SUFF=TRUE
         export DIERCKX_HOME=$EBROOTLIBDIERCKX
         export HELENA_XML=helena_imas.xml
         export HDF5_USE_FILE_LOCKING=FALSE #HDF5 locking off, so one can read from 2 or more workers the same ids at the same time.
+	export USE_LOCAL_SLATEC=TRUE
+	#module load SLATEC/4.1-iccifort-2020.4.304
     else
         echo "WHERE AM I??? Could not load modules!"
     fi
@@ -81,13 +83,13 @@ else
 fi
 
 # CREATE FOLDER FOR ACTOR POOL
-
 export ACTOR_FOLDER=${HOME}/public/imas_actors #edit this line to best suit your needs
 export HAGIS2PATH_s=$ACTOR_FOLDER/hagis2_s/hagis2_s/native_wrapper/lib/def  # DO NOT CHANGE THIS LINE! (required by the finder)
 
 mkdir -p $ACTOR_FOLDER
 
 # EXTEND PYTHON PATH AND AVOID DOUBLONS (where the actors are under the form: "/actor_name/version(if any)"
+
 export PYTHONPATH=$ACTOR_FOLDER/hagis1:$PYTHONPATH
 export PYTHONPATH=$ACTOR_FOLDER/hagis2:$PYTHONPATH
 export PYTHONPATH=$ACTOR_FOLDER/hagis2_s:$PYTHONPATH

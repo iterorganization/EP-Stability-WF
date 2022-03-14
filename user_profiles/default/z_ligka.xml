@@ -14,13 +14,19 @@
 <npsi_out>256</npsi_out>
 <kr_read>0.0</kr_read>
 <q0>0.0d0</q0>
+<rad_start>0.0d0</rad_start>
+<rad_end>0.0d0</rad_end>
+<refine>0</refine>
+<ref_pos1>0.0d0</ref_pos1>
+<ref_peak1>0.0d0</ref_peak1>
 
-<nspec>1</nspec>
-<spec_str>el</spec_str>
-<nback>1</nback>
+
+<nspec>2</nspec>
+<spec_str>eldd</spec_str>
+<nback>2</nback>
 <nhot>0</nhot>
 <mass_ratio>-1.0d0</mass_ratio>
-<writeout>0</writeout>
+<writeout>2</writeout>
 
 <shot_number_wrap>130012</shot_number_wrap>
 <run_wrap>19</run_wrap>
