@@ -76,7 +76,11 @@ def values_filler(backend_value, mode):
         return imasdef.MDSPLUS_BACKEND, occurence
 
 
-def labelscaler(fig=None, axarr=None, labelsize=None, labelmult=None, linemultiplier=None, fig_tight=None):  # (T. Hayward-Schneider)
+def labelscaler(fig=None, axarr=None, labelsize=None, labelmult=None, linemult=None, fig_tight=None):
+    """Function for rescaling labels and line sizes by T. Hayward-Schneider
+    Usage:
+        labelscaler(fig=fig, axarr=[ax], labelmult=2.0,linemult=2.0 fig_tight=True)
+    """
     if type(axarr) != list:
         axarr = [axarr]
     for ax in axarr:
@@ -88,9 +92,9 @@ def labelscaler(fig=None, axarr=None, labelsize=None, labelmult=None, linemultip
         if labelmult is not None:
             for tk in ([ax.title, ax.xaxis.label, ax.yaxis.label] + ax.get_xticklabels() + ax.get_yticklabels()):
                 tk.set_fontsize(tk.get_fontsize()*labelmult)
-        if linemultiplier is not None:
-            for i, line in enumerate(ax.lines[:]):
-                line.set_linewidth(line.get_linewidth()*linemultiplier)
+        if linemult is not None:
+            for line in ax.lines[:]:
+                line.set_linewidth(line.get_linewidth()*linemult)
         if labelmult is not None:
             try:
                 legend = ax.get_legend()
@@ -100,7 +104,6 @@ def labelscaler(fig=None, axarr=None, labelsize=None, labelmult=None, linemultip
                 pass
     if fig_tight is not None and fig_tight is not False and fig is not None:
         fig.tight_layout()
-# USAGE: img_resize.labelscaler(fig=fig, axarr=[ax], labelmult=2.0,linemultiplier=2.0 fig_tight=True)
 
 
 def create_shot_dir(machine, shot_nr, run_out):
@@ -174,10 +177,9 @@ class Plot():
                                       self.shot, self.run, self.user, self.ids_name, self.occurrence)
         shot_dir = create_shot_dir(self.database_in, self.shot, self.run)
         EF_dir = f'{shot_dir}/EF_plots'
-        if os.path.exists(EF_dir):
-            pass
-        else:
+        if not os.path.exists(EF_dir):
             os.mkdir(EF_dir)
+
         for itime, time in enumerate(mhd_linear_in.time):
             if itime in self.time_list:
                 for imode, mode in enumerate(mhd_linear_in.time_slice[itime].toroidal_mode):
@@ -218,16 +220,15 @@ class Plot():
         """
         shot_dir = create_shot_dir(self.database_in, self.shot, self.run)
         EF_dir = f'{shot_dir}/EF_2d_plots'
-        if os.path.exists(EF_dir):
-            pass
-        else:
+        if not os.path.exists(EF_dir):
             os.mkdir(EF_dir)
+
         equilibrium_in = data_retrieve(self.backend_name, self.database_in,
                                        self.shot, self.run, self.user, 'equilibrium', 0)
-
-        sgrid = np.linspace(0., 1., 256)
-        chigrid = 2.0 * np.pi * np.arange(256)/256
         y = equilibrium_in.time_slice[0].profiles_2d[0]
+        grid_size = len(y.r)
+        sgrid = np.linspace(0., 1., grid_size)
+        chigrid = 2.0 * np.pi * np.arange(grid_size)/grid_size
 
         mhd_linear_in = data_retrieve(self.backend_name, self.database_in,
                                       self.shot, self.run, self.user, self.ids_name, self.occurrence)
@@ -279,9 +280,7 @@ class Plot():
         """
         shot_dir = create_shot_dir(self.database_in, self.shot, self.run)
         profile_dir = f'{shot_dir}/n_profiles'
-        if os.path.exists(profile_dir):
-            pass
-        else:
+        if not os.path.exists(profile_dir):
             os.mkdir(profile_dir)
         ids_in = data_retrieve(self.backend_name, self.database_in,
                                self.shot, self.run, self.user, 'core_profiles', 0)
@@ -316,13 +315,9 @@ class Plot():
 
         freq_dir = f'{shot_dir}/freq'
         growth_dir = f'{shot_dir}/growth'
-        if os.path.exists(freq_dir):
-            pass
-        else:
+        if not os.path.exists(freq_dir):
             os.mkdir(freq_dir)
-        if os.path.exists(growth_dir):
-            pass
-        else:
+        if not os.path.exists(growth_dir):
             os.mkdir(growth_dir)
         m_list = [*range(self.m_min, int(self.m_max) + 1)]
         mhd_linear_in = data_retrieve(self.backend_name, self.database_in,
@@ -388,9 +383,7 @@ class Plot():
             shot_dir = create_shot_dir(
                 self.database_in, self.shot, run_list[0])
             compare_dir = f'{shot_dir}/comparison'
-            if os.path.exists(compare_dir):
-                pass
-            else:
+            if not os.path.exists(compare_dir):
                 os.mkdir(compare_dir)
             ids_in_list = []
             for i in run_list:
