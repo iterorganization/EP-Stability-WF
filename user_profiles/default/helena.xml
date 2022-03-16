@@ -12,8 +12,8 @@
 <machine>ITER</machine>
 <itime_s>19</itime_s>
 <itime_e>19</itime_e>
-<ids_time_s> 68.0 </ids_time_s>
-<ids_time_e> 68.0 </ids_time_e>
+<ids_time_s>68.0</ids_time_s>
+<ids_time_e>68.0</ids_time_e>
 <run_out>11</run_out>
 <user_out>lauberp</user_out>
 <machine_out>helena_test</machine_out>

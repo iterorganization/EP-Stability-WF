@@ -46,8 +46,8 @@ if [[ $(hostname) == *"iter.org"* ]] || [[ $(dnsdomainname) == *"iter.org"* ]]; 
         export DIERCKX_HOME=$EBROOTLIBDIERCKX
         export HELENA_XML=helena_imas.xml
         export HDF5_USE_FILE_LOCKING=FALSE #HDF5 locking off, so one can read from 2 or more workers the same ids at the same time.
-	export USE_LOCAL_SLATEC=TRUE
-	#module load SLATEC/4.1-iccifort-2020.4.304
+	export USE_LOCAL_SLATEC=FALSE
+	module load SLATEC/4.1-iccifort-2020.4.304
     else
         echo "WHERE AM I??? Could not load modules!"
     fi
