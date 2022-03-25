@@ -1,11 +1,5 @@
 from lxml import etree
 import os
-import sys
-sys.path.append('interface')
-sys.path.append('workflow')
-sys.path.append('workflow/input')
-sys.path.append(os.getcwd())
-
 
 def create_workflow_param_from_file(filepath):
     tree = etree.parse(filepath)

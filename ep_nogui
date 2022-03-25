@@ -2,11 +2,7 @@
 
 from workflow.run_workflow import workflow_EP
 import argparse
-import sys
 import os
-
-sys.path.append(os.getcwd())
-sys.path.append('workflow')
 
 
 # Management of input arguments

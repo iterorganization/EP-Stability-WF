@@ -89,7 +89,7 @@ def copy_workflow_param_to_file(previous_folder, current_wf_param_folder, wf_par
 
 def load(chosen_folder, open_gui):
 
-    if chosen_folder is () or chosen_folder == '':
+    if chosen_folder == () or chosen_folder == '':
         print('Load cancelled', file=sys.stderr)
         return
 
@@ -126,7 +126,7 @@ def save(current_config_folder, previous_folder, wf_param_folder_default, workfl
         first_save = 0
 
     # When operation is cancelled from the interface
-    if current_config_folder is () or current_config_folder == '':
+    if current_config_folder == () or current_config_folder == '':
         print('Save_as cancelled.', file=sys.stderr)
         return None
 
