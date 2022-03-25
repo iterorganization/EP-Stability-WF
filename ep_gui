@@ -1,0 +1,4 @@
+#!/usr/bin/env python
+
+import os
+os.system('python ep_gui.py')

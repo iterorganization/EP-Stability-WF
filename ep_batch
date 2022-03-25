@@ -53,7 +53,7 @@ with open(auto_batch_name, 'w') as file:
     file.write('#SBATCH  --job-name=EP_wf'+'\n')
     file.write('#SBATCH  --partition='+queue+'\n\n')
     # file.write('chmod +x ep_nogui \n')
-    file.write('python ep_nogui.py -c '+config_folder+'\n\n')
+    file.write('ep_nogui -c '+config_folder+'\n\n')
 
 file.close()
 
