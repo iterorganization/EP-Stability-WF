@@ -121,7 +121,7 @@ def save(current_config_folder, previous_folder, wf_param_folder_default, workfl
     if current_config_folder is None:
         first_save = 1
         current_config_folder = os.path.join(
-            os.getcwd(), 'user_profiles/run_'+datetime.now().strftime('%y%m%d_%H:%M:%S'))
+            os.getcwd(), 'user_profiles/run_'+datetime.now().strftime('%y%m%d_%H%M%S'))
     else:
         first_save = 0
 
@@ -131,7 +131,7 @@ def save(current_config_folder, previous_folder, wf_param_folder_default, workfl
         return None
 
     if not os.path.exists(current_config_folder):
-        os.mkdir(current_config_folder)
+        os.makedirs(current_config_folder)
 
     # Copy/update the workflow parameter file if changed from the interface
     err = copy_workflow_param_to_file(previous_folder, current_config_folder,

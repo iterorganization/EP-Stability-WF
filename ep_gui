@@ -14,10 +14,8 @@ import sys
 
 
 # set the path to the folders where the configuration and codeparameters are stored
-
-wf_param_folder_default = os.path.join(os.getcwd(), 'user_profiles/default')
-
-default_workflow_param_path = wf_param_folder_default + '/input_workflow_default.xml'
+wf_param_folder_default = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'user_profiles/default')
+default_workflow_param_path = os.path.join(wf_param_folder_default, 'input_workflow_default.xml')
 
 window = Tk()
 # create mainwindow
