@@ -70,26 +70,21 @@ def parameters_workflow(input_file):
 # WF RUNNING FUNCTIONS
 
 
-def time_construction(time_index):
-    time_list_initial = time_index.split(",")
-    time_list = []
-    time_list_ligka_auto = []
-    ligka_auto_index = 0
-    for itime in time_list_initial:
-        if "-" in itime:
-            itime = itime.split("-")
-            itime_list = list(range(int(itime[0]), int(itime[1])+1))
-            ligka_auto_index = ligka_auto_index + \
-                int(itime[1]) - int(itime[0]) + 1
-            for i in itime_list:
-                time_list.append(i)
-        else:
-            time_list.append(int(itime))
-            ligka_auto_index = ligka_auto_index + 1
-    for i in range(0, ligka_auto_index):
-        time_list_ligka_auto.append(i)
+def time_str_to_list(input_string):
+    """
+    Expand a range (e.g. "1-2" -> [1,2]; "1" -> [1]; 1->[1])
+    """
+    tmp = [int(i) for i in input_string.split("-")]
+    return list(range(tmp[0], tmp[-1]+1))
 
-    return time_list, time_list_ligka_auto
+
+def time_construction(time_input):
+    """
+    Take a input, which might be '1', '1,2' or '2-4' or combinations '1,3-6,7,10-11'
+    In these 4 cases, correct output should be [1], [1,2], [2,3,4], [1,3,4,5,6,7,10,11]
+    """
+    time_list = [item for elem in str(time_input).split(',') for item in time_str_to_list(elem)]
+    return time_list, list(range(len(time_list)))
 
 
 def read_timestep(user, database, run, current_config_folder, backend):
