@@ -135,6 +135,12 @@ def ids_compare(ids_merge_param):
 
         data_step_writeout(output, core_profiles_out)
 
+        if int(ids_merge_param['Settings']['Equilibrium_copy'][0]):
+            print('Exporting Equilibrium also in the new DB!')
+            equilibrium_out = input_1.get_slice(
+                'equilibrium', time[itime], imasdef.PREVIOUS_SAMPLE, occurrence=0)
+            data_step_writeout(output, equilibrium_out)
+
     print('IDS merge Completed!')
     input_1.close()
     input_2.close()
