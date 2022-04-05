@@ -25,7 +25,7 @@ if [[ $(hostname) == *"iter.org"* ]] || [[ $(dnsdomainname) == *"iter.org"* ]]; 
         # sdcc-login
         echo "Loading sdcc modules..."
         module load LIGKA/1.0.0-intel-2020b-DD-3.35.0
-        module load HELENA/2022-03-18-intel-2020b-DD-3.35.0
+        module load HELENA/2.0.0-intel-2020b-DD-3.35.0
         module load lxml/4.6.2-GCCcore-10.2.0
     else
         echo "WHERE AM I??? Could not load modules!"
@@ -71,7 +71,7 @@ else
     export PYTHONPATH=$ACTOR_FOLDER/hagis1:$PYTHONPATH
     export PYTHONPATH=$ACTOR_FOLDER/hagis2:$PYTHONPATH
     export PYTHONPATH=$ACTOR_FOLDER/hagis2_s:$PYTHONPATH
-    export PYTHONPATH=$ACTOR_FOLDER/helena_imas:$PYTHONPATH
+    export PYTHONPATH=$ACTOR_FOLDER/helena:$PYTHONPATH
     export PYTHONPATH=$ACTOR_FOLDER/ligka:$PYTHONPATH
     export PYTHONPATH=$ACTOR_FOLDER/finder9:$PYTHONPATH
     export PYTHONPATH=$ACTOR_FOLDER/chease:$PYTHONPATH

@@ -11,12 +11,15 @@ import numpy as np
 
 no_actor = {}
 try:
-    from helena_imas.wrapper import helena_imas_actor
-except:
-    no_actor['Helena'] = True
+    from helena.wrapper import helena_actor
+except ImportError:
+    try:
+        from helena_imas.wrapper import helena_imas_actor as helena_actor
+    except ImportError:
+        no_actor['Helena'] = True
 try:
     from ligka.wrapper import ligka_actor
-except:
+except ImportError:
     no_actor['Ligka_m5'] = True
     no_actor['Ligka_m4'] = True
     no_actor['Ligka_m1'] = True
@@ -25,19 +28,15 @@ except:
     no_actor['Ligka_m3'] = True
 try:
     from hagis1.wrapper import hagis1_actor
-except:
+except ImportError:
     no_actor['Hagis_1'] = True
-# try:
-#    from chease.wrapper import chease_actor
-# except:
-#    no_actor['chease'] = True
 try:
     from hagis2.wrapper import hagis2_actor
-except:
+except ImportError:
     no_actor['Hagis_2'] = True
 try:
     from finder9.wrapper import finder9_actor
-except:
+except ImportError:
     no_actor['Finder'] = True
 if len(list(no_actor.keys())) > 0:
     print('Cannot import:')
@@ -298,15 +297,15 @@ def imports_check(actor_name):
         return 0
 
 
-def helena_imas_actor_wf_wrapper(equilibrium_in,
-                                 core_profiles_in,
-                                 mhd_linear_in,
-                                 distributions_in,
-                                 config_file_path,
-                                 mpi_processes):
+def helena_actor_wf_wrapper(equilibrium_in,
+                            core_profiles_in,
+                            mhd_linear_in,
+                            distributions_in,
+                            config_file_path,
+                            mpi_processes):
 
-    equilibrium_out = helena_imas_actor(equilibrium_in,
-                                        config_file_path)
+    equilibrium_out = helena_actor(equilibrium_in,
+                                   config_file_path)
 
     return equilibrium_out, None, core_profiles_in, None
 
@@ -369,7 +368,7 @@ def actor_settings(actor):
     output_ids = {}
     if actor == "Helena":
         actor_params["entrypoint_actor"] = True
-        actor_params["wrapper"] = helena_imas_actor_wf_wrapper
+        actor_params["wrapper"] = helena_actor_wf_wrapper
         actor_params["config_file_name"] = "/helena.xml"
         input_ids = {"equilibrium": 0, "core_profiles": 0}
         output_ids = {"equilibrium": 0, "core_profiles": 0}
