@@ -89,7 +89,8 @@ def time_construction(time_input):
 def read_timestep(user, database, run, current_config_folder, backend):
 
     param = parameters_workflow(
-        current_config_folder + '/input_workflow_default.xml')
+        os.path.join(current_config_folder, 'input_workflow_default.xml')
+    )
     print('=> Open input datafile and read total equilibrium IDS for timesteps.')
     input = imas.DBEntry(backend, database,
                          param['shot_nr'], run, user)
@@ -369,61 +370,61 @@ def actor_settings(actor):
     if actor == "Helena":
         actor_params["entrypoint_actor"] = True
         actor_params["wrapper"] = helena_actor_wf_wrapper
-        actor_params["config_file_name"] = "/helena.xml"
+        actor_params["config_file_name"] = "helena.xml"
         input_ids = {"equilibrium": 0, "core_profiles": 0}
         output_ids = {"equilibrium": 0, "core_profiles": 0}
     if actor == "Ligka_m5":
         actor_params["entrypoint_actor"] = False
         actor_params["wrapper"] = ligka_actor_wf_wrapper
-        actor_params["config_file_name"] = "/z_ligka.xml"
+        actor_params["config_file_name"] = "z_ligka.xml"
         input_ids = {"equilibrium": 0, "core_profiles": 0}
         output_ids = {"mhd_linear": 0}
     if actor == "Ligka_m4":
         actor_params["entrypoint_actor"] = False
         actor_params["wrapper"] = ligka_actor_wf_wrapper
-        actor_params["config_file_name"] = "/z_ligka.xml"
+        actor_params["config_file_name"] = "z_ligka.xml"
         input_ids = {"equilibrium": 0, "core_profiles": 0, "mhd_linear": 0}
         output_ids = {"mhd_linear": 1}
     if actor == "Ligka_m1":
         actor_params["entrypoint_actor"] = False
         actor_params["wrapper"] = ligka_actor_wf_wrapper
-        actor_params["config_file_name"] = "/z_ligka.xml"
+        actor_params["config_file_name"] = "z_ligka.xml"
         input_ids = {"equilibrium": 0, "core_profiles": 0, "mhd_linear": 1}
         output_ids = {"mhd_linear": 2}
     if actor == "Ligka_m6":
         actor_params["entrypoint_actor"] = False
         actor_params["wrapper"] = ligka_actor_wf_wrapper
-        actor_params["config_file_name"] = "/z_ligka.xml"
+        actor_params["config_file_name"] = "z_ligka.xml"
         input_ids = {"equilibrium": 0, "core_profiles": 0, "mhd_linear": 0}
         output_ids = {"mhd_linear": 5}
     if actor == "Ligka_m2":
         actor_params["entrypoint_actor"] = False
         actor_params["wrapper"] = ligka_actor_wf_wrapper
-        actor_params["config_file_name"] = "/z_ligka.xml"
+        actor_params["config_file_name"] = "z_ligka.xml"
         input_ids = {"equilibrium": 0, "core_profiles": 0, "mhd_linear": 1}
         output_ids = {"mhd_linear": 6}
     if actor == "Ligka_m3":
         actor_params["entrypoint_actor"] = False
         actor_params["wrapper"] = ligka_actor_wf_wrapper
-        actor_params["config_file_name"] = "/z_ligka.xml"
+        actor_params["config_file_name"] = "z_ligka.xml"
         input_ids = {"equilibrium": 0, "core_profiles": 0, "mhd_linear": 0}
         output_ids = {"mhd_linear": 7}
     if actor == "Hagis_1":
         actor_params["entrypoint_actor"] = False
         actor_params["wrapper"] = hagis1_actor_wf_wrapper
-        actor_params["config_file_name"] = "/hagis1.xml"
+        actor_params["config_file_name"] = "hagis1.xml"
         input_ids = {"equilibrium": 0, "mhd_linear": 0}
         output_ids = {"equilibrium": 1, "mhd_linear": 3}
     if actor == "Hagis_2":
         actor_params["entrypoint_actor"] = False
         actor_params["wrapper"] = hagis2_actor_wf_wrapper
-        actor_params["config_file_name"] = "/hagis2.xml"
+        actor_params["config_file_name"] = "hagis2.xml"
         input_ids = {"equilibrium": 1, "mhd_linear": 3, "core_profiles": 0}
         output_ids = {"distributions": 0, "mhd_linear": 4}
     if actor == "Finder":
         actor_params["entrypoint_actor"] = False
         actor_params["wrapper"] = finder_actor_wf_wrapper
-        actor_params["config_file_name"] = "/finder_input.xml"
+        actor_params["config_file_name"] = "finder_input.xml"
         input_ids = {"equilibrium": 1}
         output_ids = {"distributions": 1}
 

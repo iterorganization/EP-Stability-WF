@@ -111,12 +111,12 @@ def actor_call(actor_name, config_folder_path, system_params, curr_str=None, sce
                     core_profiles_in = scenario_mod(
                         core_profiles_in, curr_str, scenario_params)
 
+        config_file = os.path.join(config_folder_path, actor_params['config_file_name'])
         equilibrium_out, mhd_linear_out, core_profiles_out, distributions_out = actor_params['wrapper'](equilibrium_in,
                                                                                                         core_profiles_in,
                                                                                                         mhd_linear_in,
                                                                                                         distributions_in,
-                                                                                                        config_folder_path +
-                                                                                                        actor_params['config_file_name'],
+                                                                                                        config_file,
                                                                                                         mpi_processes=mpi_processes)
 
         if equilibrium_out:
