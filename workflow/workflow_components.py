@@ -31,6 +31,7 @@ def actor_call(actor_name, config_folder_path, system_params, curr_str=None, sce
     run = None
     user = None
     shot_no = system_params['shot_nr']
+    config_file = os.path.join(config_folder_path, actor_params['config_file_name'])
 
     if system_params['hdf5'] == 1:
         backend = imasdef.HDF5_BACKEND
@@ -111,7 +112,6 @@ def actor_call(actor_name, config_folder_path, system_params, curr_str=None, sce
                     core_profiles_in = scenario_mod(
                         core_profiles_in, curr_str, scenario_params)
 
-        config_file = os.path.join(config_folder_path, actor_params['config_file_name'])
         equilibrium_out, mhd_linear_out, core_profiles_out, distributions_out = actor_params['wrapper'](equilibrium_in,
                                                                                                         core_profiles_in,
                                                                                                         mhd_linear_in,
