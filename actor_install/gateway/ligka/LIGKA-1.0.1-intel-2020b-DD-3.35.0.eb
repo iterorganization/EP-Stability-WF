@@ -1,0 +1,77 @@
+easyblock = "ConfigureMake"
+
+name = "LIGKA"
+version = "1.0.1"
+
+homepage = "https://git.iter.org/projects/STAB/repos/ligka"
+description = ("A linear gyrokinetic code describing background kinetic "
+               "and fast particle effects on MHD stability in tokamaks")
+
+
+local_ddver = "3.35.0"
+versionsuffix = "-DD-%s" % local_ddver
+
+toolchain = SYSTEM
+
+source_urls = [
+    "https://git.iter.org/rest/api/latest/projects/STAB/repos/%(namelower)s/archive"
+    "?at=refs%2Ftags%2F%(version)s&format=zip&/"
+]
+sources = ["%(namelower)s-%(version)s.zip"]
+patches = []
+checksums = ['98beb1b0ba96f4fce1fd16910c274f61e5f8a81cd7d601793360027dd9660940']
+
+local_imasver = local_ddver + "-4.10.0-2020b"
+
+builddependencies = []
+
+local_imasenv_suff = ""
+
+dependencies = [
+    ("imasenv/" + local_ddver + local_imasenv_suff + '/intel/rc', EXTERNAL_MODULE),
+    ("fftw/3.3.4--intelmpi--2017--binary", EXTERNAL_MODULE),
+    ("hdf5/1.8.17--intel--pe-xe-2017--binary", EXTERNAL_MODULE),
+    ("intel/pe-xe-2017--binary", EXTERNAL_MODULE),
+    ("intelmpi/2017--binary", EXTERNAL_MODULE),
+    ("mkl/2017--binary", EXTERNAL_MODULE),
+    ("metis/5.1.0--intel--pe-xe-2017--binary", EXTERNAL_MODULE),
+    ("parmetis/4.0.3--intelmpi--2017--binary", EXTERNAL_MODULE),
+    ("mumps/5.0.1--intelmpi--2017--binary", EXTERNAL_MODULE),
+    ("netcdf/4.4.1--intel--pe-xe-2017--binary", EXTERNAL_MODULE),
+    ("netcdff/4.4.4--intel--pe-xe-2017--binary", EXTERNAL_MODULE),
+    ("parmetis/4.0.3--intelmpi--2017--binary", EXTERNAL_MODULE),
+    ("nag/mark26--binary", EXTERNAL_MODULE),
+    ("itm-python/3.10", EXTERNAL_MODULE),
+    ("imas-pyal/1.3.5", EXTERNAL_MODULE)
+
+]
+
+maxparallel=16
+
+skipsteps = ["configure"]
+
+buildopts = [
+    ("OPTS=MPI,MUMPS,IMAS LIGKA VCS_VERSION=%(version)s EZSPLINE_NO_SUFF=TRUE "
+     "MACHINE=gateway COMPILER=intel MUMPS_5=TRUE"),
+    ("ACTOR_FOLDER=%(installdir)s NAGVERSION=26 OPTS=MPI,MUMPS,IMAS,WF LIGKA_WF "
+     "VCS_VERSION=%(version)s EZSPLINE_NO_SUFF=TRUE MACHINE=gateway COMPILER=intel "
+     "LIGKA_WF_XML=ligka_WF-PY-GATE.xml MUMPS_5=TRUE")
+]
+installopts = [
+    "INSTALL_PREFIX=%(installdir)s OPTS=MPI,MUMPS,IMAS VCS_VERSION=%(version)s",
+    "INSTALL_PREFIX=%(installdir)s OPTS=MPI,MUMPS,IMAS,WF VCS_VERSION=%(version)s -n"
+]
+
+modextrapaths = {"PYTHONPATH": "ligka"}
+
+sanity_check_paths = {
+    "files": ["ligka/setup.py", "ligka/ligka/native_wrapper/bin/ligka.exe", "bin/LIGKA"],
+    "dirs": ["ligka"],
+}
+sanity_check_commands = [
+    "python -c 'from ligka.wrapper import ligka_actor'",
+    "ldd ligka/ligka/native_wrapper/bin/ligka.exe",
+    "ldd bin/LIGKA"
+]
+
+moduleclass = "phys"

@@ -1,0 +1,14 @@
+--- ../ligka/Makefile   2022-03-18 14:42:43.289609000 +0100
++++ tmp/Makefile        2022-03-21 20:29:05.414317000 +0100
+@@ -53,7 +53,9 @@
+ 
+ 
+ # Git stuff
+-VCS_VERSION := $(shell sh -c 'git describe --always --long --dirty')
++ifeq ($(VCS_VERSION),)
++       VCS_VERSION := $(shell sh -c 'git describe --always --long --dirty')
++endif
+ CPPFLAGS += -D'VCS_VERSION="$(VCS_VERSION)"'
+ 
+ # File definitions and dependencies
+

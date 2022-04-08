@@ -1,0 +1,73 @@
+easyblock = "ConfigureMake"
+
+name = "HELENA"
+version = "2.0.1"
+
+homepage = "https://git.iter.org/projects/EQ/repos/helena"
+description = """Equilibrium solver"""
+
+local_ddver = "3.35.0"
+versionsuffix = "-DD-%s" % local_ddver
+
+toolchain = SYSTEM
+
+source_urls = [
+    "https://git.iter.org/rest/api/latest/projects/EQ/repos/%(namelower)s/archive"
+    "?at=refs%2Ftags%2F%(version)s&format=zip&/"
+]
+sources = ["%(namelower)s-%(version)s.zip"]
+patches = ["%(namelower)s-out-of-git.patch"]
+checksums = [
+    '38d093266cc55b2b6cdf7adc49d87b34e40d894c338412d1d13117f13f5fc377',  # helena-2.0.1.zip
+    '56eca74ecd7ed00db107f9a88727715bb4cb816805188420e5a564152fc105ad',  # helena-out-of-git.patch
+]
+
+local_imasver = local_ddver + "-4.10.0-2020b"
+
+builddependencies = []
+
+dependencies = [
+    ("imasenv/" + local_ddver + '/intel/rc', EXTERNAL_MODULE),
+    ("imas-pyal/1.3.5", EXTERNAL_MODULE),
+    ("nag/mark26--binary", EXTERNAL_MODULE),
+    ("fftw/3.3.4--intelmpi--2017--binary", EXTERNAL_MODULE),
+    ("hdf5/1.8.17--intel--pe-xe-2017--binary", EXTERNAL_MODULE),
+    ("netcdf/4.4.1--intel--pe-xe-2017--binary", EXTERNAL_MODULE),
+    ("netcdff/4.4.4--intel--pe-xe-2017--binary", EXTERNAL_MODULE),
+    ("pspline/20190408", EXTERNAL_MODULE),
+    ("parmetis/4.0.3--intelmpi--2017--binary", EXTERNAL_MODULE),
+    ("metis/5.1.0--intel--pe-xe-2017--binary", EXTERNAL_MODULE),
+    ("xmllib/3.3.1/intel/17.0", EXTERNAL_MODULE),
+    ("intel/pe-xe-2017--binary", EXTERNAL_MODULE),
+    ("intelmpi/2017--binary", EXTERNAL_MODULE),
+    ("mkl/2017--binary", EXTERNAL_MODULE),
+    ("mumps/5.0.1--intelmpi--2017--binary", EXTERNAL_MODULE),
+    ("parmetis/4.0.3--intelmpi--2017--binary", EXTERNAL_MODULE),
+    ("itm-python/3.10", EXTERNAL_MODULE),
+]
+
+maxparallel=16
+
+skipsteps = ["configure", "install"]
+
+build_cmd_targets = ["actor"]
+buildopts = ("ACTOR_FOLDER=%(installdir)s VERSION=%(version)s"
+             " MUMPS_5=TRUE HELENA_XML=helena_imas_gateway.xml"
+             " PPPLIB_HOME=~g2plaube/public/lib/"
+             " DIERCKX_HOME=~g2plaube/public/lib/")
+
+modextrapaths = {
+    "PYTHONPATH": "helena",
+    "LD_LIBRARY_PATH": "/afs/eufus.eu/user/g/g2plaube/public/lib",
+    "IPP_USER": "pwl"
+}
+modextrapaths = {"PYTHONPATH": "helena"}
+
+sanity_check_paths = {
+    "files": ["helena/setup.py"],
+    "dirs": ["helena"],
+}
+
+sanity_check_commands = ["python -c 'from helena.wrapper import helena_actor'"]
+
+moduleclass = "phys"

@@ -1,0 +1,40 @@
+easyblock = "PythonPackage"
+
+name = "EP-Stability-WF"
+version = "1.0.0"
+
+toolchain = SYSTEM
+
+homepage = "https://git.iter.org/projects/WF/repos/ep-stability-wf"
+description = """Energetic Particle workflow for stability analysis."""
+
+source_urls = ["https://git.iter.org/rest/api/latest/projects/WF/repos"
+               "/%(namelower)s/archive?at=refs%2Ftags%2F%(version)s&format=zip&/"]
+sources = ["%(namelower)s-%(version)s.zip"]
+checksums = ["b91663c6e2085fa80ffca3e56cd546571adf36b8c63c1aa5be4ae01b19f80bea"]
+
+local_ddver = "3.35.0"
+versionsuffix = "-DD-%s" % local_ddver
+
+local_imasver = local_ddver + "-4.10.0-2020b"
+
+local_imasenv_suff = ""
+dependencies = [
+    # ("cineca-dev", EXTERNAL_MODULE),
+    ("imasenv/3.35.0/intel/rc", EXTERNAL_MODULE),
+    ("imas-pyal/1.3.5", EXTERNAL_MODULE),
+    ("LIGKA/" + "1.0.2" + versionsuffix, EXTERNAL_MODULE),
+    ("HELENA/" + "2.0.0" + versionsuffix, EXTERNAL_MODULE),
+]
+
+use_pip = True
+exts_download_dep_fail = True
+sanity_pip_check = False
+
+
+sanity_check_paths = {
+    "dirs": ["lib"],
+    "files": [],
+}
+
+moduleclass = "phys"

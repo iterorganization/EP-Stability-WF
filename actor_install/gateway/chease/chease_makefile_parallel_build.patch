@@ -1,0 +1,149 @@
+--- src-f90/Makefile_old	2022-08-18 17:29:05.388910607 +0200
++++ src-f90/Makefile	2022-08-18 18:44:39.866710964 +0200
+@@ -467,7 +467,7 @@
+ 	$(F90) $(F90FLAGS_parser) -c assign_chease_codeparameters_choices.f90
+ xml2eg.o: xml2eg.f90
+ 	$(F90) $(F90FLAGS_parser_nor8) -c xml2eg.f90
+-xml_file_reader.o:
++xml_file_reader.o: euitm_schemas.o itm_types.o
+ 	$(F90) $(F90FLAGS_parser) -c xml_file_reader.f90
+ atcoef.o: globals.o
+ auxval.o: globals.o
+@@ -481,7 +481,7 @@
+ blines.o: globals.o
+ bltest.o: globals.o interpol.o
+ bndspl.o: globals.o
+-bndfit.o: prec_const.o interpos_source.o
++bndfit.o: prec_const.o interpos_source.o globals.o
+ bound.o: globals.o
+ bscoeff.o: globals.o neobscoeffmod.o
+ bsexpeq.o: globals.o
+@@ -506,7 +506,7 @@
+ 	sed "s/reflist/$(reflistorchoices)/" temp_chease_module.f90 > chease_imas_effxml_module.f90;rm temp_chease_module.f90
+ 	$(F90) $(F90FLAGS_O0) -c chease_imas_effxml_module.f90 $(INCL_FUTILS) $(INCL_HDF5)
+ chipsi.o: globals.o
+-chipsimetrics.o: globals.o
++chipsimetrics.o: globals.o interpos_source.o
+ cint.o: globals.o
+ cocos_module.o: itm_types.o
+ conver.o: globals.o
+@@ -522,7 +522,7 @@
+ drhodp.o: globals.o
+ dwy.o: prec_const.o
+ energy.o: globals.o
+-eqchease_mksa.o: prec_const.o globals.o
++eqchease_mksa.o: prec_const.o globals.o cocos_module.o
+ eqdim.o: globals.o
+ erdata.o: globals.o
+ errorch.o: globals.o
+@@ -534,7 +534,7 @@
+ 	$(F90) $(F90FLAGS_O0) -c chease_prog_imas_ids_effxml.f90 $(INCL_FUTILS) $(INCL_HDF5)
+ #euitm_schemas.o:
+ #euitm_routines.o: euitm_schemas.o
+-euitm_xml_parser.o: itm_types.o string_manipulation_tools.o
++euitm_xml_parser.o: itm_types.o string_manipulation_tools.o euitm_schemas.o
+ 	$(F90) $(F90FLAGS_parser) -c euitm_xml_parser.f90
+ #euitm_utilities.o: euitm_schemas.o
+ evlate.o: globals.o
+@@ -552,11 +552,11 @@
+ genout.o: prec_const.o globals.o
+ gijlin.o: globals.o
+ gloadd.o: globals.o interpol.o interpos_source.o
+-globals.o: prec_const.o
++globals.o: prec_const.o euitm_schemas.o
+ globals_init.o: globals.o
+ gloqua.o: globals.o interpol.o interpos_source.o
+ gloqua_imas.o: globals.o interpol.o interpos_source.o
+-guess.o: globals.o interpol.o
++guess.o: globals.o interpol.o interpos_source.o
+ iarray.o: globals.o
+ identa.o: globals.o BNDIND.inc
+ identb.o: globals.o
+@@ -569,7 +569,7 @@
+ ismax.o: globals.o
+ ismin.o: globals.o
+ isofind.o: globals.o
+-isofun.o: globals.o
++isofun.o: globals.o interpos_source.o
+ isrchfge.o: globals.o
+ issum.o: globals.o
+ itipr.o: globals.o
+@@ -583,17 +583,17 @@
+ ltxw.o: prec_const.o
+ lyv.o: prec_const.o
+ magaxe.o: globals.o
+-mappin.o: globals.o interpol.o sigmaneomod.o
++mappin.o: globals.o interpol.o sigmaneomod.o interpos_source.o
+ mappin_imas.o: globals.o interpol.o sigmaneomod.o
+ matrix.o: globals.o
+ mesage.o: globals.o
+ mesh.o: globals.o
+-metrictoitm_afterfpp.o: globals.o interpos_source.o
++metrictoitm_afterfpp.o: globals.o interpos_source.o cocos_module.o itm_types.o
+ msplcy.o: globals.o
+ mspline.o: globals.o
+ nerat.o: globals.o interpol.o
+ nonlin.o: globals.o
+-norept.o: globals.o interpol.o
++norept.o: globals.o interpol.o interpos_source.o
+ ntridg.o: globals.o
+ oarray.o: globals.o
+ ogyropsi.o: globals.o
+@@ -607,7 +607,7 @@
+ output.o: globals.o interpol.o COMDAT.inc interpos_source.o
+ outxt.o: globals.o
+ packme.o: globals.o interpol.o
+-packmep.o: globals.o
++packmep.o: globals.o interpos_source.o
+ page.o: globals.o
+ polyfun.o: globals.o
+ polynm.o: globals.o interpol.o
+@@ -618,7 +618,7 @@
+ ppspln2.o: prec_const.o
+ premap.o: globals.o interpol.o
+ preset.o: globals.o
+-prfunc.o: globals.o
++prfunc.o: globals.o interpos_source.o
+ priqqu.o: globals.o
+ prnorm.o: globals.o
+ profile.o: globals.o interpol.o
+@@ -637,7 +637,7 @@
+ rvar.o: globals.o
+ rvar2.o: globals.o
+ rzbound.o: globals.o
+-runtim.o: prec_const.o
++runtim.o: prec_const.o globals.o
+ scopyr.o: prec_const.o
+ setupa.o: globals.o
+ setupb.o: globals.o
+@@ -653,7 +653,7 @@
+ ssum.o: globals.o
+ stchps.o: globals.o
+ stepon.o: globals.o interpol.o interpos_source.o cocos_module.o
+-string_manipulation_tools.o: prec_const.o
++string_manipulation_tools.o: prec_const.o itm_types.o
+ subsz.o: globals.o
+ surface.o: globals.o interpol.o sigmaneomod.o interpos_source.o
+ surf_metrics_onaxis.o : globals.o interpol.o interpos_source.o
+@@ -677,7 +677,7 @@
+ write_ogyropsi.o: prec_const.o
+ write_ogyropsi_hdf5.o: prec_const.o $(FUTILS)/lib$(futils).a
+ wrtext.o: globals.o
+-wrtplot.o: globals.o interpol.o COMDAT.inc
++wrtplot.o: globals.o interpol.o COMDAT.inc interpos_source.o
+ wrtbin.o: globals.o interpol.o COMDAT.inc interpos_source.o
+ wrtasc.o: globals.o interpol.o COMDAT.inc
+ wrtmat.o: globals.o interpol.o COMDAT.inc
+@@ -690,4 +690,11 @@
+ outgyropsi_hdf5.o:globals.o
+ hamada.o: globals.o interpol.o interpos_source.o
+ neoart.o: globals.o interpos_source.o
+-interpos_source.o: prec_const.o
++interpos_source.o: prec_const.o checknanos_module.o
++
++# IMAS
++load_imas_with_rout.o: globals.o
++write_imas_with_rout.o: globals.o
++copy_itm_to_ids_equilibrium.o: globals.o interpos_source.o itm_ids_utilities.o
++copy_ids_to_itm_equilibrium.o: globals.o
++equilibrium_euitm_module.o: euitm_schemas.o

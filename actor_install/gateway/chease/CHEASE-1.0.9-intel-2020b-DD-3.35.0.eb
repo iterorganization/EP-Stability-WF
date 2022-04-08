@@ -1,0 +1,92 @@
+easyblock = "MakeCp"
+
+name = "CHEASE"
+version = "1.0.9"
+
+homepage = "https://git.iter.org/projects/EQ/repos/chease"
+description = ("The CHEASE code is an open access fixed-boundary equilibrium code")
+
+local_ddver = "3.35.0"
+local_alver = "4.10.0"
+versionsuffix = "-DD-%s" % local_ddver
+
+toolchain = SYSTEM
+local_intel_version = "2020b"
+local_imasver = local_ddver + "-" + local_alver + "-" + local_intel_version
+
+local_tagname = "crpptbx-release-v" + version
+source_urls = [
+    "https://git.iter.org/rest/api/latest/projects/EQ/repos/%(namelower)s/archive"
+    "?at=refs%2Ftags%2F" + local_tagname + "&format=zip&/"
+]
+sources = ["%(namelower)s-%(version)s.zip"]
+patches = [
+    "chease_makefile_parallel_build.patch",
+    "chease_gateway_hdf5.patch",
+]
+checksums = [
+    '86968937cab1f13eee82bd63eb5242d60a9534f1d1f4cfcf6ea10a723ceec4b3',  # chease-1.0.9.zip
+    'bcd617cc2edf295179e5d491e222bef6f494f030f78fe5a58d0d8d8d065cbccb',  # chease_makefile_parallel_build.patch
+    '04d43cc1e93f86f1881bdc5feba3fb152106769ec613aa4f514b166ed7a35b1f',  # chease_gateway_hdf5.patch
+]
+
+builddependencies = [
+]
+dependencies = [
+    ("cineca", EXTERNAL_MODULE),
+    ("intel/pe-xe-2017--binary", EXTERNAL_MODULE),
+    ("imasenv/" + local_ddver + "/intel/rc", EXTERNAL_MODULE),
+    ("imas-pyal/1.3.5", EXTERNAL_MODULE),
+    ("hdf5/1.8.17--intel--pe-xe-2017--binary", EXTERNAL_MODULE),
+]
+
+start_dir = "src-f90"
+
+maxparallel = 24
+local_targets = ["chease_imas_hdf5", "chease_imas", "chease", "libchease_kepler_imas"]
+
+prebuildopts = "rm -f metrictoitm_afterfpp.f90 && "
+
+buildopts = [
+    ("CHEASE_MACHINE=gateway_with_itm CHEASE_F90=ifort PYTHON_ACTOR_DIRECTORY=%(installdir)s "
+     "VERSION=%(version)s " + " ".join(local_targets))
+]
+
+install_cmd = "cd ../; fc2k fc2k_imas/chease.xml -nokepler -pyworkspace %(installdir)s"
+postinstallcmds = [install_cmd]
+
+# Copy targets starting with "chease"
+local_copy_targets = list(set([i for i in local_targets if i[0:6] == "chease"]))
+
+# Additionally copy all scripts in the "scripts_for_bin" folder
+local_copy_targets += [
+    "../scripts_for_bin/{}".format(script_name) for script_name in
+    [
+        "database_pprimeffprime_to_eqdsk",
+        "database_to_eqdsk",
+        "eqdsk_to_database",
+        "o.chease_rz_plasma_boundary_to_cols.pl",
+        "o.chease_to_cols",
+        "o.chease_to_cols_v10.pl",
+        "o.chease_to_cols_v9.pl",
+        "run.chease.eqdsk",
+        "run.chease.expeq",
+    ]
+]
+
+
+files_to_copy = [(local_copy_targets, "bin")]
+
+sanity_check_paths = {
+    "files": ["bin/chease"],
+    "dirs": ["bin"],
+}
+
+modextrapaths = {"PYTHONPATH": "chease"}
+
+sanity_check_commands = [
+    "python -c 'from chease.wrapper import chease_actor'",
+    "ldd $(which chease_imas)",
+]
+
+moduleclass = "phys"

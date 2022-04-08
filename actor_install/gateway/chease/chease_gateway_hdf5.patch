@@ -1,0 +1,29 @@
+diff --git a/src-f90/Makefile.define_FLAGS b/src-f90/Makefile.define_FLAGS
+index 6d37965..031c7ec 100644
+--- a/src-f90/Makefile.define_FLAGS
++++ b/src-f90/Makefile.define_FLAGS
+@@ -542,13 +542,14 @@ ifeq ($(CHEASE_MACHINE),gateway_with_itm)
+     LDFLAGS = -O0 -g -r8 -fPIC  -I$(UAL)/include/amd64_ifort
+     FUTILS = $(PWD)/futils_src
+     INCL_FUTILS= -I$(FUTILS)
+-    HDF5=
++    HDF5=$(HDF5_HOME)
+     INCL_HDF5 = -I$(HDF5)/include
+     LAPACKLIB = $(shell pkg-config --libs lapack-ifort)
+     BLASLIB = $(shell pkg-config --libs blas-ifort)
+     LIBS =  -L$(UAL)/lib  -lUALFORTRANInterface_ifort -lUALLowLevel -lz ${LAPACKLIB} ${BLASLIB}
+-    LIBS_HDF5 =  -L$(FUTILS) -lfutils -L$(HDF5)/lib -lhdf5_fortran -lhdf5 -lz $(LIBS)
++    LIBS_HDF5 = -L$(FUTILS) -lfutils -L$(FUTILS)/mpiuni -lmpiuni -Wl,-rpath,$(HDF5_HOME)/lib -L$(HDF5_HOME)/lib -lhdf5_fortran -lhdf5 -lz
+     OBJS_euitm =
++    Makefile_futils=Makefile.ifort
+ 
+     isIMAS=x${IMAS_HOME}x
+     ifeq ($(isIMAS),xx)
+@@ -560,7 +561,6 @@ ifeq ($(CHEASE_MACHINE),gateway_with_itm)
+      F90FLAGS        = -O3 -r8 -heap-arrays -g  -fPIC `pkg-config $(PACKAGES) --cflags`
+      F90FLAGS_O0     = -O0 -r8 -heap-arrays -g  -fPIC `pkg-config $(PACKAGES) --cflags`
+      LIBS = `pkg-config $(PACKAGES) --libs` -limf -lm -lz ${LAPACKLIB} ${BLASLIB}
+-     LIBS_HDF5 =  -L$(FUTILS) -lfutils -L$(HDF5)/lib -lhdf5_fortran -lhdf5 -lz $(LIBS)
+     endif
+   endif
+ endif
