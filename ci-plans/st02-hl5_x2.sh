@@ -27,9 +27,10 @@ use_tmp_dir=1
 if [ ${use_tmp_dir} -eq 1 ]; then
     tmpdir=$(mktemp -d)
     cd $tmpdir
+    cp -R ${basedir}/ci-plans/files/01-hl5 ./
 fi
 
-python ${basedir}/ep_nogui -c ${basedir}/ci-plans/files/01-hl5
+python ${basedir}/ep_nogui -c 01-hl5
 
 if [ ${use_tmp_dir} -eq 1 ]; then
     cd -
