@@ -5,9 +5,6 @@ set -e
 
 # Set up environment
 . ./ci-plans/st00-header.sh || exit 1
-# Check flake8 is installed
-pip install --user flake8
-export PATH=${PATH}:~/.local/bin
 
 set -v
 
@@ -22,27 +19,19 @@ else
 fi
 use_tmp_dir=1
 
+## If we need to do something different when running in Bamboo
+#if [ ! -z ${bamboo_buildKey} ]; then
+#  imasdb TEST
+#fi
+
 if [ ${use_tmp_dir} -eq 1 ]; then
     tmpdir=$(mktemp -d)
     cd $tmpdir
 fi
 
-# For all python files in the repo (*.py and ep_{no,}gui)
-file_list="$(find ${basedir} -iname '*.py' | tr '\n' ' ') ${basedir}/ep_gui ${basedir}/ep_nogui"
-for filename in ${file_list}; do
-  cp ${filename} ./
-  loc_name=$(basename ${filename})
-
-  # Check syntax
-  python -m py_compile ${loc_name}
-
-  # Run flake8: cheat, since we know this won't pass
-  flake8 ${loc_name} || echo 1
-done
-
+python ${basedir}/ep_nogui -c ${basedir}/ci-plans/files/01-hl541
 
 if [ ${use_tmp_dir} -eq 1 ]; then
-    ls -althr . __pycache__
     cd -
     rm -r ${tmpdir}
 fi
