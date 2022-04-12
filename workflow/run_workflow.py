@@ -14,6 +14,7 @@ def print_cond(verbose, *args, **kwargs):
     if verbose:
         print(*args, **kwargs)
 
+
 def workflow_EP(current_config_folder, verbose=True):
 
     # IMPORT PARAMETERS FROM WORKFLOW XML--------------------------------------
@@ -31,7 +32,7 @@ def workflow_EP(current_config_folder, verbose=True):
         param['machine_out']+'/3/0'
     if os.path.isdir(output_folder) == False:
         print_cond(verbose, '-- Create local database for output file ' +
-              output_folder, file=sys.stdout)
+                   output_folder)
         os.makedirs(output_folder)
 
     if int(param['pulse_list']):
@@ -42,7 +43,8 @@ def workflow_EP(current_config_folder, verbose=True):
 
     for i in pulse_list:
         if len(pulse_list) == 1:
-            print_cond(verbose, 'The workflow will now run with one shot/run as input: ', pulse_list)
+            print_cond(
+                verbose, 'The workflow will now run with one shot/run as input: ', pulse_list)
         else:
             print_cond(verbose, ('The workflow will run with the same settings (and update the'
                                  'required ones) for all selected shots/runs as input: '), pulse_list)
@@ -57,10 +59,10 @@ def workflow_EP(current_config_folder, verbose=True):
 
         if int(param['ligka_541']):
             print_cond(verbose,
-                '=================Starting HELENA and LIGKA mode 5 - 4 - 1=================')
+                       '=================Starting HELENA and LIGKA mode 5 - 4 - 1=================')
             if param['Equilibrium_code'] == 'Helena':
                 print_cond(verbose,
-                    'Now modifying SCENARIO/LIGKA XML by taking the species present in core_profiles IDS')
+                           'Now modifying SCENARIO/LIGKA XML by taking the species present in core_profiles IDS')
                 curr_str, nspec, nback, nhot = profiles_get(
                     param, species_input, scenario_params)
 
@@ -68,16 +70,17 @@ def workflow_EP(current_config_folder, verbose=True):
                            param, curr_str, scenario_params)
 
                 print_cond(verbose, param['Equilibrium_code'],
-                      ' done. STARTING LIGKA MODE 5')
+                           ' done. STARTING LIGKA MODE 5')
             else:
-                print_cond(verbose, 'Equilibrium code was not selected, skip and run LIGKA MODE 5.')
+                print_cond(
+                    verbose, 'Equilibrium code was not selected, skip and run LIGKA MODE 5.')
 
              # MODIFY LIGKA XML TO TAKE NSPEC automatically!!
             param_ligka = parameters_workflow(
                 current_config_folder+'/z_ligka.xml')
             if not curr_str:
                 print_cond(verbose,
-                    'Now modifying LIGKA XML by taking the species present in core_profiles IDS')
+                           'Now modifying LIGKA XML by taking the species present in core_profiles IDS')
                 curr_str, nspec, nback, nhot = profiles_get(
                     param, species_input, scenario_params)
             update_xml_param_on_run(param_ligka, 'spec_str', curr_str)
@@ -128,7 +131,7 @@ def workflow_EP(current_config_folder, verbose=True):
         else:
             if param['Equilibrium_code'] == 'Helena':
                 print_cond(verbose,
-                    'Now modifying SCENARIO by taking the species present in core_profiles IDS')
+                           'Now modifying SCENARIO by taking the species present in core_profiles IDS')
                 curr_str, nspec, nback, nhot = profiles_get(
                     param, species_input, scenario_params)
                 actor_call("Helena", current_config_folder,
@@ -141,7 +144,7 @@ def workflow_EP(current_config_folder, verbose=True):
 
                 if not curr_str:
                     print_cond(verbose,
-                        'Now modifying LIGKA XML by taking the species present in core_profiles IDS')
+                               'Now modifying LIGKA XML by taking the species present in core_profiles IDS')
                     curr_str, nspec, nback, nhot = profiles_get(
                         param, species_input, scenario_params)
                 update_xml_param_on_run(param_ligka, 'spec_str', curr_str)
@@ -225,7 +228,8 @@ def workflow_EP(current_config_folder, verbose=True):
                 actor_call("Hagis_2", current_config_folder, param)
 
             if param['Orbit_Finder'] == 'Finder':
-                print_cond(verbose, '=====================ADJUSTING FINDER XML===================')
+                print_cond(
+                    verbose, '=====================ADJUSTING FINDER XML===================')
                 param_finder = parameters_workflow(
                     current_config_folder+'/finder_input.xml')
                 species_string = param_ligka['spec_str']
@@ -255,7 +259,7 @@ def workflow_EP(current_config_folder, verbose=True):
                 for i in range(0, len(species_string), 2):
                     species = species_string[i:i+2]
                     print_cond(verbose, '=====================STARTING Finder for ' +
-                          species+' ===================')
+                               species+' ===================')
                     # ADD SPECIES
                     update_xml_param_on_run(param_finder, 'spec', species)
                     save_xml_param_to_file_on_run(

@@ -1,5 +1,5 @@
 from lxml import etree
-import os
+
 
 def create_workflow_param_from_file(filepath):
     tree = etree.parse(filepath)

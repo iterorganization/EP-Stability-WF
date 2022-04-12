@@ -1,0 +1,42 @@
+<root>
+
+  <input display="Inputs">
+    <user_in_1 display="User 1 Input">public</user_in_1>
+    <machine_in_1 display="Machine 1 Input">ITER</machine_in_1>
+    <shot_in_1 display="Shot 1 Input">130012</shot_in_1>
+    <run_in_1 display="Run 1 Input">2</run_in_1>
+    <HDF5_1 display="Use HDF5 backend for first IDS">0</HDF5_1>
+    <user_in_2 display="User 2 Input">public</user_in_2>
+    <machine_in_2 display="Machine 2 Input">ITER</machine_in_2>
+    <shot_in_2 display="Shot 2 Input">130012</shot_in_2>
+    <run_in_2 display="Run 2 Input">2</run_in_2>
+    <HDF5_2 display="Use HDF5 backend for second IDS">0</HDF5_2>
+  </input>
+
+  <output display="Output">
+    <machine_out display="User Output">TEST_IDS_MERGE</machine_out>
+    <shot_out display="User Output">130012</shot_out>
+    <run_out display="User Output">89</run_out>
+    <HDF5_out display="Use HDF5 backend for output">0</HDF5_out>
+  </output>
+
+  <settings display="Settings">
+    <itime display="Time Index">15-17,19</itime>
+    <Equilibrium_copy display="Copy also equilibrium">1</Equilibrium_copy>
+    <ne display="Activate electron density">0</ne>
+    <Te display="Activate electron temperature">0</Te>
+    <ni_H display="Activate ion density for Hydrogen">0</ni_H>
+    <Ti_H display="Activate ion temperature for Hydrogen">0</Ti_H>
+    <ni_T display="Activate ion density for Tritium">1</ni_T>
+    <Ti_T display="Activate ion temperature for Tritium">0</Ti_T>
+    <ni_D display="Activate ion density for Deuterium">1</ni_D>
+    <Ti_D display="Activate ion temperature for Deuterium">0</Ti_D>
+    <ni_Be display="Activate ion density for Beryllium">0</ni_Be>
+    <Ti_Be display="Activate ion temperature for Beryllium">0</Ti_Be>
+    <ni_C display="Activate ion density for Carbon">0</ni_C>
+    <Ti_C display="Activate ion temperature for Carbon">0</Ti_C>
+    <ni_Ne display="Activate ion density for Neon">0</ni_Ne>
+    <Ti_Ne display="Activate ion temperature for Neon">0</Ti_Ne>
+  </settings>
+
+</root>

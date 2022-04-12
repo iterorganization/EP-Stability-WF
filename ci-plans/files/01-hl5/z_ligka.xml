@@ -1,0 +1,39 @@
+<parameter display="LIGKA PARAMETERS">
+<modus>     5 </modus> 
+<min_n_tor> 25</min_n_tor>
+<max_n_tor> 25  </max_n_tor>
+<min_m>    26 </min_m>
+<max_m>    26</max_m>
+<sidebands>  2  </sidebands>
+<sidebands_asy>  0  </sidebands_asy>
+<mode_type>  1  </mode_type>
+<even>       0 </even>
+<start_pos>  1  </start_pos>
+<force_m>false</force_m>
+<offset_d>0.00E0</offset_d>
+<npsi_out>64</npsi_out>
+<kr_read>0.0</kr_read>
+<q0>0.0d0</q0>
+<nspec>2 </nspec>
+<spec_str>eldd</spec_str>
+<nback>2</nback>
+<nhot>0</nhot>
+<mass_ratio>-1.0d0</mass_ratio>
+<rad_start>0.5</rad_start>
+<rad_end>1.0</rad_end>
+<writeout>0</writeout>
+<ev>false</ev>
+<refine>0</refine>
+<ref_pos1>0.0</ref_pos1>
+<ref_peak1>0.0</ref_peak1>
+
+<shot_number_wrap> 130012  </shot_number_wrap>
+<run_wrap> 10 </run_wrap>
+<run_out_wrap> 11 </run_out_wrap>
+<itime_start_wrap> 1  </itime_start_wrap>
+<itime_end_wrap> 1  </itime_end_wrap>
+<time_wrap>  220 </time_wrap>
+<user_wrap>public</user_wrap>
+<user_out_wrap></user_out_wrap>
+<machine_wrap>TEST</machine_wrap> 
+</parameter>

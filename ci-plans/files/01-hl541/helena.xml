@@ -1,0 +1,19 @@
+<parameter display="HELENA PARAMETERS">
+    <nr>64</nr>
+    <np>64</np>
+    <nrmap>64</nrmap>
+    <npmap>65</npmap>
+    <nchi> 64</nchi>
+    <shot_number>130012</shot_number>
+    <run>2</run>
+    <user>public</user>
+    <machine>ITER</machine>
+    <itime_s>21</itime_s>
+    <itime_e>21</itime_e>
+    <ids_time_s> 75 </ids_time_s>
+    <ids_time_e> 75 </ids_time_e>
+    <run_out>10</run_out>
+    <user_out>lauberp</user_out>
+    <machine_out>ci_tests</machine_out>
+    <write_out>0</write_out>
+</parameter>
