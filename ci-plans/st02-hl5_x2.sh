@@ -5,7 +5,8 @@ set -e
 
 # Set up environment
 . ./ci-plans/st00-header.sh || exit 1
-
+# Check Cerberus is installed
+pip install --user cerberus
 set -v
 
 # Display some info
@@ -31,6 +32,11 @@ if [ ${use_tmp_dir} -eq 1 ]; then
 fi
 
 python ${basedir}/ep_nogui -c 01-hl5
+
+# Test the output
+
+python ${basedir}/ci-plans/03-output/output_test -o 0 -v ${basedir}/ci-plans/files/03-output/validation-01-hl5.yaml
+
 
 if [ ${use_tmp_dir} -eq 1 ]; then
     cd -

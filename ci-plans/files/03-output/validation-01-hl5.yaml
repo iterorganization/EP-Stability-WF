@@ -1,0 +1,24 @@
+
+#  Data validation schema for mhd_linear!
+
+
+ids_properties/homogeneous_time: 
+  contains: 1
+  empty: false
+  type: integer
+  required: True
+time: 
+  required: True
+  empty: false
+  maxlength: 2
+  minlength: 2
+time_slice(:):
+  required: True
+  empty: false
+  maxlength: 2
+  minlength: 2
+time_slice(:)/toroidal_mode:
+  required: True
+  empty: false
+  maxlength: 1
+  minlength: 1
