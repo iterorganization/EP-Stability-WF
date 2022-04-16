@@ -36,7 +36,7 @@ def test_ids(backend, database, user, shot_no, run, occurrence, validation_schem
         data_dict[ids_field] = ids_var
     input.close()
     if v.validate(data_dict, parsed_yaml):
-        print('Data is valid!')
+        print(f'Data is valid for occurrence {occurrence}!')
     else:
         print(f'Invalid data: {v.errors}')
 
