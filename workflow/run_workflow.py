@@ -33,7 +33,11 @@ def workflow_EP(current_config_folder, verbose=True):
     if os.path.isdir(output_folder) == False:
         print_cond(verbose, '-- Create local database for output file ' +
                    output_folder)
-        os.makedirs(output_folder)
+        try:
+            os.makedirs(output_folder)
+        except FileExistsError:
+            # Calling twice in parallel can give this error. Ignore
+            pass
 
     if int(param['pulse_list']):
         with open("shots.dat") as f:
