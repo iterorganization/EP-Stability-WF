@@ -29,9 +29,12 @@ if [ ${use_tmp_dir} -eq 1 ]; then
     tmpdir=$(mktemp -d)
     cd $tmpdir
     cp -R ${basedir}/ci-plans/files/01-hl5 ./
+    data_dir=./
+else
+    data_dir=ci-plans/files/
 fi
 
-python ${basedir}/ep_nogui -c 01-hl5
+python ${basedir}/ep_nogui -c ${data_dir}/01-hl5
 
 # Test the output
 
