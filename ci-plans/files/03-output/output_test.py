@@ -48,7 +48,7 @@ if __name__ == "__main__":
     parser.add_argument("-o", "--occurrence_list", nargs="+", type=int,
                         help="input occurrence list", required=True)
     parser.add_argument("-v", "--validation_schema",
-                        help="input validation schema", default="./ci-plans/files/03-output/validation-01-hl5.yaml")
+                        help="input validation schema", default="./ci-plans/files/03-output/validation-02-hl5_x2.yaml")
     parser.add_argument("-d", "--database",
                         help="input Database", default="ci_test_DB")
     parser.add_argument("-s", "--shot", type=int,

@@ -28,17 +28,16 @@ use_tmp_dir=1
 if [ ${use_tmp_dir} -eq 1 ]; then
     tmpdir=$(mktemp -d)
     cd $tmpdir
-    cp -R ${basedir}/ci-plans/files/01-hl5 ./
+    cp -R ${basedir}/ci-plans/files/02-hl5_x2 ./
     data_dir=./
 else
     data_dir=ci-plans/files/
 fi
 
-python ${basedir}/ep_nogui -c ${data_dir}/01-hl5
+python ${basedir}/ep_nogui -c ${data_dir}/02-hl5_x2
 
 # Test the output
-
-python ${basedir}/ci-plans/files/03-output/output_test.py -o 0 -v ${basedir}/ci-plans/files/03-output/validation-01-hl5.yaml
+python ${basedir}/ci-plans/files/03-output/output_test.py -o 0 -v ${basedir}/ci-plans/files/03-output/validation-02-hl5_x2.yaml
 
 
 if [ ${use_tmp_dir} -eq 1 ]; then
