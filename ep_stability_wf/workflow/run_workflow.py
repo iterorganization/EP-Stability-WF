@@ -5,9 +5,9 @@ import random
 import copy
 from lxml import etree
 import xml.etree.ElementTree as ET
-from workflow.functions_wf import parameters_workflow, profiles_get
-from interface.create_workflow_param import save_xml_param_to_file_on_run, update_xml_param_on_run
-from workflow.workflow_components import actor_call
+from ep_stability_wf.workflow.functions_wf import parameters_workflow, profiles_get
+from ep_stability_wf.interface.create_workflow_param import save_xml_param_to_file_on_run, update_xml_param_on_run
+from ep_stability_wf.workflow.workflow_components import actor_call
 
 
 def print_cond(verbose, *args, **kwargs):

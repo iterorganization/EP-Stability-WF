@@ -1,20 +1,20 @@
 #!/usr/bin/env python
-from interface.extra_functions import actor_window, analysis_window, scenario_window, load, save
-from tkinter import *
-from interface.extra_functions import CreateToolTip
-import interface.colour_definitions as col
-from interface.create_workflow_param import create_workflow_param_from_file, create_xml_param_from_file, update_xml_param_wf
-from ids_merge.merge_gui import ids_window
-from workflow.run_workflow import workflow_EP
+from ep_stability_wf.interface.extra_functions import actor_window, analysis_window, scenario_window, load, save
+from ep_stability_wf.interface.extra_functions import CreateToolTip
+import ep_stability_wf.interface.colour_definitions as col
+from ep_stability_wf.interface.create_workflow_param import create_workflow_param_from_file, create_xml_param_from_file, update_xml_param_wf
+from ep_stability_wf.ids_merge.merge_gui import ids_window
+from ep_stability_wf.workflow.run_workflow import workflow_EP
+import ep_stability_wf.user_profiles.default_path
 
 from lxml import etree
-from tkinter import filedialog, ttk
+from tkinter import filedialog, ttk, Tk, Frame, Label, StringVar, Entry, Checkbutton, Button
 import os
 import sys
 
 
 # set the path to the folders where the configuration and codeparameters are stored
-wf_param_folder_default = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'user_profiles/default')
+wf_param_folder_default = os.path.join(ep_stability_wf.user_profiles.default_path.DEFAULT_PATH)
 default_workflow_param_path = os.path.join(wf_param_folder_default, 'input_workflow_default.xml')
 
 window = Tk()

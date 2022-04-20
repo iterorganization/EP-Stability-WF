@@ -2,10 +2,10 @@ from tkinter import *
 from tkinter import ttk
 
 import os
-from ids_merge.merge import ids_compare
-import interface.colour_definitions as col
-from interface.create_workflow_param import save_xml_param_to_file_multiple, create_workflow_param_from_file, save_xml_param_to_file, update_xml_param, update_xml_param_wf
-from interface.extra_functions import CreateToolTip
+from ep_stability_wf.ids_merge.merge import ids_compare
+import ep_stability_wf.interface.colour_definitions as col
+from ep_stability_wf.interface.create_workflow_param import save_xml_param_to_file_multiple, create_workflow_param_from_file, save_xml_param_to_file, update_xml_param, update_xml_param_wf
+from ep_stability_wf.interface.extra_functions import CreateToolTip
 
 # FUNCTION NEW ANALYSIS WINDOW
 

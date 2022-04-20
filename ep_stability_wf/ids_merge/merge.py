@@ -2,7 +2,7 @@ import imas
 from imas import imasdef
 import sys
 import os
-from workflow.functions_wf import time_construction
+from ep_stability_wf.workflow.functions_wf import time_construction
 
 
 def data_retrieve(ids_merge_param):

@@ -10,7 +10,7 @@ import sys
 import numpy as np
 import matplotlib.pyplot as plt
 from datetime import datetime
-from workflow.functions_wf import time_construction, parameters_workflow
+from ep_stability_wf.workflow.functions_wf import time_construction, parameters_workflow
 from imas import imasdef
 from collections import defaultdict
 

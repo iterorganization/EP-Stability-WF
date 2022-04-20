@@ -2,7 +2,7 @@ import os
 import imas
 import sys
 
-from workflow.functions_wf import read_timestep, actor_settings, imports_check, scenario_mod, time_construction
+from ep_stability_wf.workflow.functions_wf import read_timestep, actor_settings, imports_check, scenario_mod, time_construction
 from imas import imasdef
 
 
