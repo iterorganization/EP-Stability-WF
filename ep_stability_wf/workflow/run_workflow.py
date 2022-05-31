@@ -9,14 +9,12 @@ from ep_stability_wf.workflow.functions_wf import parameters_workflow, profiles_
 from ep_stability_wf.interface.create_workflow_param import save_xml_param_to_file_on_run, update_xml_param_on_run
 from ep_stability_wf.workflow.workflow_components import actor_call
 
-
 def print_cond(verbose, *args, **kwargs):
     if verbose:
         print(*args, **kwargs)
 
 
 def workflow_EP(current_config_folder, verbose=True):
-
     # IMPORT PARAMETERS FROM WORKFLOW XML--------------------------------------
     param = parameters_workflow(
         current_config_folder+'/input_workflow_default.xml')

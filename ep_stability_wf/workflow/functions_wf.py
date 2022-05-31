@@ -401,7 +401,7 @@ def actor_settings(actor):
         actor_params["entrypoint_actor"] = False
         actor_params["wrapper"] = ligka_actor_wf_wrapper
         actor_params["config_file_name"] = "z_ligka.xml"
-        input_ids = {"equilibrium": 0, "core_profiles": 0, "mhd_linear": 1}
+        input_ids = {"equilibrium": 0, "core_profiles": 0, "mhd_linear": 2}
         output_ids = {"mhd_linear": 6}
     if actor == "Ligka_m3":
         actor_params["entrypoint_actor"] = False
