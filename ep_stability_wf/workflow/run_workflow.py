@@ -61,6 +61,14 @@ def workflow_EP(current_config_folder, verbose=True):
                 current_config_folder+'/input_workflow_default.xml')
 
         if int(param['ligka_541']) or int(param['ligka_5412']):
+            if param['Equilibrium_code_chease'] == 'Chease': 
+                 print_cond(verbose,
+                           'Chease was selected, starting CHEASE....')
+                 actor_call("Chease", current_config_folder,
+                           param, curr_str, scenario_params)
+                 print_cond(verbose, param['Equilibrium_code_chease'],
+                           ' done. STARTING HELENA')
+
             if int(param['ligka_541']):
                 print_cond(verbose,
                            '=================Starting HELENA and LIGKA mode 5 - 4 - 1=================')
@@ -137,6 +145,14 @@ def workflow_EP(current_config_folder, verbose=True):
                     print_cond(verbose, 'Done WORKFLOW, LIGKA 5412.')
 
         else:
+            if param['Equilibrium_code_chease'] == 'Chease': 
+                print_cond(verbose,
+                        'Chease was selected, starting CHEASE....')
+                actor_call("Chease", current_config_folder,
+                        param, curr_str, scenario_params)
+                print_cond(verbose, param['Equilibrium_code_chease'],
+                           ' done. STARTING HELENA')
+
             if param['Equilibrium_code'] == 'Helena':
                 print_cond(verbose,
                            'Now modifying SCENARIO by taking the species present in core_profiles IDS')

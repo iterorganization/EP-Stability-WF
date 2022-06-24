@@ -44,6 +44,12 @@ def actor_call(actor_name, config_folder_path, system_params, species_input, sce
         mpi_processes = 1
     else:
         mpi_processes = system_params['mpi_processes']
+    
+    if actor_name == 'Helena':
+        if system_params['Equilibrium_code_chease'] == 'Chease':
+            actor_params['entrypoint_actor'] == False
+            input_ids['equilibrium'] == 2
+
 
     if actor_params['entrypoint_actor']:
         database = system_params['machine']

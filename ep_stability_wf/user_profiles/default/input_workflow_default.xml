@@ -19,6 +19,7 @@
   </further_settings>
 
   <actor_selection display="ACTOR SELECTION">
+  <Equilibrium_code_chease display="Select if chease is used or not">0</Equilibrium_code_chease> 
     <Equilibrium_code display="Select the equilibrium code that will be used. (only Helena for the moment)">Helena</Equilibrium_code> <!-- 0:NONE, 1:HELENA, 2:CHEASE-->
     <Distributions_1 display="Either to use or not Hagis 1">0</Distributions_1> <!-- 0:NONE, 1:HAGIS1-->
     <Distributions_2 display="Either to use or not Hagis 2 for non linear physics.">0</Distributions_2> <!-- 0:NONE, 1:HAGIS2-->

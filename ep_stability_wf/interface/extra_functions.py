@@ -76,7 +76,7 @@ def copy_workflow_param_to_file(previous_folder, current_wf_param_folder, wf_par
     # Copy the actors xml files into the current dir
     # Only in case of saveAs, because the individual .xml of the actors are saved separately
     if saveAs == 1:
-        for ep_files in ['analysis.xml', 'finder_input.xml', 'hagis1.xml', 'hagis2.xml', 'helena.xml', 'z_ligka.xml', 'actor_settings.xml', 'scenario.xml', 'ids_merge.xml']:
+        for ep_files in ['analysis.xml', 'finder_input.xml', 'hagis1.xml', 'hagis2.xml', 'helena.xml', 'z_ligka.xml', 'actor_settings.xml', 'scenario.xml', 'ids_merge.xml','chease_input_choices.xml']:
             if previous_folder is not None:
                 copy2(previous_folder+'/'+ep_files,
                       current_wf_param_folder, follow_symlinks=True)
@@ -100,7 +100,7 @@ def load(chosen_folder, open_gui):
         print('configuration folder since it contains no input_workflow_default.xml file ' +
               '--> Nothing loaded.', file=sys.stderr)
         return
-    for ep_files in ['analysis.xml', 'finder_input.xml', 'hagis1.xml', 'hagis2.xml', 'helena.xml', 'z_ligka.xml', 'actor_settings.xml', 'scenario.xml', 'ids_merge.xml']:
+    for ep_files in ['analysis.xml', 'finder_input.xml', 'hagis1.xml', 'hagis2.xml', 'helena.xml', 'z_ligka.xml', 'actor_settings.xml', 'scenario.xml', 'ids_merge.xml','chease_input_choices.xml']:
         if not os.path.exists(chosen_folder+'/'+ep_files):
             print('The selected folder '+chosen_folder +
                   ' does not appear to be a proper', file=sys.stderr)
@@ -177,6 +177,9 @@ def actor_window(wfp_ref_l, wf_param_folder, l):
         window_a.title('SCENARIO PARAMETERS')
         ligka_param = create_xml_param_from_file(
             wf_param_folder+'/scenario.xml')
+    elif l == 7:
+        window_a.title('CHEASE PARAMETERS')
+        ligka_param = create_xml_param_from_file(wf_param_folder+'/chease_input_choices.xml')
 
     window_a.configure(bg=col.c1)
 
@@ -276,6 +279,12 @@ def actor_window(wfp_ref_l, wf_param_folder, l):
         button_saveconfig.grid(row=52, column=0, padx=5, pady=5, sticky='ew')
         button_saveconfig.configure(command=lambda: save_xml_param_to_file(
             ligka_param, wf_param_folder+'/scenario.xml'))
+    elif l == 7:
+        button_saveconfig = Button(
+            fr_l, text='Save CHEASE Configuration', bg=col.c2)
+        button_saveconfig.grid(row=53, column=0, padx=5, pady=5, sticky='ew')
+        button_saveconfig.configure(command=lambda: save_xml_param_to_file(
+            ligka_param, wf_param_folder+'/chease_input_choices.xml'))
 
 
 def species_window(species_ref, wf_param_folder):

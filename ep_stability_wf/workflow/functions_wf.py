@@ -12,6 +12,10 @@ from ep_stability_wf.workflow.select_ligka_species import select_species_by_dens
 
 no_actor = {}
 try:
+    from chease.wrapper import chease_actor
+except ImportError:
+    no_actor['Chease'] = True
+try:
     from helena.wrapper import helena_actor
 except ImportError:
     try:
@@ -196,6 +200,17 @@ def imports_check(actor_name):
         print(actor_name + ' is not imported, cannot continue.')
         return 0
 
+def chease_actor_wf_wrapper(equilibrium_in,
+                            core_profiles_in,
+                            mhd_linear_in,
+                            distributions_in,
+                            config_file_path,
+                            mpi_processes):
+
+    equilibrium_out = chease_actor(equilibrium_in,
+                                   config_file_path)
+
+    return equilibrium_out, None, core_profiles_in, None
 
 def helena_actor_wf_wrapper(equilibrium_in,
                             core_profiles_in,
@@ -266,6 +281,12 @@ def actor_settings(actor):
     actor_params = {}
     input_ids = {}
     output_ids = {}
+    if actor == "Chease":
+        actor_params["entrypoint_actor"] = True
+        actor_params["wrapper"] = chease_actor_wf_wrapper
+        actor_params["config_file_name"] = "chease_input_choices.xml"
+        input_ids = {"equilibrium": 0, "core_profiles": 0}
+        output_ids = {"equilibrium": 2, "core_profiles": 0}
     if actor == "Helena":
         actor_params["entrypoint_actor"] = True
         actor_params["wrapper"] = helena_actor_wf_wrapper

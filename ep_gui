@@ -40,6 +40,7 @@ def open_gui(wf_param_folder):
 
     workflow_param = create_workflow_param_from_file(
         wf_param_folder+'/input_workflow_default.xml')
+    chease_param = create_xml_param_from_file(wf_param_folder+'/chease_input_choices.xml')    
     ligka_param = create_xml_param_from_file(wf_param_folder+'/z_ligka.xml')
     helena_param = create_xml_param_from_file(wf_param_folder+'/helena.xml')
     hagis1_param = create_xml_param_from_file(wf_param_folder+'/hagis1.xml')
@@ -71,6 +72,7 @@ def open_gui(wf_param_folder):
     wfp_ref = list(workflow_param.keys())[0]
     fur_ref = list(workflow_param.keys())[1]
     act_ref = list(workflow_param.keys())[2]
+    wfp_ref_chease = list(chease_param.keys())
     wfp_ref_hel = list(helena_param.keys())
     wfp_ref_l = list(ligka_param.keys())
     wfp_ref_h = list(hagis1_param.keys())
@@ -168,9 +170,12 @@ def open_gui(wf_param_folder):
             combobox = ttk.Combobox(fr_as, textvariable=entrystring)
             combobox.grid(row=irow, column=1, padx=3, pady=2, sticky='e')
             CreateToolTip(combobox, text=workflow_param[ref][elem][1])
-            if elem == 'Equilibrium_code':
+            if elem == 'Equilibrium_code_chease':
                 combobox.config(
-                    values=('0', 'Helena', 'Chease (not working yet)'))
+                    values=('0', 'Chease'))
+            elif elem == 'Equilibrium_code':
+                combobox.config(
+                    values=('0', 'Helena'))
             elif elem == 'Distributions_1':
                 combobox.config(values=('0', 'Hagis_1'))
             elif elem == 'Distributions_2':
@@ -230,6 +235,10 @@ def open_gui(wf_param_folder):
     button_exit.configure(command=lambda: sys.exit())
 
     # BUTONS RIGHT SIDE:
+    button_saveconfig = Button(fr_as, text='CHEASE Parameters', bg=col.c2)
+    button_saveconfig.grid(row=52, column=0, padx=5, pady=5, sticky='ew')
+    button_saveconfig.configure(
+        command=lambda: actor_window(wfp_ref_chease, wf_param_folder, 7))
 
     button_saveconfig = Button(fr_as, text='HELENA Parameters', bg=col.c2)
     button_saveconfig.grid(row=53, column=0, padx=5, pady=5, sticky='ew')
