@@ -1,0 +1,73 @@
+module purge
+module load cineca
+module use ~g2thayw/public/easybuild/modules/all
+
+# Set default DD_VER (if not already set)
+DD_VER=${DD_VER:-3.35.0}
+
+module load EP-Stability-WF/1.0.2-DD-${DD_VER}
+module load CHEASE/1.0.9-DD-${DD_VER}
+
+export ACTOR_FOLDER=${ACTOR_FOLDER:-${HOME}/public/PYTHON_ACTORS}
+
+_prepend_path() {
+    _path=$1
+    _newpath=$2
+    echo ${_newpath}:${_path}
+}
+_append_path() {
+    _path=$1
+    _newpath=$2
+    echo ${_path}:${_newpath}
+}
+
+local_version_epwf() {
+    module unload EP-Stability-WF || echo -n ""
+
+    export EP_STABILITY_WF_HOME=${1}
+    if [ "${EP_STABILITY_WF_HOME}" == "" ]; then
+        echo "EP_STABILITY_WF_HOME not specified; choosing default: ~/src/ep-stability-wf"
+        export EP_STABILITY_WF_HOME=${HOME}/src/ep-stability-wf
+    fi
+    export PATH=$(_prepend_path ${PATH} ${EP_STABILITY_WF_HOME}/bin)
+    export PYTHONPATH=$(_prepend_path ${PYTHONPATH} ${ACTOR_FOLDER}/ep-stability-wf)
+#    export PYTHONPATH=$(_prepend_path ${PYTHONPATH} ${EP_STABILITY_WF_HOME}/ep-stability-wf/)
+}
+
+local_version_ligka() {
+    module unload -f LIGKA || echo -n ""
+    export LIGKA_HOME=${1}
+    if [ "${LIGKA_HOME}" == "" ]; then
+        echo "LIGKA_HOME not specified; choosing default: ~/src/ligka"
+        export LIGKA_HOME=${HOME}/src/ligka
+    fi
+    export PATH=$(_prepend_path ${PATH} ${LIGKA_HOME}/bin)
+    export PYTHONPATH=$(_prepend_path ${PYTHONPATH} ${ACTOR_FOLDER}/ligka)
+#    export PYTHONPATH=$(_prepend_path ${PYTHONPATH} ${LIGKA_HOME}/ligka/)
+}
+
+local_version_helena() {
+    module unload -f HELENA || echo -n ""
+
+    export HELENA_HOME=${1}
+    if [ "${HELENA_HOME}" == "" ]; then
+        echo "HELENA_HOME not specified; choosing default: ~/src/helena"
+        export HELENA_HOME=${HOME}/src/helena
+    fi
+    export PATH=$(_prepend_path ${PATH} ${HELENA_HOME}/bin)
+    export PYTHONPATH=$(_prepend_path ${PYTHONPATH} ${ACTOR_FOLDER}/helena_imas)
+#    export PYTHONPATH=$(_prepend_path ${PYTHONPATH} ${HELENA_HOME}/helena_imas/)
+}
+
+local_version_chease() {
+    module unload CHEASE || echo -n ""
+
+    export CHEASE_HOME=${1}
+    if [ "${CHEASE_HOME}" == "" ]; then
+        echo "CHEASE_HOME not specified; choosing default: ~/src/chease"
+        export CHEASE_HOME=${HOME}/src/chease
+    fi
+    export PATH=$(_prepend_path ${PATH} ${CHEASE_HOME}/bin)
+    export PYTHONPATH=$(_prepend_path ${PYTHONPATH} ${ACTOR_FOLDER}/chease)
+#    export PYTHONPATH=$(_prepend_path ${PYTHONPATH} ${CHEASE_HOME}/chease/)
+}
