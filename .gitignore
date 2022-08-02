@@ -17,3 +17,5 @@ user_profiles/*
 IMAS_OUT_NR*
 .vscode/
 ids_merge/__pycache__
+loc_*
+antenna*

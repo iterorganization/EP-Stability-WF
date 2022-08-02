@@ -92,7 +92,7 @@ def time_construction(time_input):
     return time_list, list(range(len(time_list)))
 
 
-def read_timestep(user, database, run, current_config_folder, backend):
+def read_timestep(user, database, run, current_config_folder, backend, occurrence):
 
     param = parameters_workflow(
         os.path.join(current_config_folder, 'input_workflow_default.xml')
@@ -104,7 +104,7 @@ def read_timestep(user, database, run, current_config_folder, backend):
     if status != 0:
         print("Can't open the selected dataset!", file=sys.stderr)
         sys.exit(1)
-    time = input.partial_get('equilibrium', 'time')
+    time = input.partial_get('equilibrium', 'time', occurrence=occurrence)
     ntime = len(time)
     input.close()
     return(time, ntime)

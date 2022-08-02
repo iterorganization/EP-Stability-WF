@@ -44,12 +44,13 @@ def actor_call(actor_name, config_folder_path, system_params, species_input, sce
         mpi_processes = 1
     else:
         mpi_processes = system_params['mpi_processes']
-    
+
     if actor_name == 'Helena':
         if system_params['Equilibrium_code_chease'] == 'Chease':
-            actor_params['entrypoint_actor'] == False
-            input_ids['equilibrium'] == 2
-
+            actor_params['entrypoint_actor'] = False
+            input_ids['equilibrium'] = 2
+            del input_ids['core_profiles']
+            del output_ids['core_profiles']
 
     if actor_params['entrypoint_actor']:
         database = system_params['machine']
@@ -69,7 +70,7 @@ def actor_call(actor_name, config_folder_path, system_params, species_input, sce
     time, ntime = read_timestep(user=user,
                                 database=database,
                                 run=run,
-                                current_config_folder=config_folder_path, backend=backend)
+                                current_config_folder=config_folder_path, backend=backend, occurrence=input_ids['equilibrium'])
 
     # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
     input = imas.DBEntry(backend, database, shot_no, run, user)
@@ -96,8 +97,7 @@ def actor_call(actor_name, config_folder_path, system_params, species_input, sce
 
         equilibrium_in = imas.equilibrium()
         equilibrium_occ = 0
-        core_profiles_in = imas.core_profiles()
-        core_profiles_occ = 0
+        core_profiles_in = None
         mhd_linear_in = imas.mhd_linear()
         mhd_linear_in.ids_properties.homogeneousTime = 1
         mhd_linear_occ = 0

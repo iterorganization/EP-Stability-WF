@@ -1,5 +1,5 @@
 module purge
-module load IMAS/3.35.0-4.10.0-2020b
+module load IMAS/3.36.0-4.10.2-2020b
 module load FC2K/4.14.0-Java-11
 module load XMLlib/3.3.1-intel-2020b
 
@@ -25,7 +25,7 @@ export EZSPLINE_NO_SUFF=TRUE
 
 # #CHEASE
 # module load INTERPOS/9.1.0-intel-2020b
-module load CHEASE/1.0.8a-intel-2020b-DD-3.35.0
+module load CHEASE/1.0.9-intel-2020b-DD-3.36.0
 
 
 
