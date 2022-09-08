@@ -83,7 +83,7 @@ def actor_call(actor_name, config_folder_path, system_params, curr_str=None, sce
 
     for i, itime in enumerate(time_index_list):
         # EXECUTE PHYSICS CODE
-        print(f'Time = {time[itime]} s, itime = {i}/{ntime-1}')
+        print(f'Time = {time[itime]} s, itime = {itime}/{ntime-1}, slice number ={i}/{len(time_index_list)}')
 
         equilibrium_in = imas.equilibrium()
         equilibrium_occ = 0
