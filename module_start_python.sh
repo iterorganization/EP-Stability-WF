@@ -34,7 +34,7 @@ else
     #gateway
     echo "Loading gateway modules..."
     module load cineca-dev
-    module load imasenv/3.34.0/intel/17.0/rc
+    module load imasenv/3.35.0/intel/17.0/rc
     module unload itm-qt/5.8.0
 
     module load imas-pyal/1.3.5

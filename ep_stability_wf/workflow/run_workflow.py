@@ -59,9 +59,14 @@ def workflow_EP(current_config_folder, verbose=True):
             param = parameters_workflow(
                 current_config_folder+'/input_workflow_default.xml')
 
-        if int(param['ligka_541']):
-            print_cond(verbose,
-                       '=================Starting HELENA and LIGKA mode 5 - 4 - 1=================')
+        if int(param['ligka_541']) or int(param['ligka_5412']):
+            if int(param['ligka_541']):
+                print_cond(verbose,
+                           '=================Starting HELENA and LIGKA mode 5 - 4 - 1=================')
+            if int(param['ligka_5412']):
+                print_cond(verbose,
+                           '=================Starting HELENA and LIGKA mode 5 - 4 - 1 - 2 =================')
+
             if param['Equilibrium_code'] == 'Helena':
                 print_cond(verbose,
                            'Now modifying SCENARIO/LIGKA XML by taking the species present in core_profiles IDS')
@@ -130,6 +135,20 @@ def workflow_EP(current_config_folder, verbose=True):
 
             print_cond(verbose, 'Done WORKFLOW, LIGKA 541.')
 
+        
+            if int(param['ligka_5412']):
+                print_cond(verbose, 'now run also mode2: LIGKA 5412.')
+                    
+                update_xml_param_on_run(param_ligka, 'modus', '2')
+                save_xml_param_to_file_on_run(
+                    current_config_folder+'/z_ligka.xml', 'modus', '2')
+                param_ligka = parameters_workflow(
+                    current_config_folder+'/z_ligka.xml')
+                if param_ligka['modus'] == 2:
+                    actor_call("Ligka_m2", current_config_folder, param)
+                    
+                    print_cond(verbose, 'Done WORKFLOW, LIGKA 5412.')
+                    
         else:
             if param['Equilibrium_code'] == 'Helena':
                 print_cond(verbose,
