@@ -136,7 +136,6 @@ def workflow_EP(current_config_folder, verbose=True):
             if int(param['ligka_541']): 
                 print_cond(verbose, 'Done WORKFLOW, LIGKA 541.')
             
-
             if int(param['ligka_5412']):
                 print_cond(verbose, 'Done LIGKA mode 1, starting mode 2')
                     
