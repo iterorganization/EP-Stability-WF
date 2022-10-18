@@ -113,7 +113,7 @@ def workflow_EP(current_config_folder, verbose=True):
             if param_ligka['modus'] == 5:
                 actor_call("Ligka_m5", current_config_folder, param)
 
-                print_cond(verbose, 'Done LIGKA mode 5, starting MODE 4')
+                print_cond(verbose, 'Done LIGKA mode 5, starting mode 4')
 
             update_xml_param_on_run(param_ligka, 'modus', '4')
             save_xml_param_to_file_on_run(
@@ -123,7 +123,7 @@ def workflow_EP(current_config_folder, verbose=True):
             if param_ligka['modus'] == 4:
                 actor_call("Ligka_m4", current_config_folder, param)
 
-                print_cond(verbose, 'Done LIGKA mode 4, starting MODE 1')
+                print_cond(verbose, 'Done LIGKA mode 4, starting mode 1')
 
             update_xml_param_on_run(param_ligka, 'modus', '1')
             save_xml_param_to_file_on_run(
@@ -133,11 +133,12 @@ def workflow_EP(current_config_folder, verbose=True):
             if param_ligka['modus'] == 1:
                 actor_call("Ligka_m1", current_config_folder, param)
 
-            print_cond(verbose, 'Done WORKFLOW, LIGKA 541.')
+            if int(param['ligka_541']): 
+                print_cond(verbose, 'Done WORKFLOW, LIGKA 541.')
+            
 
-        
             if int(param['ligka_5412']):
-                print_cond(verbose, 'now run also mode2: LIGKA 5412.')
+                print_cond(verbose, 'Done LIGKA mode 1, starting mode 2')
                     
                 update_xml_param_on_run(param_ligka, 'modus', '2')
                 save_xml_param_to_file_on_run(
