@@ -127,8 +127,9 @@ def workflow_EP(current_config_folder, verbose=True):
                 current_config_folder+'/z_ligka.xml')
             if param_ligka['modus'] == 1:
                 actor_call("Ligka_m1", current_config_folder, param)
-
-            print_cond(verbose, 'Done WORKFLOW, LIGKA 541.')
+                
+			if not int(param['ligka_5412']):
+            	print_cond(verbose, 'Done WORKFLOW, LIGKA 541.')
 
         else:
             if param['Equilibrium_code'] == 'Helena':
