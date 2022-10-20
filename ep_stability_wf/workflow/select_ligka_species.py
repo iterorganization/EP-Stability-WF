@@ -152,18 +152,19 @@ def test():
 
     class fake_profiles_1d(object):
         def __init__(self, nr=3):
-            self.ion = []
-            for isp, (ni_th, ni_fast, ni, z, a) in enumerate([
-                # Ne (below 1% threshold), ni_th missing
-                [np.zeros(nr), np.zeros(nr), 0.001*np.ones(nr), 10, 20],
-                # H: ni missing, ni_thermal present
-                [1.01* np.ones(nr), np.zeros(nr), np.zeros(nr), 1, 1],
-                # D: ni_thermal missing, ni present
-                [np.zeros(nr), np.zeros(nr), np.ones(nr), 1, 2],
-                # He (below 1% threshold), but alpha present. ni missing
-                [0.001*np.ones(nr), 0.005*np.ones(nr), np.zeros(nr), 2, 4],
-            ]):
-                self.ion.append(fake_ion_species(ni_th, ni_fast, ni, z, a))
+            self.ion = [
+                fake_ion_species(ni_th, ni_fast, ni, z, a)
+                for isp, (ni_th, ni_fast, ni, z, a) in enumerate([
+                    # Ne (below 1% threshold), ni_th missing
+                    [np.zeros(nr), np.zeros(nr), 0.001*np.ones(nr), 10, 20],
+                    # H: ni missing, ni_thermal present
+                    [1.01* np.ones(nr), np.zeros(nr), np.zeros(nr), 1, 1],
+                    # D: ni_thermal missing, ni present
+                    [np.zeros(nr), np.zeros(nr), np.ones(nr), 1, 2],
+                    # He (below 1% threshold), but alpha present. ni missing
+                    [0.001*np.ones(nr), 0.005*np.ones(nr), np.zeros(nr), 2, 4],
+                ])
+            ]
 
     class fake_core_profs(object):
         def __init__(self):
