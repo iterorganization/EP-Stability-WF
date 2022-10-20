@@ -159,7 +159,7 @@ def select_species_by_density(core_profiles:object, param:dict=None, scenario_pa
             warnings.warn("'DT' option selected, but neither D nor T present in IDS.")
 
     nback = 1 + len(curr_str)
-    nhot = len(curr_str_fast)
+    nhot = len(curr_str_fast) * int(param.get("fast_particles", 1))
     nspec = nback + nhot
 
     ligka_species_str = "".join(curr_str) + "".join(curr_str_fast) * int(param.get("fast_particles", 1))
