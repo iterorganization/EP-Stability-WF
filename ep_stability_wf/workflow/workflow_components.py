@@ -2,11 +2,12 @@ import os
 import imas
 import sys
 
-from ep_stability_wf.workflow.functions_wf import read_timestep, actor_settings, imports_check, scenario_mod, time_construction
+from ep_stability_wf.workflow.functions_wf import read_timestep, actor_settings, imports_check, scenario_mod, time_construction, profiles_get
+from ep_stability_wf.interface.create_workflow_param import save_xml_param_multiple_to_file_on_run
 from imas import imasdef
 
 
-def actor_call(actor_name, config_folder_path, system_params, curr_str=None, scenario_params=None):
+def actor_call(actor_name, config_folder_path, system_params, species_input, scenario_params=None):
     ''' This method initializes and runs an workflow actor
         Params:
           actor_name: str - name of the actor to run
@@ -31,7 +32,8 @@ def actor_call(actor_name, config_folder_path, system_params, curr_str=None, sce
     run = None
     user = None
     shot_no = system_params['shot_nr']
-    config_file = os.path.join(config_folder_path, actor_params['config_file_name'])
+    config_file = os.path.join(
+        config_folder_path, actor_params['config_file_name'])
 
     if system_params['hdf5'] == 1:
         backend = imasdef.HDF5_BACKEND
@@ -83,7 +85,8 @@ def actor_call(actor_name, config_folder_path, system_params, curr_str=None, sce
 
     for i, itime in enumerate(time_index_list):
         # EXECUTE PHYSICS CODE
-        print(f'Time = {time[itime]} s, itime = {itime}/{ntime-1}, slice number ={i}/{len(time_index_list)}')
+        print(
+            f'Time = {time[itime]} s, itime = {itime}/{ntime-1}, slice number ={i}/{len(time_index_list)}')
 
         equilibrium_in = imas.equilibrium()
         equilibrium_occ = 0
@@ -108,9 +111,16 @@ def actor_call(actor_name, config_folder_path, system_params, curr_str=None, sce
                 core_profiles_in = input.get_slice(
                     ids_name, time[itime], imasdef.PREVIOUS_SAMPLE, occurrence=ids_occ)
                 core_profiles_occ = ids_occ
+
+                curr_str, nspec, nback, nhot = profiles_get(
+                    core_profiles_in, system_params, species_input, scenario_params)
+
                 if actor_params['entrypoint_actor']:
                     core_profiles_in = scenario_mod(
                         core_profiles_in, curr_str, scenario_params)
+                else:
+                    save_xml_param_multiple_to_file_on_run(
+                        config_file, ['spec_str', 'nspec', 'nback', 'nhot'], [str(curr_str), str(nspec), str(nback), str(nhot)])
 
         equilibrium_out, mhd_linear_out, core_profiles_out, distributions_out = actor_params['wrapper'](equilibrium_in,
                                                                                                         core_profiles_in,

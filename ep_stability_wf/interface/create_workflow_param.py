@@ -101,6 +101,21 @@ def save_xml_param_to_file_on_run(filepath, variable, value):
     tree.write(filepath)
 
 
+def save_xml_param_multiple_to_file_on_run(filepath, variable_list, value_list):
+
+    tree = etree.parse(filepath)
+    root = tree.getroot()
+
+    #name0 = root.attrib['display']
+    for pairs in zip(variable_list, value_list):
+        for elem in root.iter():
+            if((elem.tag is not etree.Comment) and (len(elem) == 0)):
+                if elem.tag == pairs[0]:
+                    elem.text = pairs[1]
+
+    tree.write(filepath)
+
+
 def update_xml_param_wf(ligka_param, ref, elem, newvalue):
     lst = list(ligka_param[ref][elem])
     lst[0] = newvalue

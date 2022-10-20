@@ -5,9 +5,10 @@ import random
 import copy
 from lxml import etree
 import xml.etree.ElementTree as ET
-from ep_stability_wf.workflow.functions_wf import parameters_workflow, profiles_get
+from ep_stability_wf.workflow.functions_wf import parameters_workflow
 from ep_stability_wf.interface.create_workflow_param import save_xml_param_to_file_on_run, update_xml_param_on_run
 from ep_stability_wf.workflow.workflow_components import actor_call
+
 
 def print_cond(verbose, *args, **kwargs):
     if verbose:
@@ -70,11 +71,9 @@ def workflow_EP(current_config_folder, verbose=True):
             if param['Equilibrium_code'] == 'Helena':
                 print_cond(verbose,
                            'Now modifying SCENARIO/LIGKA XML by taking the species present in core_profiles IDS')
-                curr_str, nspec, nback, nhot = profiles_get(
-                    param, species_input, scenario_params)
 
                 actor_call("Helena", current_config_folder,
-                           param, curr_str, scenario_params)
+                           param, species_input, scenario_params)
 
                 print_cond(verbose, param['Equilibrium_code'],
                            ' done. STARTING LIGKA MODE 5')
@@ -88,22 +87,6 @@ def workflow_EP(current_config_folder, verbose=True):
             if not curr_str:
                 print_cond(verbose,
                            'Now modifying LIGKA XML by taking the species present in core_profiles IDS')
-                curr_str, nspec, nback, nhot = profiles_get(
-                    param, species_input, scenario_params)
-            update_xml_param_on_run(param_ligka, 'spec_str', curr_str)
-            save_xml_param_to_file_on_run(
-                current_config_folder+'/z_ligka.xml', 'spec_str', str(curr_str))
-            update_xml_param_on_run(param_ligka, 'nspec', nspec)
-            save_xml_param_to_file_on_run(
-                current_config_folder+'/z_ligka.xml', 'nspec', str(nspec))
-            update_xml_param_on_run(param_ligka, 'nback', nback)
-            save_xml_param_to_file_on_run(
-                current_config_folder+'/z_ligka.xml', 'nback', str(nback))
-            update_xml_param_on_run(param_ligka, 'nhot', nhot)
-            save_xml_param_to_file_on_run(
-                current_config_folder+'/z_ligka.xml', 'nhot', str(nhot))
-            param_ligka = parameters_workflow(
-                current_config_folder+'/z_ligka.xml')
 
             update_xml_param_on_run(param_ligka, 'modus', '5')
             save_xml_param_to_file_on_run(
@@ -111,7 +94,8 @@ def workflow_EP(current_config_folder, verbose=True):
             param_ligka = parameters_workflow(
                 current_config_folder+'/z_ligka.xml')
             if param_ligka['modus'] == 5:
-                actor_call("Ligka_m5", current_config_folder, param)
+                actor_call("Ligka_m5", current_config_folder,
+                           param, species_input)
 
                 print_cond(verbose, 'Done LIGKA mode 5, starting mode 4')
 
@@ -121,7 +105,8 @@ def workflow_EP(current_config_folder, verbose=True):
             param_ligka = parameters_workflow(
                 current_config_folder+'/z_ligka.xml')
             if param_ligka['modus'] == 4:
-                actor_call("Ligka_m4", current_config_folder, param)
+                actor_call("Ligka_m4", current_config_folder,
+                           param, species_input)
 
                 print_cond(verbose, 'Done LIGKA mode 4, starting mode 1')
 
@@ -131,32 +116,32 @@ def workflow_EP(current_config_folder, verbose=True):
             param_ligka = parameters_workflow(
                 current_config_folder+'/z_ligka.xml')
             if param_ligka['modus'] == 1:
-                actor_call("Ligka_m1", current_config_folder, param)
+                actor_call("Ligka_m1", current_config_folder,
+                           param, species_input)
 
-            if int(param['ligka_541']): 
+            if int(param['ligka_541']):
                 print_cond(verbose, 'Done WORKFLOW, LIGKA 541.')
-            
+
             if int(param['ligka_5412']):
                 print_cond(verbose, 'Done LIGKA mode 1, starting mode 2')
-                    
+
                 update_xml_param_on_run(param_ligka, 'modus', '2')
                 save_xml_param_to_file_on_run(
                     current_config_folder+'/z_ligka.xml', 'modus', '2')
                 param_ligka = parameters_workflow(
                     current_config_folder+'/z_ligka.xml')
                 if param_ligka['modus'] == 2:
-                    actor_call("Ligka_m2", current_config_folder, param)
-                    
+                    actor_call("Ligka_m2", current_config_folder,
+                               param, species_input)
+
                     print_cond(verbose, 'Done WORKFLOW, LIGKA 5412.')
-                    
+
         else:
             if param['Equilibrium_code'] == 'Helena':
                 print_cond(verbose,
                            'Now modifying SCENARIO by taking the species present in core_profiles IDS')
-                curr_str, nspec, nback, nhot = profiles_get(
-                    param, species_input, scenario_params)
                 actor_call("Helena", current_config_folder,
-                           param, curr_str, scenario_params)
+                           param, species_input, scenario_params)
 
             # MODIFY LIGKA XML TO TAKE NSPEC automatically!!
             if str(param['Stability_code']) != '0' or str(param['Orbit_Finder']) != '0':
@@ -166,22 +151,6 @@ def workflow_EP(current_config_folder, verbose=True):
                 if not curr_str:
                     print_cond(verbose,
                                'Now modifying LIGKA XML by taking the species present in core_profiles IDS')
-                    curr_str, nspec, nback, nhot = profiles_get(
-                        param, species_input, scenario_params)
-                update_xml_param_on_run(param_ligka, 'spec_str', curr_str)
-                save_xml_param_to_file_on_run(
-                    current_config_folder+'/z_ligka.xml', 'spec_str', str(curr_str))
-                update_xml_param_on_run(param_ligka, 'nspec', nspec)
-                save_xml_param_to_file_on_run(
-                    current_config_folder+'/z_ligka.xml', 'nspec', str(nspec))
-                update_xml_param_on_run(param_ligka, 'nback', nback)
-                save_xml_param_to_file_on_run(
-                    current_config_folder+'/z_ligka.xml', 'nback', str(nback))
-                update_xml_param_on_run(param_ligka, 'nhot', nhot)
-                save_xml_param_to_file_on_run(
-                    current_config_folder+'/z_ligka.xml', 'nhot', str(nhot))
-                param_ligka = parameters_workflow(
-                    current_config_folder+'/z_ligka.xml')
 
             if param['Stability_code'] == 'Ligka_m1':
                 update_xml_param_on_run(param_ligka, 'modus', '1')
@@ -190,7 +159,8 @@ def workflow_EP(current_config_folder, verbose=True):
                 param_ligka = parameters_workflow(
                     current_config_folder+'/z_ligka.xml')
 
-                actor_call("Ligka_m1", current_config_folder, param)
+                actor_call("Ligka_m1", current_config_folder,
+                           param, species_input)
 
             if param['Stability_code'] == 'Ligka_m4':
                 update_xml_param_on_run(param_ligka, 'modus', '4')
@@ -199,7 +169,8 @@ def workflow_EP(current_config_folder, verbose=True):
                 param_ligka = parameters_workflow(
                     current_config_folder+'/z_ligka.xml')
 
-                actor_call("Ligka_m4", current_config_folder, param)
+                actor_call("Ligka_m4", current_config_folder,
+                           param, species_input)
 
             if param['Stability_code'] == 'Ligka_m5':
                 update_xml_param_on_run(param_ligka, 'modus', '5')
@@ -208,7 +179,8 @@ def workflow_EP(current_config_folder, verbose=True):
                 param_ligka = parameters_workflow(
                     current_config_folder+'/z_ligka.xml')
 
-                actor_call("Ligka_m5", current_config_folder, param)
+                actor_call("Ligka_m5", current_config_folder,
+                           param, species_input)
 
             if param['Stability_code'] == 'Ligka_m6':
                 update_xml_param_on_run(param_ligka, 'modus', '6')
@@ -217,7 +189,8 @@ def workflow_EP(current_config_folder, verbose=True):
                 param_ligka = parameters_workflow(
                     current_config_folder+'/z_ligka.xml')
 
-                actor_call("Ligka_m6", current_config_folder, param)
+                actor_call("Ligka_m6", current_config_folder,
+                           param, species_input)
 
             if param['Stability_code'] == 'Ligka_m3':
                 update_xml_param_on_run(param_ligka, 'modus', '3')
@@ -226,7 +199,8 @@ def workflow_EP(current_config_folder, verbose=True):
                 param_ligka = parameters_workflow(
                     current_config_folder+'/z_ligka.xml')
 
-                actor_call("Ligka_m3", current_config_folder, param)
+                actor_call("Ligka_m3", current_config_folder,
+                           param, species_input)
 
             if param['Stability_code'] == 'Ligka_m2':
                 update_xml_param_on_run(param_ligka, 'modus', '2')
@@ -235,18 +209,21 @@ def workflow_EP(current_config_folder, verbose=True):
                 param_ligka = parameters_workflow(
                     current_config_folder+'/z_ligka.xml')
 
-                actor_call("Ligka_m2", current_config_folder, param)
+                actor_call("Ligka_m2", current_config_folder,
+                           param, species_input)
 
             # For now it is moved here, because it runs after LIGKA m 5/4/1.
             # Soon, automatic way of checking who to run first, but after a first version of the wf is ready
             # i.e all actors are established.
             if param['Distributions_1'] == 'Hagis_1':
 
-                actor_call("Hagis_1", current_config_folder, param)
+                actor_call("Hagis_1", current_config_folder,
+                           param, species_input)
 
             if param['Distributions_2'] == 'Hagis_2':
 
-                actor_call("Hagis_2", current_config_folder, param)
+                actor_call("Hagis_2", current_config_folder,
+                           param, species_input)
 
             if param['Orbit_Finder'] == 'Finder':
                 print_cond(
@@ -286,6 +263,7 @@ def workflow_EP(current_config_folder, verbose=True):
                     save_xml_param_to_file_on_run(
                         current_config_folder+'/finder_input.xml', 'spec', str(species))
 
-                    actor_call("Finder", current_config_folder, param)
+                    actor_call("Finder", current_config_folder,
+                               param, species_input)
 
     print_cond(verbose, 'Workflow Finished.')
