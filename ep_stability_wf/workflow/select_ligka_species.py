@@ -158,7 +158,7 @@ def select_species_by_density(core_profiles:object, param:dict=None, scenario_pa
         else:
             warnings.warn("'DT' option selected, but neither D nor T present in IDS.")
 
-    nback = 1 + len(curr_str)
+    nback = len(curr_str)
     nhot = len(curr_str_fast) * int(param.get("fast_particles", 1))
     nspec = nback + nhot
 
@@ -214,18 +214,18 @@ def test():
 
     ligka_species_str, nspec, nback, nhot = select_species_by_density(fake_obj, param={"fast_particles": 1}, density_cutoff=density_cutoff, debug=True)
     print(ligka_species_str, nspec, nback, nhot)
-    if ligka_species_str == "elhhddal":
+    if ligka_species_str == "elhhddal" and nspec==4 and nback==3 and nhot==1:
         print("ligka_species_str is correct")
     else:
-        raise ValueError
+        raise ValueError(ligka_species_str, nspec, nback, nhot)
 
     print()
     ligka_species_str, nspec, nback, nhot = select_species_by_density(fake_obj, param={"fast_particles": 0}, scenario_param={"DT": 1}, density_cutoff=density_cutoff, debug=True)
     print(ligka_species_str, nspec, nback, nhot)
-    if ligka_species_str == "eldthh":
+    if ligka_species_str == "eldthh" and nspec==3 and nback==3 and nhot==0:
         print("ligka_species_str is correct")
     else:
-        raise ValueError
+        raise ValueError(ligka_species_str, nspec, nback, nhot)
 
 
 if __name__ == "__main__":
