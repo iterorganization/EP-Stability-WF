@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from ep_stability_wf.interface.extra_functions import actor_window, analysis_window, scenario_window, load, save
+from ep_stability_wf.interface.extra_functions import actor_window, analysis_window, species_window, scenario_window, load, save
 from ep_stability_wf.interface.extra_functions import CreateToolTip
 import ep_stability_wf.interface.colour_definitions as col
 from ep_stability_wf.interface.create_workflow_param import create_workflow_param_from_file, create_xml_param_from_file, update_xml_param_wf
@@ -14,8 +14,10 @@ import sys
 
 
 # set the path to the folders where the configuration and codeparameters are stored
-wf_param_folder_default = os.path.join(ep_stability_wf.user_profiles.default_path.DEFAULT_PATH)
-default_workflow_param_path = os.path.join(wf_param_folder_default, 'input_workflow_default.xml')
+wf_param_folder_default = os.path.join(
+    ep_stability_wf.user_profiles.default_path.DEFAULT_PATH)
+default_workflow_param_path = os.path.join(
+    wf_param_folder_default, 'input_workflow_default.xml')
 
 window = Tk()
 # create mainwindow
@@ -46,7 +48,7 @@ def open_gui(wf_param_folder):
         wf_param_folder+'/finder_input.xml')
     analysis_param = create_xml_param_from_file(
         wf_param_folder+'/analysis.xml')
-    species_param = create_xml_param_from_file(
+    species_param = create_workflow_param_from_file(
         wf_param_folder+'/actor_settings.xml')
     scenario_param = create_xml_param_from_file(
         wf_param_folder+'/scenario.xml')
@@ -75,7 +77,8 @@ def open_gui(wf_param_folder):
     wfp_ref_h2 = list(hagis2_param.keys())
     wfp_ref_f = list(finder_param.keys())
     ana_ref = list(analysis_param.keys())[0]
-    species_ref = list(species_param.keys())
+    species_ref = [list(species_param.keys())[0], list(
+        species_param.keys())[1], list(species_param.keys())[2]]
     scen_ref = list(scenario_param.keys())
     ids_merge_ref = list(ids_merge_param.keys())
 
@@ -256,7 +259,7 @@ def open_gui(wf_param_folder):
     button_saveconfig = Button(fr_as, text='Species Settings', bg=col.c2)
     button_saveconfig.grid(row=58, column=0, padx=5, pady=5, sticky='ew')
     button_saveconfig.configure(
-        command=lambda: actor_window(species_ref, wf_param_folder, 5))
+        command=lambda: species_window(species_ref, wf_param_folder))
 
     button_saveconfig = Button(fr_as, text='SCENARIO Parameters', bg=col.c2)
     button_saveconfig.grid(row=59, column=0, padx=5, pady=5, sticky='ew')

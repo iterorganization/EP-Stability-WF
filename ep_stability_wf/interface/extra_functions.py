@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import filedialog, ttk
 from lxml import etree
 import ep_stability_wf.interface.colour_definitions as col
-from ep_stability_wf.interface.create_workflow_param import create_workflow_param_from_file, create_xml_param_from_file, save_xml_param_to_file, update_xml_param, update_xml_param_wf
+from ep_stability_wf.interface.create_workflow_param import create_workflow_param_from_file, create_xml_param_from_file, save_xml_param_to_file, update_xml_param, update_xml_param_wf, save_xml_param_to_file_multiple
 from ep_stability_wf.workflow.analysis_modes import Plot, export_data
 from ep_stability_wf.workflow.functions_wf import parameters_workflow
 import os
@@ -276,6 +276,70 @@ def actor_window(wfp_ref_l, wf_param_folder, l):
         button_saveconfig.grid(row=52, column=0, padx=5, pady=5, sticky='ew')
         button_saveconfig.configure(command=lambda: save_xml_param_to_file(
             ligka_param, wf_param_folder+'/scenario.xml'))
+
+
+def species_window(species_ref, wf_param_folder):
+
+    def update_scrollregion(event):
+        canvas.configure(scrollregion=canvas.bbox("all"))
+
+    window_a = Toplevel()
+
+    window_a.title('SPECIES SETTINGS')
+    species_param = create_workflow_param_from_file(
+        wf_param_folder+'/actor_settings.xml')
+
+    window_a.configure(bg=col.c1)
+
+    try:
+        wh = window_a.winfo_reqheight()
+        ww = window_a.winfo_reqwidth()
+        wx = window_a.winfo_x()
+        wy = window_a.winfo_y()
+        window_a.geometry("+%d+%d" % (wx, wy))
+    except:
+        pass
+
+    fr_l = Frame(window_a, width=350, height=500, background=col.c2)
+    fr_l.grid(row=0, column=0, rowspan=2,  sticky='nwes', padx=3, pady=3)
+
+    canvas = Canvas(fr_l, width=350, height=500, background=col.c2)
+    canvas.grid(row=0, column=0, sticky="nsew")
+
+    canvasFrame = Frame(canvas, background=col.c2)
+    canvas.create_window(0, 0, window=canvasFrame, anchor='nw')
+
+    irow = 0
+    for ref in species_ref:
+
+        Label(canvasFrame, text=ref, bg=col.c3, font='15').grid(
+            row=irow, column=0, columnspan=3, pady=10, padx=5, sticky='we')
+        irow += 1
+
+        for elem in species_param[ref]:
+
+            Label(canvasFrame, text=species_param[ref][elem][1], bg=col.c3).grid(
+                row=irow,  column=0, padx=3, pady=2, sticky='w')
+            entrystring = StringVar()
+            entrystring.set(species_param[ref][elem][0])
+            entrystring.trace('w', lambda name, index, mode, elem=elem, entrystring=entrystring,
+                              ref=ref: update_xml_param(species_param, ref, elem, entrystring.get()))
+            Entry(canvasFrame, textvariable=entrystring, bg=col.c1).grid(
+                row=irow, column=1, padx=3, pady=2, sticky='e')
+            irow += 1
+
+    scroll = Scrollbar(fr_l, orient=VERTICAL)
+    scroll.config(command=canvas.yview)
+    canvas.config(yscrollcommand=scroll.set)
+    scroll.grid(row=0, column=2, sticky="ns")
+
+    canvasFrame.bind("<Configure>", update_scrollregion)
+
+    button_saveconfig = Button(
+        fr_l, text='Save Species Configuration', bg=col.c2)
+    button_saveconfig.grid(row=52, column=0, padx=5, pady=5, sticky='ew')
+    button_saveconfig.configure(command=lambda: save_xml_param_to_file_multiple(
+        species_param, wf_param_folder+'/actor_settings.xml'))
 
 
 # FUNCTION NEW ANALYSIS WINDOW

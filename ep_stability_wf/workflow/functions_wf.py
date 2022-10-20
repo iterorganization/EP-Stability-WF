@@ -8,6 +8,7 @@ from lxml import etree
 import xml.etree.ElementTree as ET
 from imas import imasdef
 import numpy as np
+from ep_stability_wf.workflow.select_ligka_species import select_species_by_density
 
 no_actor = {}
 try:
@@ -82,7 +83,8 @@ def time_construction(time_input):
     Take a input, which might be '1', '1,2' or '2-4' or combinations '1,3-6,7,10-11'
     In these 4 cases, correct output should be [1], [1,2], [2,3,4], [1,3,4,5,6,7,10,11]
     """
-    time_list = [item for elem in str(time_input).split(',') for item in time_str_to_list(elem)]
+    time_list = [item for elem in str(time_input).split(
+        ',') for item in time_str_to_list(elem)]
     return time_list, list(range(len(time_list)))
 
 
@@ -104,9 +106,7 @@ def read_timestep(user, database, run, current_config_folder, backend):
     return(time, ntime)
 
 
-def profiles_get(param, species_input, scenario_input):
-
-    print('=> Open input datafile and read the numer of species and other neccesary inputs for LIGKA')
+def profiles_get(param, species_input, scenario_param):
 
     if int(param['hdf5']):
         backend = imasdef.HDF5_BACKEND
@@ -120,98 +120,14 @@ def profiles_get(param, species_input, scenario_input):
         print("Can't open the selected dataset!", file=sys.stderr)
         sys.exit(1)
     core_profiles = input_species.get('core_profiles')
+    species_input = {k: v for my_dict in [species_input['species_thermal'],
+                                          species_input['species_impurities'], species_input['species_fast']] for k, v in my_dict.items()}
+    ligka_species_str, nspec, nback, nhot = select_species_by_density(core_profiles, param=param, scenario_param=scenario_param,
+                                                                      density_cutoff=species_input)
 
-    nspecies = len(core_profiles.profiles_1d[0].ion)
-
-    species = []
-    for ispecies in range(nspecies):
-        species.append(core_profiles.profiles_1d[0].ion[ispecies].label)
-    volume = core_profiles.profiles_1d[0].grid.volume
-    ntot = 0
-    species_density = [0] * nspecies
-    for ispecies in range(nspecies):
-        species_density[ispecies] = sum(
-            volume*core_profiles.profiles_1d[0].ion[ispecies].density)
-        ntot = ntot + species_density[ispecies]
-
-    ne = sum(volume*core_profiles.profiles_1d[0].electrons.density)
-
-    nspec_over_ntot = [val/ntot for val in species_density]
-    nspec_over_ne = [val/ne for val in species_density]
-
-    for ispecies in range(nspecies):
-        for jspecies in range(nspecies):
-            if (species[jspecies] == species[ispecies]) & (jspecies != ispecies):
-                nspec_over_ntot[ispecies] = nspec_over_ntot[ispecies] + \
-                    nspec_over_ntot[jspecies]
-                nspec_over_ntot[jspecies] = 0
-                nspec_over_ne[ispecies] = nspec_over_ne[ispecies] + \
-                    nspec_over_ne[jspecies]
-                nspec_over_ne[jspecies] = 0
-
-    curr_str = 'el'
-    nspec = 1
-    nback = 1
-    nhot = 0
-
-    for ispecies in range(nspecies):
-        if nspec_over_ntot[ispecies] > 0. and nspec_over_ne[ispecies] > 0.:
-            print('For ion name: ', species[ispecies])
-            print('Density over total: ', format(
-                '%.10f' % nspec_over_ntot[ispecies]))
-            print('Density over electron density: ',
-                  format('%.10f' % nspec_over_ne[ispecies]))
-            # ALL THERMAL PARTICLES:
-            if species[ispecies] == 'H' or species[ispecies] == 'H+':
-                if nspec_over_ntot[ispecies] >= float(species_input["H"]):
-                    curr_str = curr_str + 'hh'
-                    nspec = nspec + 1
-                    nback = nback + 1
-            if species[ispecies] == 'D' or species[ispecies] == 'D+':
-                if int(scenario_input['DT']):
-                    curr_str = curr_str + 'dt'
-                    nspec = nspec + 1
-                    nback = nback + 1
-                else:
-                    if nspec_over_ntot[ispecies] >= float(species_input["D"]):
-                        curr_str = curr_str + 'dd'
-                        nspec = nspec + 1
-                        nback = nback + 1
-            if species[ispecies] == 'T' or species[ispecies] == 'T+':
-                if scenario_input['DT'] == 0:
-                    if nspec_over_ntot[ispecies] >= float(species_input["T"]):
-                        curr_str = curr_str + 'tt'
-                        nspec = nspec + 1
-                        nback = nback + 1
-            if species[ispecies] == 'He4' or species[ispecies] == 'He4+2':
-                if nspec_over_ntot[ispecies] >= float(species_input["He4_ash"]):
-                    curr_str = curr_str + 'he'
-                    nspec = nspec + 1
-                    nback = nback + 1
-            if species[ispecies] == 'Be' or species[ispecies] == 'Be+':
-                if nspec_over_ntot[ispecies] > float(species_input["Be"]):
-                    curr_str = curr_str + 'be'
-                    nspec = nspec + 1
-                    nback = nback + 1
-            if species[ispecies] == 'C' or species[ispecies] == 'C+':
-                if nspec_over_ntot[ispecies] >= float(species_input["C"]):
-                    curr_str = curr_str + 'ca'
-                    nspec = nspec + 1
-                    nback = nback + 1
-            if species[ispecies] == 'Ne' or species[ispecies] == 'Ne+':
-                if nspec_over_ntot[ispecies] > float(species_input["Ne"]):
-                    curr_str = curr_str + 'ne'
-                    nspec = nspec + 1
-                    nback = nback + 1
-            # ALL FAST PARTICLES
-    if int(param['fast_particles']):
-        curr_str = curr_str + 'al'
-        nspec = nspec + 1
-        nhot = nhot + 1
-
-    # NEED TO IMPLEMENT FAST HYDROGEN NBI, FAST DEUTERIUM NBI, RUNAWAYS ELECTRONS, DT combined
     input_species.close()
-    return curr_str, nspec, nback, nhot
+
+    return ligka_species_str, nspec, nback, nhot
 
 
 def scenario_mod(core_profiles_in, curr_str, scenario_params):
