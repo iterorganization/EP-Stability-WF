@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import numpy as np
+import warnings
 
 # Dictionary of mappings between (Z,A) and the Ligka species string
 # Non-implemented species should return None
@@ -76,11 +77,13 @@ def get_density_thermal_fast(species_obj:object, modify_ids:bool=False):
 
     return density_thermal, density_fast
 
-def select_species_by_density(core_profiles:object, param:dict=None, dens_func:callable=None, dens_func_choice:str="axis", density_cutoff:"dict[str, float]"={}, debug:bool=False):
+def select_species_by_density(core_profiles:object, param:dict=None, scenario_param:dict=None, dens_func:callable=None, dens_func_choice:str="axis", density_cutoff:"dict[str, float]"={}, debug:bool=False):
     if param is None:
         if debug:
             print("No parameter dict provided, taking default (EPs on)")
         param = {"fast_particles": 1}
+    if scenario_param is None:
+        scenario_param = {}
     if dens_func is None:
         if dens_func_choice.lower() in ["radial", "line"]:
             # Calculate cutoff based on radial mean (distinct from volume average density)
@@ -127,6 +130,18 @@ def select_species_by_density(core_profiles:object, param:dict=None, dens_func:c
                 curr_str_fast.append(ligka_fast_string)
             else:
                 print(f"Skipping unknown fast species: {isp} with (Z,A): ({z_sp}, {a_sp})")
+
+    # Optionally replace "dd" and/or "tt" with "dt" for Ligka to treat as $^2.5$H hybrid species
+    if int(scenario_param.get("DT", 0)):
+        if not ("dd" in curr_str and "tt" in curr_str):
+            warnings.warn("Not both D and T are present, looking for either to replace with 'DT'.")
+        if "dd" in curr_str or "tt" in curr_str:
+            for ligka_string in ["dd", "tt"]:
+                if ligka_string in curr_str:
+                    curr_str.remove(ligka_string)
+            curr_str.insert(1, "dt")
+        else:
+            warnings.warn("'DT' option selected, but neither D nor T present in IDS.")
 
     nback = 1 + len(curr_str)
     nhot = len(curr_str_fast)
@@ -190,6 +205,15 @@ def test():
         print("ligka_species_str is correct")
     else:
         raise ValueError
+
+    print()
+    ligka_species_str, nspec, nback, nhot = select_species_by_density(fake_obj, param={"fast_particles": 0}, scenario_param={"DT": 1}, density_cutoff=density_cutoff, debug=True)
+    print(ligka_species_str, nspec, nback, nhot)
+    if ligka_species_str == "eldthh":
+        print("ligka_species_str is correct")
+    else:
+        raise ValueError
+
 
 if __name__ == "__main__":
     test()
