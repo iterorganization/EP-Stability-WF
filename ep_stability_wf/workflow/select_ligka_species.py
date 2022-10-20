@@ -82,7 +82,7 @@ def select_species_by_density(core_profiles:object, param:dict=None, dens_func:c
             print("No parameter dict provided, taking default (EPs on)")
         param = {"fast_particles": 1}
     if dens_func is None:
-        if dens_func_choice == "radial":
+        if dens_func_choice.lower() in ["radial", "line"]:
             # Calculate cutoff based on radial mean (distinct from volume average density)
             dens_func = lambda x: np.sum(x * np.ones_like(x)) / np.sum(np.ones_like(x))
         else:
