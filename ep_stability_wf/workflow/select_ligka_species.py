@@ -186,13 +186,13 @@ def test():
                 fake_ion_species(ni_th, ni_fast, ni, z, a)
                 for isp, (ni_th, ni_fast, ni, z, a) in enumerate([
                     # Ne (below 1% threshold), ni_th missing
-                    [np.zeros(0), 0.001*np.ones(nr), 0.001*np.ones(nr), 10, 20],
+                    [np.zeros(0), 0.0*np.ones(nr), 0.001*np.ones(nr), 10, 20],
                     # H: ni missing, ni_thermal present
-                    [1.01* np.ones(nr), np.zeros(nr), np.zeros(0), 1, 1],
+                    [1.01* np.ones(nr), 0.0*np.ones(nr), np.zeros(0), 1, 1],
                     # D: ni_thermal missing, ni present
-                    [np.zeros(0), np.zeros(nr), np.ones(nr), 1, 2],
+                    [np.zeros(0), 0.0*np.ones(nr), np.ones(nr), 1, 2],
                     # He (below 1% threshold), but alpha present. ni missing
-                    [0.001*np.ones(nr), 0.005*np.ones(nr), np.zeros(nr), 2, 4],
+                    [0.001*np.ones(nr), 0.005*np.ones(nr), 0.0*np.ones(nr), 2, 4],
                 ])
             ]
 
@@ -209,12 +209,10 @@ def test():
         print(fake_obj.profiles_1d[0].ion[1].density_fast)
         print()
 
-    fake_params = {"fast_particles": 1}
     density_cutoff = {v:val for (mydict, val) in zip([LIGKA_ZA_STRINGS, LIGKA_FAST_ZA_STRINGS], [0.02, 0.001]) for k,v in mydict.items()}
-
     print(density_cutoff)
 
-    ligka_species_str, nspec, nback, nhot = select_species_by_density(fake_obj, param=fake_params, density_cutoff=density_cutoff, debug=True)
+    ligka_species_str, nspec, nback, nhot = select_species_by_density(fake_obj, param={"fast_particles": 1}, density_cutoff=density_cutoff, debug=True)
     print(ligka_species_str, nspec, nback, nhot)
     if ligka_species_str == "elhhddal":
         print("ligka_species_str is correct")
