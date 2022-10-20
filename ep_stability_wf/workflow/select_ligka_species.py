@@ -36,22 +36,37 @@ LIGKA_FAST_ZA_STRINGS = {
 }
 
 def get_density_thermal_fast(species_obj:object, modify_ids:bool=False):
-    if (species_obj.density_thermal > 0.0).any():
+    if len(species_obj.density_thermal) > 0:
         density_thermal = species_obj.density_thermal.copy()
     else:
-        density_thermal = species_obj.density[:] - species_obj.density_fast[:]
-        if modify_ids:
-            species_obj.density_thermal = density_thermal.copy()
+        if len(species_obj.density) > 0:
+            dd = species_obj.density
+        else:
+            dd = None
+        if len(species_obj.density_fast) > 0:
+            df = species_obj.density_fast
+        else:
+            df = None
 
-    if (species_obj.density_fast).any() > 0.0:
-        density_fast = species_obj.density_fast.copy()
-    elif (species_obj.density_fast != species_obj.density).all():
-        density_fast = species_obj.density[:] - density_thermal[:]
-        density_fast[density_fast<0.0] = 0.0
-        if modify_ids:
-            species_obj.density_fast = density_fast.copy()
+        if dd is None:
+            # Only density_fast provided, denisty = density_fast
+            dd = df.copy()
+        if df is None:
+            # Only density provided, denisty_fast = 0
+            df = np.zeros_like(dd)
+
+        density_thermal = dd - df
+
+    if len(species_obj.density_fast) == 0:
+        if len(species_obj.density > 0):
+            density_fast = species_obj.density[:] - density_thermal[:]
+        else:
+            density_fast = np.zeros_like(density_thermal)
     else:
-        density_fast = np.zeros_like(density_thermal)
+        density_fast = species_obj.density_fast[:].copy()
+
+    # Set density_fast floor = 0
+    density_fast[density_fast<0] = 0.0
 
     if (density_fast < 0.0).any() or (density_thermal < 0.0).any():
         print(f"""negative density. debug info:
@@ -67,9 +82,9 @@ def get_density_thermal_fast(species_obj:object, modify_ids:bool=False):
     if (species_obj.element[0].z_n, species_obj.element[0].a) == (10,20) and False:
         print(f"""
             (z,a): ({species_obj.element[0].z_n}, {species_obj.element[0].a})
-            {species_obj.density[0]=}
-            {species_obj.density_thermal[0]=}
-            {species_obj.density_fast[0]=}
+            {species_obj.density=}
+            {species_obj.density_thermal=}
+            {species_obj.density_fast=}
 
             {density_thermal=}
             {density_fast=}
@@ -171,11 +186,11 @@ def test():
                 fake_ion_species(ni_th, ni_fast, ni, z, a)
                 for isp, (ni_th, ni_fast, ni, z, a) in enumerate([
                     # Ne (below 1% threshold), ni_th missing
-                    [np.zeros(nr), np.zeros(nr), 0.001*np.ones(nr), 10, 20],
+                    [np.zeros(0), 0.001*np.ones(nr), 0.001*np.ones(nr), 10, 20],
                     # H: ni missing, ni_thermal present
-                    [1.01* np.ones(nr), np.zeros(nr), np.zeros(nr), 1, 1],
+                    [1.01* np.ones(nr), np.zeros(nr), np.zeros(0), 1, 1],
                     # D: ni_thermal missing, ni present
-                    [np.zeros(nr), np.zeros(nr), np.ones(nr), 1, 2],
+                    [np.zeros(0), np.zeros(nr), np.ones(nr), 1, 2],
                     # He (below 1% threshold), but alpha present. ni missing
                     [0.001*np.ones(nr), 0.005*np.ones(nr), np.zeros(nr), 2, 4],
                 ])
