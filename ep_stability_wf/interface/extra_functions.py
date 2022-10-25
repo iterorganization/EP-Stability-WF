@@ -6,10 +6,10 @@ from ep_stability_wf.interface.create_workflow_param import create_workflow_para
 from ep_stability_wf.workflow.analysis_modes import Plot, export_data
 from ep_stability_wf.workflow.functions_wf import parameters_workflow
 import os
+import warnings
 import sys
 import glob
 import yaml
-from operator import itemgetter
 from shutil import copy2
 from stat import *
 
@@ -59,10 +59,12 @@ def CreateToolTip(widget, text):
 
 def copy_workflow_param_to_file(previous_folder, current_wf_param_folder, wf_param_folder_default, workflow_param, wfp_ref, fur_ref, act_ref, saveAs):
 
+    filelist = ['analysis.xml', 'finder_input.xml', 'hagis1.xml', 'hagis2.xml', 'helena.xml',
+                'z_ligka.xml', 'actor_settings.xml', 'scenario.xml', 'ids_merge.xml', 'chease_input_choices.xml']
     # Copy the default workflow parameter file into the current one
 
     copy2(wf_param_folder_default+'/input_workflow_default.xml',
-          current_wf_param_folder, follow_symlinks=True)
+          current_wf_param_folder)
 
     tree = etree.parse(current_wf_param_folder+'/input_workflow_default.xml')
     root = tree.getroot()
@@ -75,14 +77,20 @@ def copy_workflow_param_to_file(previous_folder, current_wf_param_folder, wf_par
 
     # Copy the actors xml files into the current dir
     # Only in case of saveAs, because the individual .xml of the actors are saved separately
-    if saveAs == 1:
-        for ep_files in ['analysis.xml', 'finder_input.xml', 'hagis1.xml', 'hagis2.xml', 'helena.xml', 'z_ligka.xml', 'actor_settings.xml', 'scenario.xml', 'ids_merge.xml','chease_input_choices.xml']:
-            if previous_folder is not None:
-                copy2(previous_folder+'/'+ep_files,
-                      current_wf_param_folder, follow_symlinks=True)
+    if saveAs:
+        if previous_folder is None:
+            folder_from = wf_param_folder_default
+        for ep_file in filelist:
+            filename_from = os.path.join(folder_from, ep_file)
+            if os.path.isfile(filename_from):
+                copy2(filename_from, current_wf_param_folder)
             else:
-                copy2(wf_param_folder_default+'/'+ep_files,
-                      current_wf_param_folder, follow_symlinks=True)
+                if wf_param_folder_default is None:
+                    warnings.warn(
+                        f"File {filename_from} is not found and 'folder_from_default' is None. Recreate the WF configuration.")
+                else:
+                    copy2(os.path.join(wf_param_folder_default,
+                          ep_file), current_wf_param_folder)
 
     return 0
 
@@ -100,12 +108,12 @@ def load(chosen_folder, open_gui):
         print('configuration folder since it contains no input_workflow_default.xml file ' +
               '--> Nothing loaded.', file=sys.stderr)
         return
-    for ep_files in ['analysis.xml', 'finder_input.xml', 'hagis1.xml', 'hagis2.xml', 'helena.xml', 'z_ligka.xml', 'actor_settings.xml', 'scenario.xml', 'ids_merge.xml','chease_input_choices.xml']:
-        if not os.path.exists(chosen_folder+'/'+ep_files):
-            print('The selected folder '+chosen_folder +
+    for ep_file in ['analysis.xml', 'finder_input.xml', 'hagis1.xml', 'hagis2.xml', 'helena.xml', 'z_ligka.xml', 'actor_settings.xml', 'scenario.xml', 'ids_merge.xml', 'chease_input_choices.xml']:
+        if not os.path.exists(chosen_folder+'/'+ep_file):
+            print('The selected folder ' + chosen_folder +
                   ' does not appear to be a proper', file=sys.stderr)
-            print('configuration folder since it contains no ' +
-                  ep_files+' file '+'--> Nothing loaded.', file=sys.stderr)
+            print('configuration folder since it contains no '
+                  f'{ep_file=} --> Nothing loaded.', file=sys.stderr)
             return
 
     print('---> Configuration loaded from '+chosen_folder, file=sys.stdout)
@@ -179,7 +187,8 @@ def actor_window(wfp_ref_l, wf_param_folder, l):
             wf_param_folder+'/scenario.xml')
     elif l == 7:
         window_a.title('CHEASE PARAMETERS')
-        ligka_param = create_xml_param_from_file(wf_param_folder+'/chease_input_choices.xml')
+        ligka_param = create_xml_param_from_file(
+            wf_param_folder+'/chease_input_choices.xml')
 
     window_a.configure(bg=col.c1)
 

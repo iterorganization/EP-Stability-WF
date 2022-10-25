@@ -6,7 +6,6 @@ import random
 import copy
 from lxml import etree
 import xml.etree.ElementTree as ET
-from imas import imasdef
 import numpy as np
 from ep_stability_wf.workflow.select_ligka_species import select_species_by_density
 
@@ -200,6 +199,7 @@ def imports_check(actor_name):
         print(actor_name + ' is not imported, cannot continue.')
         return 0
 
+
 def chease_actor_wf_wrapper(equilibrium_in,
                             core_profiles_in,
                             mhd_linear_in,
@@ -211,6 +211,7 @@ def chease_actor_wf_wrapper(equilibrium_in,
                                    config_file_path)
 
     return equilibrium_out, None, core_profiles_in, None
+
 
 def helena_actor_wf_wrapper(equilibrium_in,
                             core_profiles_in,

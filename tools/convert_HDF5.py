@@ -1,7 +1,6 @@
 import imas
 import sys
 import os
-from imas import imasdef
 
 
 def converter(backend_from, backend_to, database_from, database_to, shot_no, run_from, run_to, user_from, ids_dict):
@@ -32,8 +31,8 @@ def converter(backend_from, backend_to, database_from, database_to, shot_no, run
 
 
 if __name__ == "__main__":
-    backend_from = imasdef.HDF5_BACKEND
-    backend_to = imasdef.MDSPLUS_BACKEND
+    backend_from = imas.imasdef.HDF5_BACKEND
+    backend_to = imas.imasdef.MDSPLUS_BACKEND
     database_from = ''
     database_to = ''
     shot_no = 0

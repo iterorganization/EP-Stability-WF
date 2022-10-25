@@ -11,7 +11,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from datetime import datetime
 from ep_stability_wf.workflow.functions_wf import time_construction, parameters_workflow
-from imas import imasdef
 from collections import defaultdict
 
 
@@ -71,9 +70,9 @@ def values_filler(backend_value, mode):
     else:
         occurence = 3
     if int(backend_value):
-        return imasdef.HDF5_BACKEND, occurence
+        return imas.imasdef.HDF5_BACKEND, occurence
     else:
-        return imasdef.MDSPLUS_BACKEND, occurence
+        return imas.imasdef.MDSPLUS_BACKEND, occurence
 
 
 def labelscaler(fig=None, axarr=None, labelsize=None, labelmult=None, linemult=None, fig_tight=None):
@@ -145,7 +144,7 @@ class Plot():
             user (str): Username of the user who has the DB
             occurrence (int): For WF users: mhd_linear: 0 -  mode 5, 1 - mode 4, 2 - mode 1. For equilibrium 0 in general.
             ids_name (str): mhd_linear or equilibrium (defined by dd_doc)
-            backend_name (object, optional): Backends: HDF5 -> imasdef.HDF5_BACKEND(1) as defined by AL. Defaults to imasdef.MDSPLUS_BACKEND(0).
+            backend_name (object, optional): Backends: HDF5 -> imas.imasdef.HDF5_BACKEND(1) as defined by AL. Defaults to imas.imasdef.MDSPLUS_BACKEND(0).
         """
         self.user = param['user']
         self.version = os.getenv('IMAS_VERSION')[0]
@@ -542,7 +541,7 @@ def export_data(wf_param_folder):
         out_file.write(
             f"{user} {shot_nr} {run_out} {machine_out} {occurence}\n")
 
-        input = imas.DBEntry(imasdef.MDSPLUS_BACKEND,
+        input = imas.DBEntry(imas.imasdef.MDSPLUS_BACKEND,
                              machine_out, shot_nr, run_out, user)
         status, _ = input.open()
         if status != 0:

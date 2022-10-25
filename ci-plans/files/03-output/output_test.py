@@ -3,7 +3,6 @@ import imas
 import os
 import yaml
 from cerberus import Validator
-from imas import imasdef
 import argparse
 
 
@@ -57,7 +56,7 @@ if __name__ == "__main__":
                         help="input Database", default="10")
     args = parser.parse_args()
 
-    backend = imasdef.MDSPLUS_BACKEND
+    backend = imas.imasdef.MDSPLUS_BACKEND
     database = args.database
     user = os.getenv('USER')
     shot_no = args.shot

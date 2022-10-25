@@ -1,5 +1,4 @@
 import imas
-from imas import imasdef
 import sys
 import os
 from ep_stability_wf.workflow.functions_wf import time_construction
@@ -12,9 +11,9 @@ def data_retrieve(ids_merge_param):
         [ids]: [for now only core_profiles]
     """
     if int(ids_merge_param['Inputs']['HDF5_1'][0]):
-        backend = imasdef.HDF5_BACKEND
+        backend = imas.imasdef.HDF5_BACKEND
     else:
-        backend = imasdef.MDSPLUS_BACKEND
+        backend = imas.imasdef.MDSPLUS_BACKEND
 
     input_1 = imas.DBEntry(backend,
                            ids_merge_param['Inputs']['machine_in_1'][0],
@@ -29,9 +28,9 @@ def data_retrieve(ids_merge_param):
     time = input_1.partial_get('core_profiles', 'time')
 
     if int(ids_merge_param['Inputs']['HDF5_2'][0]):
-        backend = imasdef.HDF5_BACKEND
+        backend = imas.imasdef.HDF5_BACKEND
     else:
-        backend = imasdef.MDSPLUS_BACKEND
+        backend = imas.imasdef.MDSPLUS_BACKEND
 
     input_2 = imas.DBEntry(backend,
                            ids_merge_param['Inputs']['machine_in_2'][0],
@@ -49,9 +48,9 @@ def data_retrieve(ids_merge_param):
 def data_writeout_create(ids_merge_param):
 
     if int(ids_merge_param['Output']['HDF5_out'][0]):
-        backend = imasdef.HDF5_BACKEND
+        backend = imas.imasdef.HDF5_BACKEND
     else:
-        backend = imasdef.MDSPLUS_BACKEND
+        backend = imas.imasdef.MDSPLUS_BACKEND
         machine_out = ids_merge_param['Output']['machine_out'][0]
         version = os.getenv("IMAS_VERSION")[0]
         output_folder = os.path.join(
@@ -125,10 +124,10 @@ def ids_compare(ids_merge_param):
         print(f'Time = {time[itime]} s, itime = {i}/{ntime-1}')
 
         core_profiles_in_1 = input_1.get_slice(
-            'core_profiles', time[itime], imasdef.PREVIOUS_SAMPLE, occurrence=0)
+            'core_profiles', time[itime], imas.imasdef.PREVIOUS_SAMPLE, occurrence=0)
 
         core_profiles_in_2 = input_2.get_slice(
-            'core_profiles', time[itime], imasdef.PREVIOUS_SAMPLE, occurrence=0)
+            'core_profiles', time[itime], imas.imasdef.PREVIOUS_SAMPLE, occurrence=0)
 
         core_profiles_out = profiles_get_species(
             core_profiles_in_1, core_profiles_in_2, ids_merge_param)
@@ -138,7 +137,7 @@ def ids_compare(ids_merge_param):
         if int(ids_merge_param['Settings']['Equilibrium_copy'][0]):
             print('Exporting Equilibrium also in the new DB!')
             equilibrium_out = input_1.get_slice(
-                'equilibrium', time[itime], imasdef.PREVIOUS_SAMPLE, occurrence=0)
+                'equilibrium', time[itime], imas.imasdef.PREVIOUS_SAMPLE, occurrence=0)
             data_step_writeout(output, equilibrium_out)
 
     print('IDS merge Completed!')

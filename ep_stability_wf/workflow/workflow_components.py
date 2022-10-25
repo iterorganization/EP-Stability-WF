@@ -4,7 +4,6 @@ import sys
 
 from ep_stability_wf.workflow.functions_wf import read_timestep, actor_settings, imports_check, scenario_mod, time_construction, profiles_get
 from ep_stability_wf.interface.create_workflow_param import save_xml_param_multiple_to_file_on_run
-from imas import imasdef
 
 
 def actor_call(actor_name, config_folder_path, system_params, species_input, scenario_params=None):
@@ -36,9 +35,9 @@ def actor_call(actor_name, config_folder_path, system_params, species_input, sce
         config_folder_path, actor_params['config_file_name'])
 
     if system_params['hdf5'] == 1:
-        backend = imasdef.HDF5_BACKEND
+        backend = imas.imasdef.HDF5_BACKEND
     else:
-        backend = imasdef.MDSPLUS_BACKEND
+        backend = imas.imasdef.MDSPLUS_BACKEND
 
     if actor_name == 'Ligka_m5':
         mpi_processes = 1
@@ -49,6 +48,7 @@ def actor_call(actor_name, config_folder_path, system_params, species_input, sce
         if system_params['Equilibrium_code_chease'] == 'Chease':
             actor_params['entrypoint_actor'] = False
             input_ids['equilibrium'] = 2
+            # If CHEASE is run first, we remove the input/output from helena to chease actor (i.e delete the entries of the dict)
             del input_ids['core_profiles']
             del output_ids['core_profiles']
 
@@ -107,15 +107,15 @@ def actor_call(actor_name, config_folder_path, system_params, species_input, sce
         for ids_name, ids_occ in input_ids.items():
             if ids_name == 'equilibrium':
                 equilibrium_in = input.get_slice(
-                    ids_name, time[itime], imasdef.PREVIOUS_SAMPLE, occurrence=ids_occ)
+                    ids_name, time[itime], imas.imasdef.PREVIOUS_SAMPLE, occurrence=ids_occ)
                 equilibrium_occ = ids_occ
             if ids_name == 'mhd_linear':
                 mhd_linear_in = input.get_slice(
-                    ids_name, time[itime], imasdef.PREVIOUS_SAMPLE, occurrence=ids_occ)
+                    ids_name, time[itime], imas.imasdef.PREVIOUS_SAMPLE, occurrence=ids_occ)
                 mhd_linear_occ = ids_occ
             if ids_name == 'core_profiles':
                 core_profiles_in = input.get_slice(
-                    ids_name, time[itime], imasdef.PREVIOUS_SAMPLE, occurrence=ids_occ)
+                    ids_name, time[itime], imas.imasdef.PREVIOUS_SAMPLE, occurrence=ids_occ)
                 core_profiles_occ = ids_occ
 
                 curr_str, nspec, nback, nhot = profiles_get(
