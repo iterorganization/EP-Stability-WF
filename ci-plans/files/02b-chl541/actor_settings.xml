@@ -1,0 +1,22 @@
+<root>
+  <species_thermal display="Thermal Ions">
+    <hh display="H" >0.02</hh>
+    <dd display="D" >0.02</dd>
+    <tt display="T" >0.02</tt>
+  </species_thermal>
+
+  <species_impurities display="Impurities">
+    <be display="Be" >0.02</be>
+    <ne display="Ne" >0.02</ne>
+    <he display="He4" >0.02</he>
+    <ca display="C" >0.02</ca>
+    <tu display="Tu" >0.02</tu>
+    <ar display="Ar" >0.02</ar>
+  </species_impurities>
+
+  <species_fast display="Fast Ions">
+    <fh display="H" >0.02</fh>
+    <fd display="D" >0.02</fd>
+    <al display="He4" >0.02</al>
+  </species_fast>
+</root>
