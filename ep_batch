@@ -1,61 +1,54 @@
 #!/usr/bin/env python
-
 # -----------------------------------------------------
 # AUTO-GENERATE BATCH SCRIPT TO RUN THE EP WORKFLOW,
-# AND LAUNCH IT VIA QSUB
+# AND LAUNCH IT VIA sbatch
 # -----------------------------------------------------
 # EXAMPLE:
 # EP_batch -N 1 -n 1 -t 1 -e alpopa@ipp.mpg.de -q gen9_ib-short -c user_profiles/default/
 
 import argparse
 import subprocess
-
 from datetime import datetime
 
-# Management of input arguments
-parser = argparse.ArgumentParser(
-    description='---- Run the EP workflow without the interface')
-# parser.add_argument(
-#     "-N", "--nodes", help="Number of nodes", required=True)
-parser.add_argument(
-    "-n", "--nproc", help="Number of processors/node", required=True)
-parser.add_argument(
-    "-t", "--time", help="Required cpu time in hours", required=True)
-parser.add_argument(
-    "-e", "--email", help="E-mail where to send job resulting status", required=True)
-parser.add_argument(
-    "-q", "--queue", help="Name of the batch queue", required=True)
-parser.add_argument("-c", "--config_folder",
-                    help="input configuration folder", required=True)
 
-args = vars(parser.parse_args())
-nproc = args["nproc"]
-# nodes = args["nodes"]
-time = args["time"]
-email = args["email"]
-queue = args["queue"]
-config_folder = args["config_folder"]
-
-auto_batch_name = str('auto_batch_'+datetime.now().strftime('%y%m%d_%H%M%S'))
+def write_batch_script(batch_file_name, nproc, job_time, email, queue, config_folder):
+    with open(batch_file_name, "w") as batch_file:
+        batch_file.write(f"#!/bin/sh\n")
+        batch_file.write(f'#SBATCH  --nodes=1\n')
+        batch_file.write(f"#SBATCH  --ntasks-per-node={nproc}\n")
+        batch_file.write(f"#SBATCH  --cpus-per-task=1\n")
+        batch_file.write(f"#SBATCH  --time={job_time}:00:00\n")
+        if args.email is not None:
+            batch_file.write(f"#SBATCH  --mail-user={email}\n")
+            batch_file.write(f"#SBATCH  --mail-type=END\n")
+        else:
+            batch_file.write(f"#SBATCH  --mail-type=NONE\n")
+        batch_file.write(f"#SBATCH  --job-name=EP_wf\n")
+        batch_file.write(f"#SBATCH  --partition={queue}\n\n")
+        # batch_file.write('chmod +x ep_nogui \n')
+        # batch_file.write('export OMP_NUM_THREADS='+nproc+'\n')
+        # batch_file.write('export OMP_PLACES=8'+'\n')
+        batch_file.write(f"ep_nogui -c {config_folder}\n")
 
 
-with open(auto_batch_name, 'w') as file:
+def submit_batch_script(batch_file_name, verbose=True):
+    subprocess.call(["sbatch " + batch_file_name], shell=True)
+    if verbose:
+        print(f"{batch_file_name} submitted.")
 
-    file.write('#!/bin/sh\n\n')
-    # file.write('export OMP_NUM_THREADS='+nproc+'\n')
-    # file.write('export OMP_PLACES=8'+'\n')
-    # file.write('#SBATCH  --nodes='+nodes+'\n')
-    file.write('#SBATCH  --ntasks-per-node='+nproc+'\n')
-    file.write('#SBATCH  --cpus-per-task=1'+'\n')
-    file.write('#SBATCH  --time='+time+':00:00'+'\n')
-    file.write('#SBATCH  --mail-user='+email+'\n')
-    file.write('#SBATCH  --mail-type=END'+'\n')
-    file.write('#SBATCH  --job-name=EP_wf'+'\n')
-    file.write('#SBATCH  --partition='+queue+'\n\n')
-    # file.write('chmod +x ep_nogui \n')
-    file.write('ep_nogui -c '+config_folder+'\n\n')
 
-file.close()
+if __name__ == "__main__":
+    # Management of input arguments
+    parser = argparse.ArgumentParser(description="---- Run the EP workflow without the interface")
+    parser.add_argument( "-n", "--nproc", help="Number of processors/node", type="int", default=1)
+    parser.add_argument( "-t", "--time", help="Required cpu time in hours", type="int", default=2)
+    parser.add_argument( "-e", "--email", help="E-mail where to send job resulting status", type="str")
+    parser.add_argument("-q", "--queue", help="Name of the batch queue", required=True)
+    parser.add_argument("-c", "--config_folder", required=True, help="input configuration folder")
+    args = parser.parse_args()
 
-subprocess.call(['qsub '+auto_batch_name], shell=True)
-print(auto_batch_name+' submitted.')
+    auto_batch_name = str("auto_batch_" + datetime.now().strftime("%y%m%d_%H%M%S"))
+    write_batch_script(
+        auto_batch_name, args.nproc, args.time, args.email, args.queue, args.config_folder
+    )
+    submit_batch_script(auto_batch_name)
