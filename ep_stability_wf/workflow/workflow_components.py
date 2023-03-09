@@ -102,7 +102,11 @@ def actor_call(actor_name, config_folder_path, system_params, species_input, sce
         mhd_linear_in = imas.mhd_linear()
         mhd_linear_in.ids_properties.homogeneousTime = 1
         mhd_linear_occ = 0
-        distributions_in = imas.distributions()
+        distributions_in_1 = imas.distributions()
+        distributions_in_1.ids_properties.homogeneousTime = 1
+        distributions_occ = 0
+        distributions_in_2 = imas.distributions()
+        distributions_in_2.ids_properties.homogeneousTime = 1
         distributions_occ = 0
 
         for ids_name, ids_occ in input_ids.items():
@@ -114,6 +118,14 @@ def actor_call(actor_name, config_folder_path, system_params, species_input, sce
                 mhd_linear_in = input.get_slice(
                     ids_name, time[itime], imas.imasdef.PREVIOUS_SAMPLE, occurrence=ids_occ)
                 mhd_linear_occ = ids_occ
+
+            if ids_name == 'distributions':
+                if ids_occ == 0:
+                    distributions_in_1 = input.get_slice(
+                        ids_name, time[itime], imas.imasdef.PREVIOUS_SAMPLE, occurrence=ids_occ)
+                elif ids_occ == 1:
+                    distributions_in_2 = input.get_slice(
+                        ids_name, time[itime], imas.imasdef.PREVIOUS_SAMPLE, occurrence=ids_occ)
             if ids_name == 'core_profiles':
                 core_profiles_in = input.get_slice(
                     ids_name, time[itime], imas.imasdef.PREVIOUS_SAMPLE, occurrence=ids_occ)
@@ -132,7 +144,8 @@ def actor_call(actor_name, config_folder_path, system_params, species_input, sce
         equilibrium_out, mhd_linear_out, core_profiles_out, distributions_out = actor_params['wrapper'](equilibrium_in,
                                                                                                         core_profiles_in,
                                                                                                         mhd_linear_in,
-                                                                                                        distributions_in,
+                                                                                                        distributions_in_1,
+                                                                                                        distributions_in_2,
                                                                                                         config_file,
                                                                                                         mpi_processes=mpi_processes)
 

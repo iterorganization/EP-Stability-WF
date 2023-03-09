@@ -203,7 +203,8 @@ def imports_check(actor_name):
 def chease_actor_wf_wrapper(equilibrium_in,
                             core_profiles_in,
                             mhd_linear_in,
-                            distributions_in,
+                            distributions_in_1,
+                            distributions_in_2,
                             config_file_path,
                             mpi_processes):
 
@@ -216,7 +217,8 @@ def chease_actor_wf_wrapper(equilibrium_in,
 def helena_actor_wf_wrapper(equilibrium_in,
                             core_profiles_in,
                             mhd_linear_in,
-                            distributions_in,
+                            distributions_in_1,
+                            distributions_in_2,
                             config_file_path,
                             mpi_processes):
 
@@ -229,7 +231,8 @@ def helena_actor_wf_wrapper(equilibrium_in,
 def hagis1_actor_wf_wrapper(equilibrium_in,
                             core_profiles_in,
                             mhd_linear_in,
-                            distributions_in,
+                            distributions_in_1,
+                            distributions_in_2,
                             config_file_path,
                             mpi_processes):
 
@@ -242,12 +245,13 @@ def hagis1_actor_wf_wrapper(equilibrium_in,
 def hagis2_actor_wf_wrapper(equilibrium_in,
                             core_profiles_in,
                             mhd_linear_in,
-                            distributions_in,
+                            distributions_in_1,
+                            distributions_in_2,
                             config_file_path,
                             mpi_processes):
 
     mhd_linear_out, distributions_out = hagis2_actor(
-        equilibrium_in, mhd_linear_in, core_profiles_in, distributions_in, config_file_path, 'mpi_local', mpi_processes=mpi_processes)
+        equilibrium_in, mhd_linear_in, core_profiles_in, distributions_in_1, config_file_path, 'mpi_local', mpi_processes=mpi_processes)
 
     return None, mhd_linear_out, None, distributions_out
 
@@ -255,12 +259,13 @@ def hagis2_actor_wf_wrapper(equilibrium_in,
 def ligka_actor_wf_wrapper(equilibrium_in,
                            core_profiles_in,
                            mhd_linear_in,
-                           distributions_in,
+                           distributions_in_1,
+                           distributions_in_2,
                            config_file_path,
                            mpi_processes):
 
-    mhd_linear_out = ligka_actor(equilibrium_in, core_profiles_in, mhd_linear_in,
-                                 config_file_path, 'mpi_local', mpi_processes=mpi_processes)
+    mhd_linear_out = ligka_actor(equilibrium_in, core_profiles_in, mhd_linear_in, distributions_in_1,
+                                 distributions_in_2, config_file_path, 'mpi_local', mpi_processes=mpi_processes)
 
     return None, mhd_linear_out, None, None
 
@@ -268,7 +273,8 @@ def ligka_actor_wf_wrapper(equilibrium_in,
 def finder_actor_wf_wrapper(equilibrium_in,
                             core_profiles_in,
                             mhd_linear_in,
-                            distributions_in,
+                            distributions_in_1,
+                            distributions_in_2,
                             config_file_path,
                             mpi_processes):
 
@@ -286,8 +292,8 @@ def actor_settings(actor):
         actor_params["entrypoint_actor"] = True
         actor_params["wrapper"] = chease_actor_wf_wrapper
         actor_params["config_file_name"] = "chease_input_choices.xml"
-        input_ids = {"equilibrium": 0, "core_profiles": 0}
-        output_ids = {"equilibrium": 2, "core_profiles": 0}
+        input_ids = {"equilibrium": 0, "core_profiles": 0, "distributions": 0}
+        output_ids = {"equilibrium": 2, "core_profiles": 0, "distributions": 0}
     if actor == "Helena":
         actor_params["entrypoint_actor"] = True
         actor_params["wrapper"] = helena_actor_wf_wrapper
@@ -304,13 +310,15 @@ def actor_settings(actor):
         actor_params["entrypoint_actor"] = False
         actor_params["wrapper"] = ligka_actor_wf_wrapper
         actor_params["config_file_name"] = "z_ligka.xml"
-        input_ids = {"equilibrium": 0, "core_profiles": 0, "mhd_linear": 0}
+        input_ids = {"equilibrium": 0, "core_profiles": 0,
+                     "mhd_linear": 0, "distributions": 0, "distributions": 1}
         output_ids = {"mhd_linear": 1}
     if actor == "Ligka_m1":
         actor_params["entrypoint_actor"] = False
         actor_params["wrapper"] = ligka_actor_wf_wrapper
         actor_params["config_file_name"] = "z_ligka.xml"
-        input_ids = {"equilibrium": 0, "core_profiles": 0, "mhd_linear": 1}
+        input_ids = {"equilibrium": 0, "core_profiles": 0,
+                     "mhd_linear": 1, "distributions": 0, "distributions": 1}
         output_ids = {"mhd_linear": 2}
     if actor == "Ligka_m6":
         actor_params["entrypoint_actor"] = False
@@ -322,13 +330,15 @@ def actor_settings(actor):
         actor_params["entrypoint_actor"] = False
         actor_params["wrapper"] = ligka_actor_wf_wrapper
         actor_params["config_file_name"] = "z_ligka.xml"
-        input_ids = {"equilibrium": 0, "core_profiles": 0, "mhd_linear": 2}
+        input_ids = {"equilibrium": 0, "core_profiles": 0,
+                     "mhd_linear": 2, "distributions": 0, "distributions": 1}
         output_ids = {"mhd_linear": 6}
     if actor == "Ligka_m3":
         actor_params["entrypoint_actor"] = False
         actor_params["wrapper"] = ligka_actor_wf_wrapper
         actor_params["config_file_name"] = "z_ligka.xml"
-        input_ids = {"equilibrium": 0, "core_profiles": 0, "mhd_linear": 0}
+        input_ids = {"equilibrium": 0, "core_profiles": 0,
+                     "mhd_linear": 0, "distributions": 0, "distributions": 1}
         output_ids = {"mhd_linear": 7}
     if actor == "Hagis_1":
         actor_params["entrypoint_actor"] = False
@@ -340,7 +350,8 @@ def actor_settings(actor):
         actor_params["entrypoint_actor"] = False
         actor_params["wrapper"] = hagis2_actor_wf_wrapper
         actor_params["config_file_name"] = "hagis2.xml"
-        input_ids = {"equilibrium": 1, "mhd_linear": 3, "core_profiles": 0}
+        input_ids = {"equilibrium": 1, "mhd_linear": 3,
+                     "core_profiles": 0, 'distributions': 0}
         output_ids = {"distributions": 0, "mhd_linear": 4}
     if actor == "Finder":
         actor_params["entrypoint_actor"] = False
