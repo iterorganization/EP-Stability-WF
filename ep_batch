@@ -27,8 +27,6 @@ def write_batch_script(batch_file_name, nproc, job_time, email, queue, config_fo
         if queue is not None:
             batch_file.write(f"#SBATCH  --partition={queue}\n\n")
         batch_file.write(f"ep_nogui -c {config_folder}\n")
-    if verbose:
-        print(f"{batch_file_name} submitted.")
 
 
 def submit_batch_script(batch_file_name, verbose=True):
