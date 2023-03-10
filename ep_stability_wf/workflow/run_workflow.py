@@ -246,7 +246,6 @@ def workflow_EP(current_config_folder, verbose=True):
                     verbose, '=====================ADJUSTING FINDER XML===================')
                 param_finder = parameters_workflow(
                     current_config_folder+'/finder_input.xml')
-                species_string = param_ligka['spec_str']
                 # ADD NPSI_OUT
                 update_xml_param_on_run(
                     param_finder, 'num_kin_rad', param_ligka['npsi_out'])
@@ -269,9 +268,20 @@ def workflow_EP(current_config_folder, verbose=True):
                     param_finder, 'm_max_prop', param_ligka['max_m'])
                 save_xml_param_to_file_on_run(
                     current_config_folder+'/finder_input.xml', 'm_max_prop', str(param_ligka['max_m']))
-                print_cond(verbose, '=====================  STARTING Finder  ===================')
-                
+                # MODIFY SPEC_STR AND NSPEC THE SAME AS LIGKA
+                update_xml_param_on_run(
+                    param_finder, 'spec_str', param_ligka['spec_str'])
+                save_xml_param_to_file_on_run(
+                    current_config_folder+'/finder_input.xml', 'spec_str', str(param_ligka['spec_str']))
+                update_xml_param_on_run(
+                    param_finder, 'nspec', param_ligka['nspec'])
+                save_xml_param_to_file_on_run(
+                    current_config_folder+'/finder_input.xml', 'nspec', str(param_ligka['nspec']))
+
+                print_cond(
+                    verbose, '=====================  STARTING Finder  ===================')
+
                 actor_call("Finder", current_config_folder,
-                          param, species_input)
+                           param, species_input)
 
     print_cond(verbose, 'Workflow Finished.')

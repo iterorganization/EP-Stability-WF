@@ -1,23 +1,51 @@
 <parameter display="FINDER PARAMETERS">
-  <mamu>1.0000000E+00</mamu>
-  <qc>1.0000000E+00</qc>
-  <orbit_properties_compute>true</orbit_properties_compute>
-  <orbit_properties_norbits>1</orbit_properties_norbits>
   <wradloc>false</wradloc>
-  <findtpb>true </findtpb>
+  <findtpb>true</findtpb>
+  <lcollcoeff>false</lcollcoeff>
+  <qlflux>false</qlflux>
+  <mamu>1.0E+00</mamu>
+  <qc>1.0E+00</qc>
+  <orbit_properties_norbits> 1</orbit_properties_norbits>
+  <num_periods>1</num_periods>
+  <characteristic_time>2</characteristic_time>
+  <characteristic_time_2>3</characteristic_time_2>
+  <lpert>false</lpert>
+  <toler_1>1.0E-06</toler_1>
+
+  <nomods>0</nomods>
+  <ampint1> 1.0e-8   </ampint1>
+  <ampint2> 1.0e-8   </ampint2>
+  <ampint3> 1.0e-8   </ampint3>
+  <ampint4> 1.0e-8   </ampint4>
+  <ampint5> 1.0e-8   </ampint5>
+  <ampint6> 1.0e-8   </ampint6>
+  <ampint7> 1.0e-8   </ampint7>
+  <ampint8> 1.0e-8   </ampint8>
+  <ampint9> 1.0e-8   </ampint9>
+  <ampint10> 1.0e-8   </ampint10>
+
+  <orbit_properties_compute>true</orbit_properties_compute>
+  <lporb>true</lporb>
+  <nporbp>-1 </nporbp>
   <filin> </filin>
   <filpin>part.dat</filpin>
-  <toler_1>0.10000E-06</toler_1>
+  <toler_2>0.10000E-04</toler_2>
+  <toler_3>0.10000E-04</toler_3>
   <nmrkrs>10</nmrkrs>
   <scntyp>2</scntyp>
   <nresy>5</nresy>
-  <time_option>4</time_option>
-  <tmaxi>1.0E0</tmaxi>
+
+  <time_option>2</time_option>
+  <tmaxi>1.0E-01</tmaxi>
   <tmini>0.0</tmini>
-  <n_interm>250</n_interm>
-  <n_integ_1>150</n_integ_1>
-  <n_integ_2>150</n_integ_2>
-  <characteristic_time>2</characteristic_time>
+
+  <dt_interm>1.0E-6</dt_interm>
+  <dt_integ_1>1.0E-6</dt_integ_1>
+  <dt_integ_2>1.0E-6</dt_integ_2>
+  <n_interm>50</n_interm>
+  <n_integ_1>50</n_integ_1>
+  <n_integ_2>50</n_integ_2>
+
   <start0>0</start0>
   <ltrap>false</ltrap>
   <s_load_min>0.05E0</s_load_min>
@@ -25,9 +53,25 @@
   <ensmin>3.0E4</ensmin>
   <ensmax>4.4E6</ensmax>
   <tstpar>0</tstpar>
-  <lpert>false</lpert>
   <lmodev>false</lmodev>
-  <nomods>0</nomods>
+  <lphslk>false</lphslk>
+
+  <spcpet>  14  </spcpet>
+  <spcfrq>  1  </spcfrq>
+  <spcgrth>  1  </spcgrth>
+  <force_mode_evol> 0   </force_mode_evol>
+  <lsel>false</lsel>
+
+  <dnsty0>  1.0E19  </dnsty0>
+  <fracH>  0.0  </fracH>
+  <fracD>  1.0  </fracD>
+  <fracT>  0.0  </fracT>
+  <lamopt> 1   </lamopt>
+  <lam0>  0  </lam0>
+  <ldeltf>false</ldeltf>
+  <dfmethod>  0  </dfmethod>
+  <f0meth>  0  </f0meth>
+
   <parplt>false</parplt>
   <enplt>false</enplt>
   <surplt>false</surplt>
@@ -38,40 +82,48 @@
   <vpeplt>false</vpeplt>
   <dztplt>false</dztplt>
   <qplt>false</qplt>
-  <n_prop_min>10</n_prop_min>
-  <n_prop_max>10</n_prop_max>
-  <m_min_prop>11</m_min_prop>
-  <m_max_prop>11</m_max_prop>
-  <k_prop>5</k_prop>
-  <num_kin_rad>256</num_kin_rad>
+  <wintprog>false</wintprog>
+
+  <n_prop_min>16</n_prop_min>
+  <n_prop_max>16</n_prop_max>
+  <m_min_prop>14</m_min_prop>
+  <m_max_prop>18</m_max_prop>
+  <k_prop>3</k_prop>
+  <num_kin_rad>128</num_kin_rad>
   <num_kin_lam>20</num_kin_lam>
-  <num_kin_en>10</num_kin_en>
-  <shot_number>130012</shot_number>
-  <run>15</run>
-  <itimef>60</itimef>
-  <ids_time>68.0</ids_time>
+  <num_kin_en> 10 </num_kin_en> 
+
+  <shot_number>100015</shot_number>
+  <run>62</run>
+  <run_out>91</run_out>
+  <occurrence>0</occurrence>
+  <itimef>1</itimef>
+  <ids_time>150</ids_time>
   <user>lauberp</user>
   <machine>helena_test</machine>
-  <basedir>./</basedir>
+  <basedir>./</basedir> 
   <hagisdir>../bin/Linux_MPI_64/</hagisdir>
+
   <nenergy>10</nenergy>
   <nrad>128</nrad>
-  <nrad_start>1</nrad_start>
+  <nrad_start>1</nrad_start> 
   <nrad_end>128</nrad_end>
-  <spec>el</spec>
-  <temp_birth>25000.0E0</temp_birth>
+  <nzeta>1</nzeta>
+
+  <nspec>2</nspec>
+  <spec_str>eldd</spec_str>  
+  <temp_birth>30000.0E0</temp_birth>
   <el_mass_ratio>0.0E0</el_mass_ratio>
   <hot>false</hot>
   <only_find_tpb>true</only_find_tpb>
   <mastername>master_xx</mastername>
   <np>10</np>
-  <lacc>0.01E0</lacc>
+  <lacc>0.02E0</lacc>
   <radacc>0.01</radacc>
   <force>false</force>
   <recalc>false</recalc>
   <only_trap>false</only_trap>
   <par_en>false</par_en>
   <equi_rad>true</equi_rad>
-  <hagis_toler_1>1.0E-7</hagis_toler_1>
-  <wintprog>true</wintprog>
+  <hagis_toler_1>1.E-06</hagis_toler_1>
 </parameter>
