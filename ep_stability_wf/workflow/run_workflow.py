@@ -269,17 +269,9 @@ def workflow_EP(current_config_folder, verbose=True):
                     param_finder, 'm_max_prop', param_ligka['max_m'])
                 save_xml_param_to_file_on_run(
                     current_config_folder+'/finder_input.xml', 'm_max_prop', str(param_ligka['max_m']))
-
-                for i in range(0, len(species_string), 2):
-                    species = species_string[i:i+2]
-                    print_cond(verbose, '=====================STARTING Finder for ' +
-                               species+' ===================')
-                    # ADD SPECIES
-                    update_xml_param_on_run(param_finder, 'spec', species)
-                    save_xml_param_to_file_on_run(
-                        current_config_folder+'/finder_input.xml', 'spec', str(species))
-
-                    actor_call("Finder", current_config_folder,
-                               param, species_input)
+                print_cond(verbose, '=====================  STARTING Finder  ===================')
+                
+                actor_call("Finder", current_config_folder,
+                          param, species_input)
 
     print_cond(verbose, 'Workflow Finished.')
