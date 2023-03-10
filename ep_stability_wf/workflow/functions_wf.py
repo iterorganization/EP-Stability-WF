@@ -278,8 +278,7 @@ def finder_actor_wf_wrapper(equilibrium_in,
                             config_file_path,
                             mpi_processes):
 
-    distributions_out = finder9_actor(
-        equilibrium_in, config_file_path, 'mpi_local', mpi_processes=mpi_processes)
+    distributions_out = finder9_actor(equilibrium_in,core_profiles_in, mhd_linear_in, distributions_in_1, distributions_in_2,config_file_path, 'mpi_local', mpi_processes=mpi_processes)
 
     return None, None, None, distributions_out
 
@@ -344,7 +343,7 @@ def actor_settings(actor):
         actor_params["entrypoint_actor"] = False
         actor_params["wrapper"] = hagis1_actor_wf_wrapper
         actor_params["config_file_name"] = "hagis1.xml"
-        input_ids = {"equilibrium": 0, "mhd_linear": 0}
+        input_ids = {"equilibrium": 0, "mhd_linear": 6}
         output_ids = {"equilibrium": 1, "mhd_linear": 3}
     if actor == "Hagis_2":
         actor_params["entrypoint_actor"] = False
@@ -357,7 +356,8 @@ def actor_settings(actor):
         actor_params["entrypoint_actor"] = False
         actor_params["wrapper"] = finder_actor_wf_wrapper
         actor_params["config_file_name"] = "finder_input.xml"
-        input_ids = {"equilibrium": 1}
+        input_ids = {"equilibrium": 1, "core_profiles": 0,
+                     "mhd_linear": 3, "distributions": 0, "distributions": 1}
         output_ids = {"distributions": 1}
 
     actor_params["input_ids"] = input_ids

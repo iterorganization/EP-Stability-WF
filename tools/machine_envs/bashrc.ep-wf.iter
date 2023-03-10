@@ -7,6 +7,16 @@ DD_VER=${DD_VER:-3.35.0}
 module load EP-Stability-WF/1.0.2-intel-2020b-DD-${DD_VER}
 module load CHEASE/1.0.9-intel-2020b-DD-${DD_VER}
 
+export HAGIS_HOME=/home/ITER/lauberp/codes/sdcc/hagis/
+module load PLplot/5.15.0-intel-2020b
+export PATH=$(_prepend_path ${PATH} ${HAGIS_HOME}/bin/hagis1)
+export PATH=$(_prepend_path ${PATH} ${HAGIS_HOME}/bin/hagis2)
+export PYTHONPATH=$(_prepend_path ${PYTHONPATH} ${ACTOR_FOLDER}/hagis1)
+export PYTHONPATH=$(_prepend_path ${PYTHONPATH} ${ACTOR_FOLDER}/hagis2)
+export PYTHONPATH=$(_prepend_path ${PYTHONPATH} ${ACTOR_FOLDER}/hagis2_s)
+
+
+
 export ACTOR_FOLDER=${ACTOR_FOLDER:-${HOME}/public/PYTHON_ACTORS}
 
 _prepend_path() {
@@ -42,6 +52,8 @@ local_version_ligka() {
     fi
     export PATH=$(_prepend_path ${PATH} ${LIGKA_HOME}/bin)
     export PYTHONPATH=$(_prepend_path ${PYTHONPATH} ${ACTOR_FOLDER}/ligka)
+    export PATH=$(_prepend_path ${PATH} ${LIGKA_HOME}/finder/bin)
+    export PYTHONPATH=$(_prepend_path ${PYTHONPATH} ${ACTOR_FOLDER}/finder9)
 #    export PYTHONPATH=$(_prepend_path ${PYTHONPATH} ${LIGKA_HOME}/ligka/)
 
     # Add Ligka build-deps
@@ -79,3 +91,5 @@ local_version_chease() {
     # Add Chease build-deps
     module load FC2K/4.14.0-Java-11
 }
+
+
