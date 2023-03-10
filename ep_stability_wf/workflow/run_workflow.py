@@ -260,14 +260,16 @@ def workflow_EP(current_config_folder, verbose=True):
                     param_finder, 'n_prop_max', param_ligka['max_n_tor'])
                 save_xml_param_to_file_on_run(
                     current_config_folder+'/finder_input.xml', 'n_prop_max', str(param_ligka['max_n_tor']))
+                param_finder['m_min_prop']=param_ligka['min_m']-param_ligka['sidebands']+param_ligka['sidebands_asy']
                 update_xml_param_on_run(
-                    param_finder, 'm_min_prop', param_ligka['min_m'])
+                    param_finder, 'm_min_prop', param_finder['m_min_prop'])
                 save_xml_param_to_file_on_run(
-                    current_config_folder+'/finder_input.xml', 'm_min_prop', str(param_ligka['min_m']))
+                    current_config_folder+'/finder_input.xml', 'm_min_prop', str(param_finder['m_min_prop']))
+                param_finder['m_max_prop']=param_ligka['max_m']+param_ligka['sidebands']+param_ligka['sidebands_asy']
                 update_xml_param_on_run(
-                    param_finder, 'm_max_prop', param_ligka['max_m'])
+                    param_finder, 'm_max_prop', param_finder['m_max_prop'])
                 save_xml_param_to_file_on_run(
-                    current_config_folder+'/finder_input.xml', 'm_max_prop', str(param_ligka['max_m']))
+                    current_config_folder+'/finder_input.xml', 'm_max_prop', str(param_finder['m_max_prop']))
                 # MODIFY SPEC_STR AND NSPEC THE SAME AS LIGKA
                 update_xml_param_on_run(
                     param_finder, 'spec_str', param_ligka['spec_str'])
@@ -279,7 +281,7 @@ def workflow_EP(current_config_folder, verbose=True):
                     current_config_folder+'/finder_input.xml', 'nspec', str(param_ligka['nspec']))
 
                 print_cond(
-                    verbose, '=====================  STARTING Finder  ===================')
+                    verbose, '=====================  STARTING Finder  ========= with m_pol range: ', param_finder['m_min_prop'], param_finder['m_max_prop'])
 
                 actor_call("Finder", current_config_folder,
                            param, species_input)

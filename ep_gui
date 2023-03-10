@@ -177,7 +177,7 @@ def open_gui(wf_param_folder):
             elif elem == 'Distributions_2':
                 combobox.config(values=('0', 'Hagis_2 (testing now)'))
             elif elem == 'Orbit_Finder':
-                combobox.config(values=('0', 'Finder (testing now)'))
+                combobox.config(values=('0', 'Finder'))
             elif elem == 'Stability_code':
                 combobox.config(values=('0', 'Ligka_m5', 'Ligka_m4',
                                         'Ligka_m1', 'Ligka_m2', 'Ligka_m6', 'Ligka_m3'))
