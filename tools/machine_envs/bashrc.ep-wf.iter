@@ -6,7 +6,7 @@ DD_VER=${DD_VER:-3.35.0}
 
 module load EP-Stability-WF/1.0.2-intel-2020b-DD-${DD_VER}
 module load CHEASE/1.0.9-intel-2020b-DD-${DD_VER}
-
+module load PLplot/5.15.0-intel-2020b
 
 
 export ACTOR_FOLDER=${ACTOR_FOLDER:-${HOME}/public/PYTHON_ACTORS}
@@ -21,6 +21,13 @@ _append_path() {
     _newpath=$2
     echo ${_path}:${_newpath}
 }
+
+export PATH=$(_prepend_path ${PATH} ${HAGIS2PATH_i}/hagis/bin/hagis1)
+export PATH=$(_prepend_path ${PATH} ${HAGIS2PATH_i}/hagis/bin/hagis2)
+export PYTHONPATH=$(_prepend_path ${PYTHONPATH} ${ACTOR_FOLDER}/hagis1)
+export PYTHONPATH=$(_prepend_path ${PYTHONPATH} ${ACTOR_FOLDER}/hagis2)
+export PYTHONPATH=$(_prepend_path ${PYTHONPATH} ${ACTOR_FOLDER}/hagis2_s)
+
 
 local_version_epwf() {
     module unload EP-Stability-WF || echo -n ""
@@ -49,13 +56,6 @@ local_version_ligka() {
 #    export PYTHONPATH=$(_prepend_path ${PYTHONPATH} ${LIGKA_HOME}/ligka/)
 
     # Add Ligka build-deps
-      export HAGIS_HOME=/home/ITER/lauberp/codes/sdcc/hagis/
-      module load PLplot/5.15.0-intel-2020b
-      export PATH=$(_prepend_path ${PATH} ${HAGIS_HOME}/bin/hagis1)
-      export PATH=$(_prepend_path ${PATH} ${HAGIS_HOME}/bin/hagis2)
-      export PYTHONPATH=$(_prepend_path ${PYTHONPATH} ${ACTOR_FOLDER}/hagis1)
-      export PYTHONPATH=$(_prepend_path ${PYTHONPATH} ${ACTOR_FOLDER}/hagis2)
-      export PYTHONPATH=$(_prepend_path ${PYTHONPATH} ${ACTOR_FOLDER}/hagis2_s)
     module load FC2K/4.14.0-Java-11 SLATEC/4.1-iccifort-2020.4.304
 }
 
