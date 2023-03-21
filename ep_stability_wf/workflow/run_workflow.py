@@ -247,10 +247,12 @@ def workflow_EP(current_config_folder, verbose=True):
                 param_finder = parameters_workflow(
                     current_config_folder+'/finder_input.xml')
                 # ADD NPSI_OUT
+                param_helena = parameters_workflow(
+                current_config_folder+'/helena.xml')
                 update_xml_param_on_run(
                     param_finder, 'num_kin_rad', param_ligka['npsi_out'])
                 save_xml_param_to_file_on_run(
-                    current_config_folder+'/finder_input.xml', 'num_kin_rad', str(param_ligka['npsi_out']))
+                    current_config_folder+'/finder_input.xml', 'num_kin_rad', str(param_helena['nrmap']))
                 # ADD min/max n/m
                 update_xml_param_on_run(
                     param_finder, 'n_prop_min', param_ligka['min_n_tor'])

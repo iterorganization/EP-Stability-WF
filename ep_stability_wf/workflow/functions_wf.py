@@ -96,7 +96,7 @@ def read_timestep(user, database, run, current_config_folder, backend, occurrenc
     param = parameters_workflow(
         os.path.join(current_config_folder, 'input_workflow_default.xml')
     )
-    print('=> Open input datafile and read total equilibrium IDS for timesteps.')
+    print('=> Open input datafile and read total equilibrium IDS for timesteps.',backend, database,param['shot_nr'], run, user)
     input = imas.DBEntry(backend, database,
                          param['shot_nr'], run, user)
     status, _ = input.open()
