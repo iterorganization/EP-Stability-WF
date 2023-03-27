@@ -152,8 +152,12 @@ def actor_call(actor_name, config_folder_path, system_params, species_input, sce
                                                                                                         mpi_processes=mpi_processes)
 
         if equilibrium_out:
-            output.put_slice(
+            if itime == 0: 
+                output.put(
                 equilibrium_out, occurrence=output_ids['equilibrium'])
+            else:
+                output.put_slice(
+                    equilibrium_out, occurrence=output_ids['equilibrium'])
             print('*************************************')
             print('Output time = ', equilibrium_out.time[0])
             print('Saved ' + actor_name +
