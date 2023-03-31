@@ -18,7 +18,7 @@ if [ $USE_MESSAGE -eq 1 ]; then
     MESSAGE="$@"
 fi
 
-sed -i -r "s/(version[ ]*=[ ]*).*$/\1\"${VER}\"/" setup.py
+sed -i -r "s/(version[ ]*=[ ]*).*$/\1\"${VER}\",/" setup.py
 git add setup.py
 
 if [ ${USE_MESSAGE} -eq 1 ]; then
