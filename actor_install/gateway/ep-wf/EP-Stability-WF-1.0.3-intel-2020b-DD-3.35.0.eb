@@ -1,0 +1,46 @@
+easyblock = "PythonPackage"
+
+name = "EP-Stability-WF"
+version = "1.0.3"
+
+toolchain = SYSTEM
+
+homepage = "https://git.iter.org/projects/WF/repos/ep-stability-wf"
+description = """Energetic Particle workflow for stability analysis."""
+
+source_urls = ["https://git.iter.org/rest/api/latest/projects/WF/repos"
+               "/%(namelower)s/archive?at=refs%2Ftags%2F%(version)s&format=zip&/"]
+sources = [SOURCELOWER_ZIP]
+checksums = ['dba0f15fd6cdf8f8531aad790e27bcf171434e4748b9e0432d7784f0eca26c53']
+
+local_ddver = "3.35.0"
+versionsuffix = "-DD-%s" % local_ddver
+
+local_imasver = local_ddver + "-4.10.0-2020b"
+
+local_imasenv_suff = ""
+dependencies = [
+    # ("cineca-dev", EXTERNAL_MODULE),
+    ("imasenv/" + local_ddver + "/intel/rc", EXTERNAL_MODULE),
+    ("imas-pyal/1.3.5", EXTERNAL_MODULE),
+    ("LIGKA/" + "1.0.4" + versionsuffix, EXTERNAL_MODULE),
+    ("HELENA/" + "2.0.1" + versionsuffix, EXTERNAL_MODULE),
+    ("CHEASE/" + "13.1" + versionsuffix, EXTERNAL_MODULE),
+]
+
+use_pip = True
+exts_download_dep_fail = True
+sanity_pip_check = False
+
+
+sanity_check_paths = {
+    "dirs": ["lib"],
+    "files": [],
+}
+
+# sanity_check_commands = [
+#     "python -c 'from helena.wrapper import helena_actor'",
+#     "python -c 'from ligka.wrapper import ligka_actor'",
+# ]
+
+moduleclass = "phys"
