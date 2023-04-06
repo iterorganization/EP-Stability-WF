@@ -87,8 +87,9 @@ def actor_call(actor_name, config_folder_path, system_params, species_input, sce
         output.create()
     else:
         output = input
-        for ids_name, ids_occ in output_ids.items():
-            input.delete_data(ids_name, occurrence=ids_occ)
+        if actor_name != 'Helena':
+            for ids_name, ids_occ in output_ids.items():
+                input.delete_data(ids_name, occurrence=ids_occ)
 
     for i, itime in enumerate(time_index_list):
         # EXECUTE PHYSICS CODE
