@@ -17,6 +17,7 @@ setuptools.setup(
     scripts=[
         'ep_gui',
         'ep_nogui',
+        'ep_batch'
     ],
     include_package_data = True,
     python_requires='>=3.6',
