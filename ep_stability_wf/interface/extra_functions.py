@@ -80,6 +80,8 @@ def copy_workflow_param_to_file(previous_folder, current_wf_param_folder, wf_par
     if saveAs:
         if previous_folder is None:
             folder_from = wf_param_folder_default
+        else:
+            folder_from = previous_folder
         for ep_file in filelist:
             filename_from = os.path.join(folder_from, ep_file)
             if os.path.isfile(filename_from):
