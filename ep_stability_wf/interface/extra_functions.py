@@ -3,7 +3,7 @@ from tkinter import filedialog, ttk
 from lxml import etree
 import ep_stability_wf.interface.colour_definitions as col
 from ep_stability_wf.interface.create_workflow_param import create_workflow_param_from_file, create_xml_param_from_file, save_xml_param_to_file, update_xml_param, update_xml_param_wf, save_xml_param_to_file_multiple
-from ep_stability_wf.workflow.analysis_modes import Plot, export_data
+# from ep_stability_wf.workflow.analysis_modes import Plot, export_data
 from ep_stability_wf.workflow.functions_wf import parameters_workflow
 import os
 import warnings
@@ -363,118 +363,118 @@ def species_window(species_ref, wf_param_folder):
 
 
 # FUNCTION NEW ANALYSIS WINDOW
-def analysis_window(ana_ref, analysis_param, wf_param_folder):
-    # create analysis directory if none exists
-    analysis_dir = ('workflow/Analysis')
-    analysis_dir_check = os.path.isdir(analysis_dir)
+# def analysis_window(ana_ref, analysis_param, wf_param_folder):
+#     # create analysis directory if none exists
+#     analysis_dir = ('workflow/Analysis')
+#     analysis_dir_check = os.path.isdir(analysis_dir)
 
-    if not analysis_dir_check:
-        os.makedirs(analysis_dir)
-        print('Analysis folder was created')
+#     if not analysis_dir_check:
+#         os.makedirs(analysis_dir)
+#         print('Analysis folder was created')
 
-    window_an = Toplevel()
-    window_an.title('EP Analysis')
-    window_an.configure(bg=col.c1)
+#     window_an = Toplevel()
+#     window_an.title('EP Analysis')
+#     window_an.configure(bg=col.c1)
 
-    try:
-        wh = window_an.winfo_reqheight()
-        ww = window_an.winfo_reqwidth()
-        wx = window_an.winfo_x()
-        wy = window_an.winfo_y()
-        window_an.geometry("+%d+%d" % (wx, wy))
-    except:
-        pass
+#     try:
+#         wh = window_an.winfo_reqheight()
+#         ww = window_an.winfo_reqwidth()
+#         wx = window_an.winfo_x()
+#         wy = window_an.winfo_y()
+#         window_an.geometry("+%d+%d" % (wx, wy))
+#     except:
+#         pass
 
-    fr_ana = Frame(window_an, width=300, height=500, background=col.c2)
-    fr_ana.grid(row=0, column=0, rowspan=2,  sticky='nwes', padx=3, pady=3)
+#     fr_ana = Frame(window_an, width=300, height=500, background=col.c2)
+#     fr_ana.grid(row=0, column=0, rowspan=2,  sticky='nwes', padx=3, pady=3)
 
-    # LEFT SIDE
-    irow = 0
-    for ref in [ana_ref]:
+#     # LEFT SIDE
+#     irow = 0
+#     for ref in [ana_ref]:
 
-        Label(fr_ana, text=ref, bg=col.c3, font='15').grid(
-            row=irow, column=0, columnspan=3, pady=10, padx=5, sticky='we')
-        irow += 1
+#         Label(fr_ana, text=ref, bg=col.c3, font='15').grid(
+#             row=irow, column=0, columnspan=3, pady=10, padx=5, sticky='we')
+#         irow += 1
 
-        for elem in analysis_param[ref]:
+#         for elem in analysis_param[ref]:
 
-            Label(fr_ana, text=elem, bg=col.c3).grid(
-                row=irow,  column=0, padx=3, pady=2, sticky='w')
-            if elem == 'mode':
-                entrystring = StringVar()
-                entrystring.set(analysis_param[ref][elem])
-                Label(fr_ana, text=elem, bg=col.c3).grid(
-                    row=irow, column=0, padx=3, pady=2, sticky='w')
-                combobox = ttk.Combobox(fr_ana, textvariable=entrystring)
-                combobox.grid(row=irow, column=1, padx=3, pady=2, sticky='e')
-                combobox.config(values=('5', '4', '1'))
-                entrystring.trace('w', lambda name, index, mode, elem=elem, entrystring=entrystring,
-                                  ref=ref: update_xml_param(analysis_param, ref, elem, entrystring.get()))
-                irow += 1
-            elif elem == 'compare_modes':
-                entrystring = StringVar()
-                entrystring.set(analysis_param[ref][elem])
-                c = Checkbutton(fr_ana, variable=entrystring)
-                c.grid(row=irow, column=1, padx=3, pady=2, sticky='e')
-                entrystring.trace('w', lambda name, index, mode, elem=elem, entrystring=entrystring,
-                                  ref=ref: update_xml_param(analysis_param, ref, elem, entrystring.get()))
-            else:
-                entrystring = StringVar()
-                entrystring.set(analysis_param[ref][elem])
-                # if an entry is changed, the new values should immediately be changed in the workflow_param dictionary
-                entrystring.trace('w', lambda name, index, mode, elem=elem, entrystring=entrystring,
-                                  ref=ref: update_xml_param(analysis_param, ref, elem, entrystring.get()))
-                Entry(fr_ana, textvariable=entrystring, bg=col.c1).grid(
-                    row=irow, column=1, padx=3, pady=2, sticky='e')
-                irow += 1
+#             Label(fr_ana, text=elem, bg=col.c3).grid(
+#                 row=irow,  column=0, padx=3, pady=2, sticky='w')
+#             if elem == 'mode':
+#                 entrystring = StringVar()
+#                 entrystring.set(analysis_param[ref][elem])
+#                 Label(fr_ana, text=elem, bg=col.c3).grid(
+#                     row=irow, column=0, padx=3, pady=2, sticky='w')
+#                 combobox = ttk.Combobox(fr_ana, textvariable=entrystring)
+#                 combobox.grid(row=irow, column=1, padx=3, pady=2, sticky='e')
+#                 combobox.config(values=('5', '4', '1'))
+#                 entrystring.trace('w', lambda name, index, mode, elem=elem, entrystring=entrystring,
+#                                   ref=ref: update_xml_param(analysis_param, ref, elem, entrystring.get()))
+#                 irow += 1
+#             elif elem == 'compare_modes':
+#                 entrystring = StringVar()
+#                 entrystring.set(analysis_param[ref][elem])
+#                 c = Checkbutton(fr_ana, variable=entrystring)
+#                 c.grid(row=irow, column=1, padx=3, pady=2, sticky='e')
+#                 entrystring.trace('w', lambda name, index, mode, elem=elem, entrystring=entrystring,
+#                                   ref=ref: update_xml_param(analysis_param, ref, elem, entrystring.get()))
+#             else:
+#                 entrystring = StringVar()
+#                 entrystring.set(analysis_param[ref][elem])
+#                 # if an entry is changed, the new values should immediately be changed in the workflow_param dictionary
+#                 entrystring.trace('w', lambda name, index, mode, elem=elem, entrystring=entrystring,
+#                                   ref=ref: update_xml_param(analysis_param, ref, elem, entrystring.get()))
+#                 Entry(fr_ana, textvariable=entrystring, bg=col.c1).grid(
+#                     row=irow, column=1, padx=3, pady=2, sticky='e')
+#                 irow += 1
 
-    # LEFT SIDE BOTTOM
+#     # LEFT SIDE BOTTOM
 
-    button_saveconfig = Button(fr_ana, text='Export Data', bg=col.c2)
-    button_saveconfig.grid(row=51, column=0, padx=5, pady=5, sticky='ew')
-    button_saveconfig.configure(command=lambda: export_data(wf_param_folder))
+#     button_saveconfig = Button(fr_ana, text='Export Data', bg=col.c2)
+#     button_saveconfig.grid(row=51, column=0, padx=5, pady=5, sticky='ew')
+#     button_saveconfig.configure(command=lambda: export_data(wf_param_folder))
 
-    button_saveconfig = Button(
-        fr_ana, text='Save Analysis Configuration', bg=col.c2)
-    button_saveconfig.grid(row=52, column=0, padx=5, pady=5, sticky='ew')
-    button_saveconfig.configure(command=lambda: save_xml_param_to_file(
-        analysis_param, wf_param_folder+'/analysis.xml'))
+#     button_saveconfig = Button(
+#         fr_ana, text='Save Analysis Configuration', bg=col.c2)
+#     button_saveconfig.grid(row=52, column=0, padx=5, pady=5, sticky='ew')
+#     button_saveconfig.configure(command=lambda: save_xml_param_to_file(
+#         analysis_param, wf_param_folder+'/analysis.xml'))
 
-    # RIGHT SIDE TOP
+#     # RIGHT SIDE TOP
 
-    button_analysis = Button(fr_ana, text='Frequency', bg=col.c2)
-    button_analysis.grid(row=1, column=3, padx=5, pady=5, sticky='ew')
-    button_analysis.configure(command=lambda: Plot(
-        parameters_workflow(wf_param_folder+'/analysis.xml')).compare_runs('freq'))
+#     button_analysis = Button(fr_ana, text='Frequency', bg=col.c2)
+#     button_analysis.grid(row=1, column=3, padx=5, pady=5, sticky='ew')
+#     button_analysis.configure(command=lambda: Plot(
+#         parameters_workflow(wf_param_folder+'/analysis.xml')).compare_runs('freq'))
 
-    button_analysis = Button(fr_ana, text='Damping', bg=col.c2)
-    button_analysis.grid(row=2, column=3, padx=5, pady=5, sticky='ew')
-    button_analysis.configure(command=lambda: Plot(
-        parameters_workflow(wf_param_folder+'/analysis.xml')).compare_runs('growth'))
+#     button_analysis = Button(fr_ana, text='Damping', bg=col.c2)
+#     button_analysis.grid(row=2, column=3, padx=5, pady=5, sticky='ew')
+#     button_analysis.configure(command=lambda: Plot(
+#         parameters_workflow(wf_param_folder+'/analysis.xml')).compare_runs('growth'))
 
-    # button_analysis = Button(fr_ana, text='Radial Position', bg=col.c2)
-    # button_analysis.grid(row=3, column=3, padx=5, pady=5, sticky='ew')
-    # button_analysis.configure(
-    #     command=lambda: Plot(3, wf_param_folder))
+#     # button_analysis = Button(fr_ana, text='Radial Position', bg=col.c2)
+#     # button_analysis.grid(row=3, column=3, padx=5, pady=5, sticky='ew')
+#     # button_analysis.configure(
+#     #     command=lambda: Plot(3, wf_param_folder))
 
-    button_analysis = Button(fr_ana, text='Mode Structure', bg=col.c2)
-    button_analysis.grid(row=4, column=3, padx=5, pady=5, sticky='ew')
-    button_analysis.configure(command=lambda: Plot(
-        parameters_workflow(wf_param_folder+'/analysis.xml')).compare_runs('EFs'))
+#     button_analysis = Button(fr_ana, text='Mode Structure', bg=col.c2)
+#     button_analysis.grid(row=4, column=3, padx=5, pady=5, sticky='ew')
+#     button_analysis.configure(command=lambda: Plot(
+#         parameters_workflow(wf_param_folder+'/analysis.xml')).compare_runs('EFs'))
 
-    button_analysis = Button(fr_ana, text='Mode Structure 2D', bg=col.c2)
-    button_analysis.grid(row=5, column=3, padx=5, pady=5, sticky='ew')
-    button_analysis.configure(command=lambda: Plot(
-        parameters_workflow(wf_param_folder+'/analysis.xml')).EFs_plot_2d())
+#     button_analysis = Button(fr_ana, text='Mode Structure 2D', bg=col.c2)
+#     button_analysis.grid(row=5, column=3, padx=5, pady=5, sticky='ew')
+#     button_analysis.configure(command=lambda: Plot(
+#         parameters_workflow(wf_param_folder+'/analysis.xml')).EFs_plot_2d())
 
-    button_analysis = Button(fr_ana, text='Denisty Profiles', bg=col.c2)
-    button_analysis.grid(row=6, column=3, padx=5, pady=5, sticky='ew')
-    button_analysis.configure(command=lambda: Plot(
-        parameters_workflow(wf_param_folder+'/analysis.xml')).profile_plot())
+#     button_analysis = Button(fr_ana, text='Denisty Profiles', bg=col.c2)
+#     button_analysis.grid(row=6, column=3, padx=5, pady=5, sticky='ew')
+#     button_analysis.configure(command=lambda: Plot(
+#         parameters_workflow(wf_param_folder+'/analysis.xml')).profile_plot())
 
-    # button_analysis = Button(fr_ana, text = 'Rational Surfaces / q - profile', bg = col.c2)
-    # button_analysis.grid(row = 4, column = 3, padx = 5, pady = 5, sticky = 'ew')
-    # button_analysis.configure(command = lambda: mode_analysis_ligka(5))
+#     # button_analysis = Button(fr_ana, text = 'Rational Surfaces / q - profile', bg = col.c2)
+#     # button_analysis.grid(row = 4, column = 3, padx = 5, pady = 5, sticky = 'ew')
+#     # button_analysis.configure(command = lambda: mode_analysis_ligka(5))
 
 
 def scenario_window(wf_param_folder):

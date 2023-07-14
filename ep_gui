@@ -1,6 +1,7 @@
 #!/usr/bin/env python
-from ep_stability_wf.interface.extra_functions import actor_window, analysis_window, species_window, scenario_window, load, save
+from ep_stability_wf.interface.extra_functions import actor_window, species_window, scenario_window, load, save
 from ep_stability_wf.interface.extra_functions import CreateToolTip
+from ep_stability_wf.interface.analysis_interface import analysis_window
 import ep_stability_wf.interface.colour_definitions as col
 from ep_stability_wf.interface.create_workflow_param import create_workflow_param_from_file, create_xml_param_from_file, update_xml_param_wf
 from ep_stability_wf.ids_merge.merge_gui import ids_window

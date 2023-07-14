@@ -60,6 +60,8 @@ def save_xml_param_to_file(ligka_param, filepath):
             elem.text = ligka_param[name0][elem.tag]
 
     tree.write(filepath)
+    file_name = filepath.split('/')[-1]
+    print(f'Saved settings to {file_name}!')
 
 
 def save_xml_param_to_file_multiple(ligka_param, filepath):
@@ -84,7 +86,8 @@ def save_xml_param_to_file_multiple(ligka_param, filepath):
             elem.text = ligka_param[name2][elem.tag][0]
 
     tree.write(filepath)
-    print('Saved Tree to XML!')
+    file_name = filepath.split('/')[-1]
+    print(f'Saved settings to {file_name}!')
 
 
 def save_xml_param_to_file_on_run(filepath, variable, value):

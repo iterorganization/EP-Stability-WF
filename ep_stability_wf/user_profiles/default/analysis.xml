@@ -1,19 +1,24 @@
 <parameter display="Analysis Settings">
-<shot_number>130012</shot_number>
-<run>10,11</run>
 <user>popaa</user>
-<machine>METIS_HARMONICS</machine>
+<database>test_DB</database>
+<backend>MDSPlus</backend>
+<version>3</version>
+<shot_number>130012</shot_number>
+<run>10</run>
+<!-- <n>10</n>
+<m>11</m>
 <n_min>10</n_min>
 <n_max>10</n_max>
 <m_min>11</m_min>
 <m_max>11</m_max>
-<r_TAE_min>0</r_TAE_min>
-<r_TAE_max>1</r_TAE_max>
-<itime>0-100</itime>
-<ids_name>mhd_linear</ids_name>
-<label_scaler>1</label_scaler>
-<line_scaler>1</line_scaler>
-<backend_HDF5>0</backend_HDF5>
-<mode>1</mode>
+<r_min>0</r_min>
+<r_max>1</r_max> -->
+<!-- <itime></itime> -->
+<ids_occurence>0</ids_occurence>
+<!-- <label_scaler>1</label_scaler>
+<line_scaler>1</line_scaler> -->
+<model>5</model>
 <compare_modes>1</compare_modes>
+<!-- <save_plots>1</save_plots> -->
+<!-- <interactivePlots>0</interactivePlots> -->
 </parameter>
