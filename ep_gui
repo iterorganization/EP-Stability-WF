@@ -220,11 +220,11 @@ def open_gui(wf_param_folder):
     button_analysis.configure(command=lambda: load(filedialog.askdirectory(
         initialdir=os.path.join(os.getcwd(), 'user_profiles')), open_gui))
 
-    button_analysis = Button(
-        fr_wfp, text='LIGKA Analysis (Testing)', bg=col.c2)
-    button_analysis.grid(row=53, column=1, padx=5, pady=5, sticky='ew')
-    button_analysis.configure(command=lambda: analysis_window(
-        ana_ref, analysis_param, wf_param_folder))
+    # button_analysis = Button(
+    #     fr_wfp, text='LIGKA Analysis (Testing)', bg=col.c2)
+    # button_analysis.grid(row=53, column=1, padx=5, pady=5, sticky='ew')
+    # button_analysis.configure(command=lambda: analysis_window(
+    #     ana_ref, analysis_param, wf_param_folder))
 
     button_scenario = Button(
         fr_wfp, text='Scenario Summary Choice', bg='light grey')
