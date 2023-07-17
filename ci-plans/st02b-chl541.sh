@@ -8,8 +8,8 @@ job_name=02b-chl541
 # Set up environment
 . ./ci-plans/st00-header.sh || exit 1
 . ./ci-plans/st00b-header_chease.sh || exit 1
-# Check Cerberus is installed
-pip install --user cerberus
+# Check Flake8 & Cerberus are installed (in venv)
+. ./ci-plans/st00a-header_venv.sh || exit 1
 set -v
 
 # Display some info

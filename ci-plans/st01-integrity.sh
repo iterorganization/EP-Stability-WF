@@ -5,9 +5,8 @@ set -e
 
 # Set up environment
 . ./ci-plans/st00-header.sh || exit 1
-# Check flake8 is installed
-pip install --user flake8
-export PATH=${PATH}:~/.local/bin
+# Check Flake8 & Cerberus are installed (in venv)
+. ./ci-plans/st00a-header_venv.sh || exit 1
 
 set -v
 

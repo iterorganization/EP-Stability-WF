@@ -5,10 +5,8 @@ set -e
 
 # Set up environment
 . ./ci-plans/st00-header.sh || exit 1
-# Check flake8 is installed
-pip install --user flake8
-export PATH=${PATH}:~/.local/bin
-
+# Check Flake8 & Cerberus are installed (in venv)
+. ./ci-plans/st00a-header_venv.sh || exit 1
 set -v
 
 # Display some info
@@ -30,13 +28,16 @@ fi
 # TODO: run in venv
 
 # Build python module
-python -m pip install --user ${basedir}
+# Add --user if not using venv
+#user_flag=--user
+user_flag=
+python3 -m pip install ${user_flag} ${basedir}
 
 # Test
-python -c "import ep_stability_wf"
+python3 -c "import ep_stability_wf"
 
 # Uninstall
-python -m pip uninstall --yes EP-Stability-WF
+python3 -m pip uninstall --yes EP-Stability-WF
 
 if [ ${use_tmp_dir} -eq 1 ]; then
     cd -
