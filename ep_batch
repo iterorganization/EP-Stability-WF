@@ -11,21 +11,29 @@ import subprocess
 from datetime import datetime
 
 
-def write_batch_script(batch_file_name, nproc, job_time, email, queue, config_folder, verbose=True):
+def write_batch_script(batch_file_name, nproc, job_time, queue, config_folder, email=None, memory=None, additional_kwargs=None, verbose=True):
     with open(batch_file_name, "w") as batch_file:
         batch_file.write(f"#!/bin/sh\n")
         batch_file.write(f"#SBATCH  --nodes=1\n")
         batch_file.write(f"#SBATCH  --ntasks-per-node={nproc}\n")
         batch_file.write(f"#SBATCH  --cpus-per-task=1\n")
-        batch_file.write(f"#SBATCH  --time={job_time}:00:00\n")
+        job_hours = int(job_time)
+        job_minutes = int(round((job_time - int(job_time)) * 60))
+        batch_file.write(f"#SBATCH  --time={job_hours:02d}:{job_minutes:02d}:00\n")
         if email is not None:
             batch_file.write(f"#SBATCH  --mail-user={email}\n")
             batch_file.write(f"#SBATCH  --mail-type=END\n")
         else:
             batch_file.write(f"#SBATCH  --mail-type=NONE\n")
+        if memory is not None:
+            batch_file.write(f"#SBATCH  --mem={memory}\n")
         batch_file.write(f"#SBATCH  --job-name=EP_wf\n")
         if queue is not None:
             batch_file.write(f"#SBATCH  --partition={queue}\n\n")
+        if additional_kwargs is not None:
+            for k,v in additional_kwargs.items():
+                if v is not None:
+                    batch_file.write(f"#SBATCH  --{k}={v}\n")
         batch_file.write(f"ep_nogui -c {config_folder}\n")
 
 
@@ -39,10 +47,13 @@ if __name__ == "__main__":
     # Management of input arguments
     parser = argparse.ArgumentParser(description="---- Run the EP workflow without the interface")
     parser.add_argument("-n", "--nproc", type=int, default=1, help="Number of processors/node")
-    parser.add_argument("-t", "--time", type=int, default=2, help="Required cpu time in hours")
+    parser.add_argument("-t", "--time", type=float, default=2., help="Required cpu time in hours")
     parser.add_argument("-e", "--email", type=str, help="E-mail where to send job resulting status")
     parser.add_argument("-q", "--queue", type=str, help="Name of the batch queue")
+    parser.add_argument("--qos", type=str, help="Name of the QOS")
+    parser.add_argument("-m", "--mem", type=str, help="How much memory to request")
     parser.add_argument("-c", "--config_folder", required=True, help="input configuration folder")
+    parser.add_argument("-s", "--submit", type=int, help="Whether to submit", default=1)
     args = parser.parse_args()
 
     auto_batch_name = str("auto_batch_" + datetime.now().strftime("%y%m%d_%H%M%S"))
@@ -50,8 +61,13 @@ if __name__ == "__main__":
         auto_batch_name,
         args.nproc,
         args.time,
-        args.email,
         args.queue,
         args.config_folder,
+        email=args.email,
+        memory=args.mem,
+        additional_kwargs={"qos": args.qos}
     )
-    submit_batch_script(auto_batch_name)
+    if args.submit:
+        submit_batch_script(auto_batch_name)
+    else:
+        print(f"{auto_batch_name} prepared; not submitted")
