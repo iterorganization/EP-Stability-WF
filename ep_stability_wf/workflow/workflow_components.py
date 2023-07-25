@@ -202,13 +202,22 @@ def actor_call(actor_name, config_folder_path, system_params, species_input, sce
             print('*************************************')
 
         if distributions_out:
-            output.put_slice(distributions_out,
-                             occurrence=output_ids['distributions'])
-            print('*************************************')
-            print('Output time = ', distributions_out.time[0])
-            print('Saved ' + actor_name +
-                  ' distributions under occurrence ' + str(output_ids['distributions']))
-            print('*************************************')
+            if itime == 0:
+                output.put(
+                    distributions_out, occurrence=output_ids['distributions'])
+                print('*************************************')
+                print('Initial Output')
+                print('Saved ' + actor_name +
+                      ' mhd_linear under occurrence ' + str(output_ids['distributions']))
+                print('*************************************')
+            else:
+                output.put_slice(distributions_out,
+                                occurrence=output_ids['distributions'])
+                print('*************************************')
+                print('Output time = ', distributions_out.time[0])
+                print('Saved ' + actor_name +
+                    ' distributions under occurrence ' + str(output_ids['distributions']))
+                print('*************************************')
 
     input.close()
     output.close()
