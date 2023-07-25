@@ -26,8 +26,8 @@ if [ ${use_tmp_dir} -eq 1 ]; then
     cd $tmpdir
 fi
 
-# For all python files in the repo (*.py and ep_{no,}gui)
-file_list="$(find ${basedir} -iname '*.py' | tr '\n' ' ') ${basedir}/ep_gui ${basedir}/ep_nogui"
+# For all python files in the repo (*.py and ep_{no,}gui). Filter out the files in the venv
+file_list="$(find ${basedir} -iname '*.py' | grep -v "python3\." | tr '\n' ' ') ${basedir}/ep_gui ${basedir}/ep_nogui"
 for filename in ${file_list}; do
   cp ${filename} ./
   loc_name=$(basename ${filename})
