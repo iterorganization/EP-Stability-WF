@@ -106,10 +106,10 @@ def actor_call(actor_name, config_folder_path, system_params, species_input, sce
         mhd_linear_occ = 0
         distributions_in_1 = imas.distributions()
         distributions_in_1.ids_properties.homogeneousTime = 1
-        distributions_occ = 0
+        distributions_occ_1 = 0
         distributions_in_2 = imas.distributions()
         distributions_in_2.ids_properties.homogeneousTime = 1
-        distributions_occ = 0
+        distributions_occ_2 = 1
 
         for ids_name, ids_occ in input_ids.items():
             if ids_name == 'equilibrium':
@@ -123,11 +123,17 @@ def actor_call(actor_name, config_folder_path, system_params, species_input, sce
 
             if ids_name == 'distributions':
                 if ids_occ == 0:
-                    distributions_in_1 = input.get_slice(
-                        ids_name, time[itime], imas.imasdef.PREVIOUS_SAMPLE, occurrence=ids_occ)
+                    try:
+                        distributions_in_1 = input.get_slice(
+                            ids_name, time[itime], imas.imasdef.PREVIOUS_SAMPLE, occurrence=ids_occ)
+                    except:
+                        distributions_in_1 = distributions_in_1
                 elif ids_occ == 1:
-                    distributions_in_2 = input.get_slice(
-                        ids_name, time[itime], imas.imasdef.PREVIOUS_SAMPLE, occurrence=ids_occ)
+                    try:
+                        distributions_in_2 = input.get_slice(
+                            ids_name, time[itime], imas.imasdef.PREVIOUS_SAMPLE, occurrence=ids_occ)
+                    except:
+                        distributions_in_2 = distributions_in_2
             if ids_name == 'core_profiles':
                 core_profiles_in = input.get_slice(
                     ids_name, time[itime], imas.imasdef.PREVIOUS_SAMPLE, occurrence=ids_occ)
