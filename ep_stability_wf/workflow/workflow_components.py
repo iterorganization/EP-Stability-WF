@@ -117,9 +117,13 @@ def actor_call(actor_name, config_folder_path, system_params, species_input, sce
                     ids_name, time[itime], imas.imasdef.PREVIOUS_SAMPLE, occurrence=ids_occ)
                 equilibrium_occ = ids_occ
             if ids_name == 'mhd_linear':
-                mhd_linear_in = input.get_slice(
-                    ids_name, time[itime], imas.imasdef.PREVIOUS_SAMPLE, occurrence=ids_occ)
-                mhd_linear_occ = ids_occ
+                try:
+                    mhd_linear_in = input.get_slice(
+                        ids_name, time[itime], imas.imasdef.PREVIOUS_SAMPLE, occurrence=ids_occ)
+                    mhd_linear_occ = ids_occ
+                except:
+                    mhd_linear_in = mhd_linear_in
+                    mhd_linear_occ = ids_occ
 
             if ids_name == 'distributions':
                 if ids_occ == 0:
