@@ -118,7 +118,10 @@ def select_species_by_density(core_profiles:object, param:dict=None, scenario_pa
         print(species_list)
     total_ion_density = sum([x[1] + x[2] for x in species_list])
 
-    curr_str = ["el"]
+    if density_cutoff['el'] == 1:
+        curr_str = ["el"]
+    else:
+        curr_str = []
     curr_str_fast = []
 
     # Round A and Z to integers? What about 2.5

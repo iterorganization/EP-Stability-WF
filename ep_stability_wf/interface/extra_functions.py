@@ -337,16 +337,26 @@ def species_window(species_ref, wf_param_folder):
         irow += 1
 
         for elem in species_param[ref]:
-
-            Label(canvasFrame, text=species_param[ref][elem][1], bg=col.c3).grid(
-                row=irow,  column=0, padx=3, pady=2, sticky='w')
-            entrystring = StringVar()
-            entrystring.set(species_param[ref][elem][0])
-            entrystring.trace('w', lambda name, index, mode, elem=elem, entrystring=entrystring,
-                              ref=ref: update_xml_param(species_param, ref, elem, entrystring.get()))
-            Entry(canvasFrame, textvariable=entrystring, bg=col.c1).grid(
-                row=irow, column=1, padx=3, pady=2, sticky='e')
-            irow += 1
+            if elem == 'el':
+                Label(canvasFrame, text=species_param[ref][elem][1], bg=col.c3).grid(
+                    row=irow,  column=0, padx=3, pady=2, sticky='w')
+                entrystring = StringVar()
+                entrystring.set(species_param[ref][elem])
+                c = Checkbutton(canvasFrame, variable=entrystring)
+                c.grid(row=irow, column=1, padx=3, pady=2, sticky='e')
+                entrystring.trace('w', lambda name, index, mode, elem=elem, entrystring=entrystring,
+                                  ref=ref: update_xml_param(species_param, ref, elem, entrystring.get()))
+                irow += 1
+            else:
+                Label(canvasFrame, text=species_param[ref][elem][1], bg=col.c3).grid(
+                    row=irow,  column=0, padx=3, pady=2, sticky='w')
+                entrystring = StringVar()
+                entrystring.set(species_param[ref][elem][0])
+                entrystring.trace('w', lambda name, index, mode, elem=elem, entrystring=entrystring,
+                                ref=ref: update_xml_param(species_param, ref, elem, entrystring.get()))
+                Entry(canvasFrame, textvariable=entrystring, bg=col.c1).grid(
+                    row=irow, column=1, padx=3, pady=2, sticky='e')
+                irow += 1
 
     scroll = Scrollbar(fr_l, orient=VERTICAL)
     scroll.config(command=canvas.yview)
