@@ -28,7 +28,6 @@ window.configure(bg=col.c1)
 
 
 def open_gui(wf_param_folder):
-
     try:
         wh = window.winfo_reqheight()
         ww = window.winfo_reqwidth()
@@ -36,12 +35,11 @@ def open_gui(wf_param_folder):
         wy = window.winfo_y()
         window.geometry("+%d+%d" % (wx, wy))
     except:
-
         pass
 
     workflow_param = create_workflow_param_from_file(
         wf_param_folder+'/input_workflow_default.xml')
-    chease_param = create_xml_param_from_file(wf_param_folder+'/chease_input_choices.xml')    
+    chease_param = create_xml_param_from_file(wf_param_folder+'/chease_input_choices.xml')
     ligka_param = create_xml_param_from_file(wf_param_folder+'/z_ligka.xml')
     helena_param = create_xml_param_from_file(wf_param_folder+'/helena.xml')
     hagis1_param = create_xml_param_from_file(wf_param_folder+'/hagis1.xml')
@@ -126,13 +124,11 @@ def open_gui(wf_param_folder):
     # LEFT - CONFIGURING THE WORKFLOW PARAMETERS
     irow = 0
     for ref in [wfp_ref, fur_ref]:
-
         Label(fr_wfp, text=ref, bg=col.c3, font='15').grid(
             row=irow, column=0, columnspan=3, pady=10, padx=5, sticky='we')
         irow += 1
 
         for elem in workflow_param[ref]:
-
             Label(fr_wfp, text=elem, bg=col.c3).grid(
                 row=irow,  column=0, padx=3, pady=2, sticky='w')
             if elem in ['ligka_541', 'ligka_5412', 'pulse_list', 'fast_particles', 'hdf5']:
@@ -163,7 +159,6 @@ def open_gui(wf_param_folder):
         irow += 1
 
         for elem in workflow_param[ref]:
-
             entrystring = StringVar()
             entrystring.set(workflow_param[ref][elem][0])
             Label(fr_as, text=elem, bg=col.c3).grid(
@@ -284,7 +279,6 @@ def open_gui(wf_param_folder):
     ## FUNCTIONS - SAVING & UPDATING
 
     def save_workflow_param_to_file(filepath):
-
         tree = etree.parse(filepath)
         root = tree.getroot()
 
@@ -309,5 +303,4 @@ def open_gui(wf_param_folder):
 
 
 if __name__ == "__main__":
-
     open_gui(wf_param_folder_default)

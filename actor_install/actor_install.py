@@ -10,7 +10,7 @@ def module(*args):
         args = args[0]
     else:
         args = list(args)
-        (output, error) = subprocess.Popen(['/usr/bin/modulecmd', 'python'] + 
+        (output, error) = subprocess.Popen(['/usr/bin/modulecmd', 'python'] +
                                            args, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()
         exec(output)
         return str(error.decode("utf-8"))
@@ -23,13 +23,13 @@ def setup_env(desc, args):
         print(desc)
     err = module('purge')
     if err!='':
-        print(err) 
+        print(err)
         return 1
 
     if args.preModule != None:
         err = module('load',args.preModule)
         if err!='':
-            print(err) 
+            print(err)
             return 1
 
     for m in desc:
@@ -41,7 +41,7 @@ def setup_env(desc, args):
                 print("switching module "+m)
                 err = module('switch',m)
                 if err!='':
-                    print(err) 
+                    print(err)
                     return 1
             elif "ERROR" in err:
                 print('Error while loading module '+m)
@@ -152,9 +152,9 @@ def install_actors(desc, args):
                 subprocess.call(['fc2k '+x+' -nokepler -pyworkspace '+os.getenv('ACTOR_FOLDER')],shell=True)
         else:
             subprocess.call(['fc2k '+xml+' -nokepler -pyworkspace '+os.getenv('ACTOR_FOLDER')],shell=True)
-            
+
         os.chdir(prevdir)
-    
+
     return 0;
 
 
@@ -253,9 +253,9 @@ for yml in args.yml:
                 if args.pedantic:
                     sys.exit()
                 else:
-                    continue 
-        
-        if args.skipBuilds: 
+                    continue
+
+        if args.skipBuilds:
             print("Bypassing libraries build")
         else:
             project['BUILDS'] = desc.get('BUILDS')
@@ -264,9 +264,9 @@ for yml in args.yml:
                 if args.pedantic:
                     sys.exit()
                 else:
-                    continue 
-        
-        if args.skipActors: 
+                    continue
+
+        if args.skipActors:
             print("Bypassing actors install")
         else:
             project['ACTORS'] = desc.get('ACTORS')

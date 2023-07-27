@@ -38,5 +38,5 @@ def run_analysis(wf_param_folder, l):
         print(f'Running Mode Structure: {analysis_param}')
         result = subprocess.run(["plot_EF_ids.py", f"-user={analysis_param[ana_ref]['user']}", f"-database={analysis_param[ana_ref]['database']}", f"-shot={analysis_param[ana_ref]['shot_number']}", f"-run={analysis_param[ana_ref]['run']}", f"-occurrence={occurrence}", f"-interactivePlots=0"], capture_output=True, text=True)
         print(result.stdout)
-    
+
     print('Done, please check the results!')

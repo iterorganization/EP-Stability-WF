@@ -16,12 +16,12 @@ def save_analysis_open_window(analysis_param, wf_param_folder, label):
         return window_frequency_damping(wf_param_folder)
     elif label == 'Mode Structure':
         return window_mode_structure(wf_param_folder)
-        
-    
+
+
 
 # FUNCTION NEW ANALYSIS WINDOW
 def analysis_window(ana_ref, analysis_param, wf_param_folder):
-    
+
     options_to_diplay = ['user', 'database', 'backend', 'version', 'shot_number', 'run']
     # create analysis directory if none exists
     analysis_dir = ('./Analysis_EP_WF')
@@ -96,11 +96,11 @@ def analysis_window(ana_ref, analysis_param, wf_param_folder):
 
 
 def window_frequency_damping(wf_param_folder):
-    
+
     options_to_diplay = ['n_min', 'n_max', 'm_min', 'm_max', 'r_min', 'r_max', 'model', 'compare_modes', 'itime', 'save_plots', 'interactivePlots', 'label_scaler', 'line_scaler']
     analysis_param = create_xml_param_from_file(wf_param_folder+'/analysis.xml')
     ana_ref = list(analysis_param.keys())[0]
-    
+
     window_an = Toplevel()
     window_an.title('Frequency, Damping & Radial Location Analysis')
     window_an.configure(bg=col.c1)
@@ -165,12 +165,12 @@ def window_frequency_damping(wf_param_folder):
     button_saveconfig.grid(row=51, column=0, padx=5, pady=5, sticky='ew')
     button_saveconfig.configure(command=lambda: save_xml_param_to_file(
         analysis_param, wf_param_folder+'/analysis.xml'))
-    
+
     button_run_freq = Button(
         fr_ana, text='Run Frequency', bg=col.c2)
     button_run_freq.grid(row=52, column=0, padx=5, pady=5, sticky='ew')
     button_run_freq.configure(command=lambda: run_analysis(wf_param_folder,0))
-    
+
     button_run_damping = Button(
         fr_ana, text='Run Damping', bg=col.c2)
     button_run_damping.grid(row=53, column=0, padx=5, pady=5, sticky='ew')
@@ -182,11 +182,11 @@ def window_frequency_damping(wf_param_folder):
     button_run_damping.configure(command=lambda: run_analysis(wf_param_folder,2))
 
 def window_mode_structure(wf_param_folder):
-    
+
     options_to_diplay = ['model', 'itime', 'save_plots', 'interactivePlots']
     analysis_param = create_xml_param_from_file(wf_param_folder+'/analysis.xml')
     ana_ref = list(analysis_param.keys())[0]
-    
+
     window_an = Toplevel()
     window_an.title('Mode Structure Analysis')
     window_an.configure(bg=col.c1)
@@ -251,7 +251,7 @@ def window_mode_structure(wf_param_folder):
     button_saveconfig.grid(row=51, column=0, padx=5, pady=5, sticky='ew')
     button_saveconfig.configure(command=lambda: save_xml_param_to_file(
         analysis_param, wf_param_folder+'/analysis.xml'))
-    
+
     button_run_freq = Button(
         fr_ana, text='Run Mode Structure', bg=col.c2)
     button_run_freq.grid(row=52, column=0, padx=5, pady=5, sticky='ew')
