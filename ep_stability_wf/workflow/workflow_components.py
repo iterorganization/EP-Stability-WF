@@ -116,7 +116,7 @@ def actor_call(actor_name, config_folder_path, system_params, species_input, sce
                 equilibrium_in = input.get_slice(
                     ids_name, time[itime], imas.imasdef.PREVIOUS_SAMPLE, occurrence=ids_occ)
                 equilibrium_occ = ids_occ
-                
+
             if ids_name == 'mhd_linear':
                 try:
                     mhd_linear_in = input.get_slice(
@@ -124,7 +124,6 @@ def actor_call(actor_name, config_folder_path, system_params, species_input, sce
                     mhd_linear_occ = ids_occ
                 except:
                     print(f'No mhd_linear with occurrence {mhd_linear_occ} found, using empty mhd_linear')
-                    pass
 
             if ids_name == 'distributions':
                 if ids_occ == 0:
@@ -133,15 +132,13 @@ def actor_call(actor_name, config_folder_path, system_params, species_input, sce
                             ids_name, time[itime], imas.imasdef.PREVIOUS_SAMPLE, occurrence=ids_occ)
                     except:
                         print(f'No distributions with occurrence {distributions_occ_1} found, using empty distributions')
-                        pass
                 elif ids_occ == 1:
                     try:
                         distributions_in_2 = input.get_slice(
                             ids_name, time[itime], imas.imasdef.PREVIOUS_SAMPLE, occurrence=ids_occ)
                     except:
                         print(f'No distributions with occurrence {distributions_occ_2} found, using empty distributions')
-                        pass
-                    
+
             if ids_name == 'core_profiles':
                 core_profiles_in = input.get_slice(
                     ids_name, time[itime], imas.imasdef.PREVIOUS_SAMPLE, occurrence=ids_occ)
@@ -166,7 +163,7 @@ def actor_call(actor_name, config_folder_path, system_params, species_input, sce
                                                                                                         mpi_processes=mpi_processes)
 
         if equilibrium_out:
-            if itime == 0: 
+            if itime == 0:
                 output.put(
                 equilibrium_out, occurrence=output_ids['equilibrium'])
             else:
