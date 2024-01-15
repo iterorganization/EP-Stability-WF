@@ -1,5 +1,5 @@
 <root>
-  <electrons display="Electrons (testing)">
+  <electrons display="Electrons">
     <el display="e">1</el>
   </electrons>
   <species_thermal display="Bulk Ions">

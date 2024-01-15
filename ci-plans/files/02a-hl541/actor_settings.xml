@@ -1,4 +1,8 @@
 <root>
+  <electrons display="Electrons">
+    <el display="e">1</el>
+  </electrons>
+  
   <species_thermal display="Thermal Ions">
     <hh display="H" >0.02</hh>
     <dd display="D" >0.02</dd>
