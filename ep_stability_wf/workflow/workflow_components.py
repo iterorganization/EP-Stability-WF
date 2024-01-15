@@ -72,10 +72,10 @@ def actor_call(actor_name, config_folder_path, system_params, species_input, sce
     time, ntime = read_timestep(user=user,
                                 database=database,
                                 run=run,
-                                current_config_folder=config_folder_path, backend=backend_in, occurrence=input_ids['equilibrium'])
+                                current_config_folder=config_folder_path, backend=backend, occurrence=input_ids['equilibrium'])
 
     # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
-    input = imas.DBEntry(backend_in, database, shot_no, run, user)
+    input = imas.DBEntry(backend, database, shot_no, run, user)
     status, _ = input.open()
     if status != 0:
         print("Can't open the selected dataset!", file=sys.stderr)
