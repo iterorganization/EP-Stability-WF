@@ -36,11 +36,8 @@ def actor_call(actor_name, config_folder_path, system_params, species_input, sce
 
     if system_params['hdf5'] == 1:
         backend = imas.imasdef.HDF5_BACKEND
-        backend_in = imas.imasdef.HDF5_BACKEND
-        #backend_in = imas.imasdef.MDSPLUS_BACKEND #hack in cases the scenarios are in MDS+, but we need HDF5 for finder!
     else:
         backend = imas.imasdef.MDSPLUS_BACKEND
-        backend_in = imas.imasdef.MDSPLUS_BACKEND
     if actor_name == 'Ligka_m5':
         mpi_processes = 1
     else:
