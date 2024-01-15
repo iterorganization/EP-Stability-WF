@@ -7,9 +7,11 @@ import os
 
 # Management of input arguments
 parser = argparse.ArgumentParser(
-    description='---- Run the EP workflow without the interface')
-parser.add_argument("-c", "--config_folder",
-                    help="input configuration folder", required=True)
+    description="---- Run the EP workflow without the interface"
+)
+parser.add_argument(
+    "-c", "--config_folder", help="input configuration folder", required=True
+)
 
 args = vars(parser.parse_args())
 config_folder = args["config_folder"]

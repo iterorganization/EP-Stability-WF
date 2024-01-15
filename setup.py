@@ -13,12 +13,8 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://confluence.iter.org/pages/viewpage.action?pageId=289069024",
     packages=setuptools.find_packages(),
-    package_data = {"": ["*.xml"]},
-    scripts=[
-        'ep_gui',
-        'ep_nogui',
-        'ep_batch'
-    ],
-    include_package_data = True,
-    python_requires='>=3.6',
+    package_data={"": ["*.xml"]},
+    scripts=["ep_gui", "ep_nogui", "ep_batch"],
+    include_package_data=True,
+    python_requires=">=3.6",
 )

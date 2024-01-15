@@ -30,12 +30,13 @@ LIGKA_ZA_STRINGS = {
 LIGKA_FAST_ZA_STRINGS = {
     (1, 1): "fh",
     (1, 2): "fd",
-    #(1, 3): "ft",
+    # (1, 3): "ft",
     (1, 3): None,
     (2, 4): "al",
 }
 
-def get_density_thermal_fast(species_obj:object, modify_ids:bool=False):
+
+def get_density_thermal_fast(species_obj: object, modify_ids: bool = False):
     if len(species_obj.density_thermal) > 0:
         density_thermal = species_obj.density_thermal.copy()
     else:
@@ -66,21 +67,24 @@ def get_density_thermal_fast(species_obj:object, modify_ids:bool=False):
         density_fast = species_obj.density_fast[:].copy()
 
     # Set density_fast floor = 0
-    density_fast[density_fast<0] = 0.0
+    density_fast[density_fast < 0] = 0.0
 
     if (density_fast < 0.0).any() or (density_thermal < 0.0).any():
-        print(f"""negative density. debug info:
+        print(
+            f"""negative density. debug info:
             (z,a): ({species_obj.element[0].z_n}, {species_obj.element[0].a})
             {density_thermal=}
             {density_fast=}
             {species_obj.density[0]=}
             {species_obj.density_thermal[0]=}
             {species_obj.density_fast[0]=}
-        """)
+        """
+        )
 
     # For debugging a single species
-    if (species_obj.element[0].z_n, species_obj.element[0].a) == (10,20) and False:
-        print(f"""
+    if (species_obj.element[0].z_n, species_obj.element[0].a) == (10, 20) and False:
+        print(
+            f"""
             (z,a): ({species_obj.element[0].z_n}, {species_obj.element[0].a})
             {species_obj.density=}
             {species_obj.density_thermal=}
@@ -88,11 +92,21 @@ def get_density_thermal_fast(species_obj:object, modify_ids:bool=False):
 
             {density_thermal=}
             {density_fast=}
-        """)
+        """
+        )
 
     return density_thermal, density_fast
 
-def select_species_by_density(core_profiles:object, param:dict=None, scenario_param:dict=None, dens_func:callable=None, dens_func_choice:str="axis", density_cutoff:"dict[str, float]"={}, debug:bool=False):
+
+def select_species_by_density(
+    core_profiles: object,
+    param: dict = None,
+    scenario_param: dict = None,
+    dens_func: callable = None,
+    dens_func_choice: str = "axis",
+    density_cutoff: "dict[str, float]" = {},
+    debug: bool = False,
+):
     if param is None:
         if debug:
             print("No parameter dict provided, taking default (EPs on)")
@@ -118,7 +132,7 @@ def select_species_by_density(core_profiles:object, param:dict=None, scenario_pa
         print(species_list)
     total_ion_density = sum([x[1] + x[2] for x in species_list])
 
-    if density_cutoff['el'] == 1:
+    if density_cutoff["el"] == 1:
         curr_str = ["el"]
     else:
         curr_str = []
@@ -139,20 +153,30 @@ def select_species_by_density(core_profiles:object, param:dict=None, scenario_pa
                 continue
 
         # density cutoff is a dict of ligka strings to floats describing the fraction of total ion density
-        if thermal_density_val >= density_cutoff.get(ligka_string, np.inf) * total_ion_density:
+        if (
+            thermal_density_val
+            >= density_cutoff.get(ligka_string, np.inf) * total_ion_density
+        ):
             curr_str.append(ligka_string)
 
         ligka_fast_string = LIGKA_FAST_ZA_STRINGS.get((z_sp, a_sp), None)
-        if fast_density_val >= density_cutoff.get(ligka_fast_string, np.inf) * total_ion_density:
+        if (
+            fast_density_val
+            >= density_cutoff.get(ligka_fast_string, np.inf) * total_ion_density
+        ):
             if ligka_fast_string is not None:
                 curr_str_fast.append(ligka_fast_string)
             else:
-                print(f"Skipping unknown fast species: {isp} with (Z,A): ({z_sp}, {a_sp})")
+                print(
+                    f"Skipping unknown fast species: {isp} with (Z,A): ({z_sp}, {a_sp})"
+                )
 
     # Optionally replace "dd" and/or "tt" with "dt" for Ligka to treat as $^2.5$H hybrid species
     if int(scenario_param.get("DT", 0)):
         if not ("dd" in curr_str and "tt" in curr_str):
-            warnings.warn("Not both D and T are present, looking for either to replace with 'DT'.")
+            warnings.warn(
+                "Not both D and T are present, looking for either to replace with 'DT'."
+            )
         if "dd" in curr_str or "tt" in curr_str:
             for ligka_string in ["dd", "tt"]:
                 if ligka_string in curr_str:
@@ -165,7 +189,9 @@ def select_species_by_density(core_profiles:object, param:dict=None, scenario_pa
     nhot = len(curr_str_fast) * int(param.get("fast_particles", 1))
     nspec = nback + nhot
 
-    ligka_species_str = "".join(curr_str) + "".join(curr_str_fast) * int(param.get("fast_particles", 1))
+    ligka_species_str = "".join(curr_str) + "".join(curr_str_fast) * int(
+        param.get("fast_particles", 1)
+    )
 
     return ligka_species_str, nspec, nback, nhot
 
@@ -187,16 +213,24 @@ def test():
         def __init__(self, nr=3):
             self.ion = [
                 fake_ion_species(ni_th, ni_fast, ni, z, a)
-                for isp, (ni_th, ni_fast, ni, z, a) in enumerate([
-                    # Ne (below 1% threshold), ni_th missing
-                    [np.zeros(0), 0.0*np.ones(nr), 0.001*np.ones(nr), 10, 20],
-                    # H: ni missing, ni_thermal present
-                    [1.01* np.ones(nr), 0.0*np.ones(nr), np.zeros(0), 1, 1],
-                    # D: ni_thermal missing, ni present
-                    [np.zeros(0), 0.0*np.ones(nr), np.ones(nr), 1, 2],
-                    # He (below 1% threshold), but alpha present. ni missing
-                    [0.001*np.ones(nr), 0.005*np.ones(nr), 0.0*np.ones(nr), 2, 4],
-                ])
+                for isp, (ni_th, ni_fast, ni, z, a) in enumerate(
+                    [
+                        # Ne (below 1% threshold), ni_th missing
+                        [np.zeros(0), 0.0 * np.ones(nr), 0.001 * np.ones(nr), 10, 20],
+                        # H: ni missing, ni_thermal present
+                        [1.01 * np.ones(nr), 0.0 * np.ones(nr), np.zeros(0), 1, 1],
+                        # D: ni_thermal missing, ni present
+                        [np.zeros(0), 0.0 * np.ones(nr), np.ones(nr), 1, 2],
+                        # He (below 1% threshold), but alpha present. ni missing
+                        [
+                            0.001 * np.ones(nr),
+                            0.005 * np.ones(nr),
+                            0.0 * np.ones(nr),
+                            2,
+                            4,
+                        ],
+                    ]
+                )
             ]
 
     class fake_core_profs(object):
@@ -212,20 +246,34 @@ def test():
         print(fake_obj.profiles_1d[0].ion[1].density_fast)
         print()
 
-    density_cutoff = {v:val for (mydict, val) in zip([LIGKA_ZA_STRINGS, LIGKA_FAST_ZA_STRINGS], [0.02, 0.001]) for k,v in mydict.items()}
+    density_cutoff = {
+        v: val
+        for (mydict, val) in zip(
+            [LIGKA_ZA_STRINGS, LIGKA_FAST_ZA_STRINGS], [0.02, 0.001]
+        )
+        for k, v in mydict.items()
+    }
     print(density_cutoff)
 
-    ligka_species_str, nspec, nback, nhot = select_species_by_density(fake_obj, param={"fast_particles": 1}, density_cutoff=density_cutoff, debug=True)
+    ligka_species_str, nspec, nback, nhot = select_species_by_density(
+        fake_obj, param={"fast_particles": 1}, density_cutoff=density_cutoff, debug=True
+    )
     print(ligka_species_str, nspec, nback, nhot)
-    if ligka_species_str == "elhhddal" and nspec==4 and nback==3 and nhot==1:
+    if ligka_species_str == "elhhddal" and nspec == 4 and nback == 3 and nhot == 1:
         print("ligka_species_str is correct")
     else:
         raise ValueError(ligka_species_str, nspec, nback, nhot)
 
     print()
-    ligka_species_str, nspec, nback, nhot = select_species_by_density(fake_obj, param={"fast_particles": 0}, scenario_param={"DT": 1}, density_cutoff=density_cutoff, debug=True)
+    ligka_species_str, nspec, nback, nhot = select_species_by_density(
+        fake_obj,
+        param={"fast_particles": 0},
+        scenario_param={"DT": 1},
+        density_cutoff=density_cutoff,
+        debug=True,
+    )
     print(ligka_species_str, nspec, nback, nhot)
-    if ligka_species_str == "eldthh" and nspec==3 and nback==3 and nhot==0:
+    if ligka_species_str == "eldthh" and nspec == 3 and nback == 3 and nhot == 0:
         print("ligka_species_str is correct")
     else:
         raise ValueError(ligka_species_str, nspec, nback, nhot)
