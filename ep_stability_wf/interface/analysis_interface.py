@@ -232,7 +232,9 @@ def window_frequency_damping(wf_param_folder):
 
 def window_mode_structure(wf_param_folder):
     options_to_diplay = ["model", "itime", "save_plots", "interactivePlots"]
-    analysis_param = create_xml_param_from_file(wf_param_folder + "/analysis.xml")
+    analysis_param = create_xml_param_from_file(
+        os.path.join(wf_param_folder, "analysis.xml")
+    )
     ana_ref = list(analysis_param.keys())[0]
 
     window_an = Toplevel()

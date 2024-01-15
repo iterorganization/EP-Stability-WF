@@ -18,7 +18,8 @@ from ep_stability_wf.interface.create_workflow_param import (
 def actor_call(
     actor_name, config_folder_path, system_params, species_input, scenario_params=None
 ):
-    """This method initializes and runs an workflow actor
+    """
+    This method initializes and runs an workflow actor
     Params:
       actor_name: str - name of the actor to run
       config_folder_path: str - path to the general config folder
