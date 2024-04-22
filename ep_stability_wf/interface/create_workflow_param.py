@@ -54,22 +54,12 @@ def save_xml_param_to_file_multiple(ligka_param, filepath):
     tree = etree.parse(filepath)
     root = tree.getroot()
 
-    name0 = root[0].attrib["display"]
-    name1 = root[1].attrib["display"]
-    name2 = root[2].attrib["display"]
-
-    for elem in root[0].iter():
-        if len(elem) == 0 and elem.tag is not etree.Comment:
-            elem.text = ligka_param[name0][elem.tag][0]
-
-    for elem in root[1].iter():
-        if len(elem) == 0 and elem.tag is not etree.Comment:
-            elem.text = ligka_param[name1][elem.tag][0]
-
-    for elem in root[2].iter():
-        if len(elem) == 0 and elem.tag is not etree.Comment:
-            elem.text = ligka_param[name2][elem.tag][0]
-
+    for level in root:
+        name = level.attrib["display"]
+        for elem in level.iter():
+            if len(elem) == 0 and elem.tag is not etree.Comment:
+                elem.text = ligka_param[name][elem.tag][0]
+                
     tree.write(filepath)
     file_name = filepath.split("/")[-1]
     print(f"Saved settings to {file_name}!")
@@ -107,7 +97,7 @@ def update_xml_param_wf(ligka_param, ref, elem, newvalue):
     lst[0] = newvalue
     ligka_param[ref][elem] = tuple(lst)
 
-
+# Legacy need to check where to use this or not!
 def update_xml_param(ligka_param, ref, elem, newvalue):
     ligka_param[ref][elem] = newvalue
 

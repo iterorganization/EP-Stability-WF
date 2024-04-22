@@ -456,7 +456,7 @@ def species_window(species_ref, wf_param_folder):
                 entrystring.set(species_param[ref][elem][0])
                 entrystring.trace(
                     "w",
-                    lambda name, index, mode, elem=elem, entrystring=entrystring, ref=ref: update_xml_param(
+                    lambda name, index, mode, elem=elem, entrystring=entrystring, ref=ref: update_xml_param_wf(
                         species_param, ref, elem, entrystring.get()
                     ),
                 )
