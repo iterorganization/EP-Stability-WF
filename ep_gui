@@ -102,11 +102,7 @@ def open_gui(wf_param_folder):
     wfp_ref_h2 = list(hagis2_param.keys())
     wfp_ref_f = list(finder_param.keys())
     ana_ref = list(analysis_param.keys())[0]
-    species_ref = [
-        list(species_param.keys())[0],
-        list(species_param.keys())[1],
-        list(species_param.keys())[2],
-    ]
+    species_ref = [x for x in species_param.keys()]
     scen_ref = list(scenario_param.keys())
     ids_merge_ref = list(ids_merge_param.keys())
 
