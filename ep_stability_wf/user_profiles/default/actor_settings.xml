@@ -21,6 +21,7 @@
   <species_fast display="Fast Ions">
     <fh display="H">0.001</fh>
     <fd display="D">0.001</fd>
+    <ft display="T">0.001</ft>
     <al display="He4">0.001</al>
   </species_fast>
 </root>

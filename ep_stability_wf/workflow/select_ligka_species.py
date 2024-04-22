@@ -30,8 +30,7 @@ LIGKA_ZA_STRINGS = {
 LIGKA_FAST_ZA_STRINGS = {
     (1, 1): "fh",
     (1, 2): "fd",
-    # (1, 3): "ft",
-    (1, 3): None,
+    (1, 3): "ft",
     (2, 4): "al",
 }
 
