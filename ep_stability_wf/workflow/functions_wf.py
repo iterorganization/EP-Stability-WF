@@ -11,18 +11,18 @@ from ep_stability_wf.workflow.select_ligka_species import select_species_by_dens
 
 no_actor = {}
 try:
-    from chease.wrapper import chease_actor
+    from chease.actor import chease
 except ImportError:
     no_actor["Chease"] = True
 try:
-    from helena.wrapper import helena_actor
+    from helena.actor import helena
 except ImportError:
     try:
         from helena_imas.wrapper import helena_imas_actor as helena_actor
     except ImportError:
         no_actor["Helena"] = True
 try:
-    from ligka.wrapper import ligka_actor
+    from ligka.actor import ligka
 except ImportError:
     no_actor["Ligka_m5"] = True
     no_actor["Ligka_m4"] = True
@@ -272,7 +272,21 @@ def imports_check(actor_name):
     if actor_name in no_actor:
         print(actor_name + " is not imported, cannot continue.")
         return 0
+    
+def modify_xml(xml_file):
+    # Load the XML file
+    tree = ET.parse(xml_file)
+    root = tree.getroot()
 
+    # Remove the 'display' attribute from the root element, if it exists
+    if 'display' in root.attrib:
+        del root.attrib['display']
+
+    output_file_path = xml_file.split('.')[0]+'_run.xml'
+    
+    # Save the updated XML back to the file or keep it in memory
+    tree.write(output_file_path, encoding='utf-8', xml_declaration=True)
+    return output_file_path
 
 def chease_actor_wf_wrapper(
     equilibrium_in,
@@ -281,9 +295,17 @@ def chease_actor_wf_wrapper(
     distributions_in_1,
     distributions_in_2,
     config_file_path,
-    mpi_processes,
+    mpi_ranks,
 ):
-    equilibrium_out = chease_actor(equilibrium_in, config_file_path)
+    chease_actor = chease()
+    code_parameters = chease_actor.get_code_parameters()
+    config_file_path = modify_xml(config_file_path)
+    code_parameters.parameters_path = config_file_path
+    chease_actor.initialize(code_parameters=code_parameters)
+
+    equilibrium_out = chease_actor.run(equilibrium_in)
+
+    chease_actor.finalize()
 
     return equilibrium_out, None, core_profiles_in, None
 
@@ -295,9 +317,17 @@ def helena_actor_wf_wrapper(
     distributions_in_1,
     distributions_in_2,
     config_file_path,
-    mpi_processes,
+    mpi_ranks,
 ):
-    equilibrium_out = helena_actor(equilibrium_in, config_file_path)
+    helena_actor = helena()
+    code_parameters = helena_actor.get_code_parameters()
+    config_file_path = modify_xml(config_file_path)
+    code_parameters.parameters_path = config_file_path
+    helena_actor.initialize(code_parameters=code_parameters)
+
+    equilibrium_out = helena_actor.run(equilibrium_in)
+
+    helena_actor.finalize()
 
     return equilibrium_out, None, core_profiles_in, None
 
@@ -309,7 +339,7 @@ def hagis1_actor_wf_wrapper(
     distributions_in_1,
     distributions_in_2,
     config_file_path,
-    mpi_processes,
+    mpi_ranks,
 ):
     equilibrium_out, mhd_linear_out = hagis1_actor(
         equilibrium_in, mhd_linear_in, config_file_path
@@ -325,7 +355,7 @@ def hagis2_actor_wf_wrapper(
     distributions_in_1,
     distributions_in_2,
     config_file_path,
-    mpi_processes,
+    mpi_ranks,
 ):
     mhd_linear_out, distributions_out = hagis2_actor(
         equilibrium_in,
@@ -334,7 +364,7 @@ def hagis2_actor_wf_wrapper(
         distributions_in_1,
         config_file_path,
         "mpi_local",
-        mpi_processes=mpi_processes,
+        mpi_processes=mpi_ranks,
     )
 
     return None, mhd_linear_out, None, distributions_out
@@ -347,19 +377,29 @@ def ligka_actor_wf_wrapper(
     distributions_in_1,
     distributions_in_2,
     config_file_path,
-    mpi_processes,
+    mpi_ranks,
 ):
-    mhd_linear_out = ligka_actor(
+    
+    ligka_actor = ligka()
+    code_parameters = ligka_actor.get_code_parameters()
+    config_file_path = modify_xml(config_file_path)
+    code_parameters.parameters_path = config_file_path
+    runtime_settings = ligka_actor.get_runtime_settings()
+    #configures runtime settings
+    runtime_settings.mpi.mpi_processes = mpi_ranks
+    # runtime_settings.mpi.mpi_runner = 'mpirun'
+    # runtime_settings.mpi.mpi_options = '-tv'
+    ligka_actor.initialize(code_parameters=code_parameters, runtime_settings=runtime_settings)
+
+    mhd_linear_out = ligka_actor.run(
         equilibrium_in,
         core_profiles_in,
         mhd_linear_in,
         distributions_in_1,
-        distributions_in_2,
-        config_file_path,
-        "mpi_local",
-        mpi_processes=mpi_processes,
+        distributions_in_2
     )
 
+    ligka_actor.finalize()
     return None, mhd_linear_out, None, None
 
 
@@ -370,7 +410,7 @@ def finder_actor_wf_wrapper(
     distributions_in_1,
     distributions_in_2,
     config_file_path,
-    mpi_processes,
+    mpi_ranks,
 ):
     distributions_out = finder9_actor(
         equilibrium_in,
@@ -380,7 +420,7 @@ def finder_actor_wf_wrapper(
         distributions_in_2,
         config_file_path,
         "mpi_local",
-        mpi_processes=mpi_processes,
+        mpi_processes=mpi_ranks,
     )
 
     return None, None, None, distributions_out

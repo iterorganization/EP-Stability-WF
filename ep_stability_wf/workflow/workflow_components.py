@@ -116,13 +116,13 @@ def actor_call(
         equilibrium_occ = 0
         core_profiles_in = None
         mhd_linear_in = imas.mhd_linear()
-        mhd_linear_in.ids_properties.homogeneousTime = 1
+        mhd_linear_in.ids_properties.homogeneous_time = 1
         mhd_linear_occ = 0
         distributions_in_1 = imas.distributions()
-        distributions_in_1.ids_properties.homogeneousTime = 1
+        distributions_in_1.ids_properties.homogeneous_time = 1
         distributions_occ_1 = 0
         distributions_in_2 = imas.distributions()
-        distributions_in_2.ids_properties.homogeneousTime = 1
+        distributions_in_2.ids_properties.homogeneous_time = 1
         distributions_occ_2 = 1
 
         for ids_name, ids_occ in input_ids.items():
@@ -143,6 +143,8 @@ def actor_call(
                         imas.imasdef.PREVIOUS_SAMPLE,
                         occurrence=ids_occ,
                     )
+                    # mhd_linear_in.ids_properties.homogeneous_time = 1
+                    # print('Read the IDS')
                     mhd_linear_occ = ids_occ
                 except:
                     print(
@@ -211,7 +213,7 @@ def actor_call(
             distributions_in_1,
             distributions_in_2,
             config_file,
-            mpi_processes=mpi_processes,
+            mpi_ranks=mpi_processes,
         )
 
         if equilibrium_out:

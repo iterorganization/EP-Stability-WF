@@ -28,7 +28,7 @@ def workflow_EP(current_config_folder, verbose=True):
     curr_str = None  # for avioding error
     # CHECK FOR EXISTING DB
     output_folder = (
-        os.getenv("HOME") + "/public/imasdb/" + param["machine_out"] + "/3/0"
+        os.getenv("HOME") + "/public/imasdb/" + param["machine_out"] + "/" + str(param['shot_nr']) + "/" + str(param['run_out'])
     )
     if os.path.isdir(output_folder) == False:
         print_cond(verbose, "-- Create local database for output file " + output_folder)
