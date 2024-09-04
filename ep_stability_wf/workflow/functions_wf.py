@@ -31,15 +31,15 @@ except ImportError:
     no_actor["Ligka_m2"] = True
     no_actor["Ligka_m3"] = True
 try:
-    from hagis1.wrapper import hagis1_actor
+    from hagis1.actor import hagis1
 except ImportError:
     no_actor["Hagis_1"] = True
 try:
-    from hagis2.wrapper import hagis2_actor
+    from hagis2.actor import hagis2
 except ImportError:
     no_actor["Hagis_2"] = True
 try:
-    from finder9.wrapper import finder9_actor
+    from finder9.actor import finder9
 except ImportError:
     no_actor["Finder"] = True
 if len(list(no_actor.keys())) > 0:
@@ -341,9 +341,18 @@ def hagis1_actor_wf_wrapper(
     config_file_path,
     mpi_ranks,
 ):
+    hagis1_actor = hagis1()
+    code_parameters = hagis1_actor.get_code_parameters()
+    config_file_path = modify_xml(config_file_path)
+    code_parameters.parameters_path = config_file_path
+    hagis1_actor.initialize(code_parameters=code_parameters)
+
     equilibrium_out, mhd_linear_out = hagis1_actor(
-        equilibrium_in, mhd_linear_in, config_file_path
+        equilibrium_in, mhd_linear_in
     )
+
+    hagis1_actor.finalize()
+    
 
     return equilibrium_out, mhd_linear_out, None, None
 
@@ -357,16 +366,25 @@ def hagis2_actor_wf_wrapper(
     config_file_path,
     mpi_ranks,
 ):
+    hagis2_actor = hagis2()
+    code_parameters = hagis2_actor.get_code_parameters()
+    config_file_path = modify_xml(config_file_path)
+    code_parameters.parameters_path = config_file_path
+    runtime_settings = hagis2_actor.get_runtime_settings()
+    #configures runtime settings
+    runtime_settings.mpi.mpi_processes = mpi_ranks
+    # runtime_settings.mpi.mpi_runner = 'mpirun'
+    # runtime_settings.mpi.mpi_options = '-tv'
+    hagis2_actor.initialize(code_parameters=code_parameters, runtime_settings=runtime_settings)
+
+    
     mhd_linear_out, distributions_out = hagis2_actor(
         equilibrium_in,
         mhd_linear_in,
         core_profiles_in,
-        distributions_in_1,
-        config_file_path,
-        "mpi_local",
-        mpi_processes=mpi_ranks,
+        distributions_in_1
     )
-
+    hagis2_actor.finalize()
     return None, mhd_linear_out, None, distributions_out
 
 
@@ -412,17 +430,26 @@ def finder_actor_wf_wrapper(
     config_file_path,
     mpi_ranks,
 ):
+    finder9_actor = finder9()
+    code_parameters = finder9_actor.get_code_parameters()
+    config_file_path = modify_xml(config_file_path)
+    code_parameters.parameters_path = config_file_path
+    runtime_settings = finder9_actor.get_runtime_settings()
+    #configures runtime settings
+    runtime_settings.mpi.mpi_processes = mpi_ranks
+    # runtime_settings.mpi.mpi_runner = 'mpirun'
+    # runtime_settings.mpi.mpi_options = '-tv'
+    finder9_actor.initialize(code_parameters=code_parameters, runtime_settings=runtime_settings)
+
+    
     distributions_out = finder9_actor(
         equilibrium_in,
         core_profiles_in,
         mhd_linear_in,
         distributions_in_1,
-        distributions_in_2,
-        config_file_path,
-        "mpi_local",
-        mpi_processes=mpi_ranks,
+        distributions_in_2
     )
-
+    finder9_actor.finalize()
     return None, None, None, distributions_out
 
 
