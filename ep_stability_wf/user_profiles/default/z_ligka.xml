@@ -1,40 +1,51 @@
 <parameter display="LIGKA PARAMETERS">
   <modus>5</modus>
-  <min_n_tor>1</min_n_tor>
-  <max_n_tor>10</max_n_tor>
-  <min_m>1</min_m>
-  <max_m>2</max_m>
-  <sidebands>5</sidebands>
-  <sidebands_asy>2</sidebands_asy>
-  <mode_type>1</mode_type>
-  <even>0</even>
-  <cocp>      1   </cocp>
-  <start_pos>1</start_pos>
-  <force_m>false</force_m>
-  <npsi_out>256</npsi_out>
-  <kr_read>0.0d0</kr_read>
-  <q0>0.0d0</q0>
-  <rad_start>0.0d0</rad_start>
-  <rad_end>1.0d0</rad_end>
-  <offset_d>0.0d0</offset_d>
-  <guess_start>0.0d0</guess_start>
-  <guess_end>0.0d0</guess_end>
-  <dguess>0.0d0</dguess>
-  <refine>0</refine>
-  <ref_pos1>0.0d0</ref_pos1>
-  <ref_peak1>0.0d0</ref_peak1>
-  <antenna_rad_drive>0.0d0</antenna_rad_drive>
-
-  <nspec>2</nspec>
-  <spec_str>eldd</spec_str>
-  <nback>2</nback>
-  <nhot>0</nhot>
-  <mass_ratio>-1.0d0</mass_ratio>
-  <writeout>0</writeout>
-
-  <shot_number_wrap>130015</shot_number_wrap>
-  <run_wrap>1</run_wrap>
-  <itime_wrap>40</itime_wrap>
-  <user_wrap>lauberp</user_wrap>
-  <machine_wrap>ITER</machine_wrap>
+    <min_n_tor>1</min_n_tor>
+    <max_n_tor>10</max_n_tor>
+    <min_m>1</min_m>
+    <max_m>2</max_m>
+    <sidebands>5</sidebands>
+    <sidebands_asy>2</sidebands_asy>
+    <mode_type>1</mode_type>
+    <even>0</even>
+    <cocp>      1   </cocp>
+    <zof>0</zof>
+    <start_pos>1</start_pos>
+    <force_m>false</force_m>
+    <npsi_out>256</npsi_out>
+    <kr_read>0.0d0</kr_read>
+    <q0>0.0d0</q0>
+    <rad_start>0.0d0</rad_start>
+    <rad_end>1.0d0</rad_end>
+    <offset_d>0.0d0</offset_d>
+    <guess_start>0.0d0</guess_start>
+    <guess_end>0.0d0</guess_end>
+    <dguess>0.0d0</dguess>
+    <refine>0</refine>
+    <ref_pos1>0.0d0</ref_pos1>
+    <ref_peak1>0.0d0</ref_peak1>
+    <antenna_rad_drive>0.0d0</antenna_rad_drive>
+    
+    <nspec>2</nspec>
+    <spec_str>eldd</spec_str>
+    <nback>2</nback>
+    <nhot>0</nhot>
+    <kin_mode>0</kin_mode>
+    <kintype_1>-1</kintype_1>
+    <kintype_2>-1</kintype_2>
+    <kintype_3>-1</kintype_3>
+    <kintype_4>-1</kintype_4>
+    <kintype_5>-1</kintype_5>
+    <kintype_6>-1</kintype_6>
+    <kintype_7>-1</kintype_7>
+    <startkinrad>1</startkinrad>
+    <endkinrad>126</endkinrad>
+    <mass_ratio>-1.0d0</mass_ratio>
+    <writeout>0</writeout>
+    
+    <shot_number_wrap>130015</shot_number_wrap>
+    <run_wrap>1</run_wrap>
+    <itime_wrap>40</itime_wrap>
+    <user_wrap>lauberp</user_wrap>
+    <machine_wrap>ITER</machine_wrap>
 </parameter>

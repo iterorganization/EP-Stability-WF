@@ -143,7 +143,7 @@ def actor_call(
                         imas.imasdef.PREVIOUS_SAMPLE,
                         occurrence=ids_occ,
                     )
-                    # mhd_linear_in.ids_properties.homogeneous_time = 1
+                    mhd_linear_in.ids_properties.homogeneous_time = 1
                     # print('Read the IDS')
                     mhd_linear_occ = ids_occ
                 except:
