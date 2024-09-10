@@ -12,10 +12,12 @@ from ep_stability_wf.workflow.select_ligka_species import select_species_by_dens
 no_actor = {}
 try:
     from chease.actor import chease
+    from chease.common.runtime_settings import SandboxLifeTime as SandboxLifeTime_Chease
 except ImportError:
     no_actor["Chease"] = True
 try:
     from helena.actor import helena
+    from helena.common.runtime_settings import SandboxLifeTime as SandboxLifeTime_Helena
 except ImportError:
     try:
         from helena_imas.wrapper import helena_imas_actor as helena_actor
@@ -23,6 +25,7 @@ except ImportError:
         no_actor["Helena"] = True
 try:
     from ligka.actor import ligka
+    from ligka.common.runtime_settings import SandboxLifeTime as SandboxLifeTime_Ligka
 except ImportError:
     no_actor["Ligka_m5"] = True
     no_actor["Ligka_m4"] = True
@@ -32,14 +35,17 @@ except ImportError:
     no_actor["Ligka_m3"] = True
 try:
     from hagis1.actor import hagis1
+    from hagis1.common.runtime_settings import SandboxLifeTime as SandboxLifeTime_Hagis1
 except ImportError:
     no_actor["Hagis_1"] = True
 try:
     from hagis2.actor import hagis2
+    from hagis2.common.runtime_settings import SandboxLifeTime as SandboxLifeTime_Hagis2
 except ImportError:
     no_actor["Hagis_2"] = True
 try:
     from finder9.actor import finder9
+    from finder9.common.runtime_settings import SandboxLifeTime as SandboxLifeTime_Finder9
 except ImportError:
     no_actor["Finder"] = True
 if len(list(no_actor.keys())) > 0:
@@ -301,7 +307,9 @@ def chease_actor_wf_wrapper(
     code_parameters = chease_actor.get_code_parameters()
     config_file_path = modify_xml(config_file_path)
     code_parameters.parameters_path = config_file_path
-    chease_actor.initialize(code_parameters=code_parameters)
+    runtime_settings = chease_actor.get_runtime_settings()
+    runtime_settings.sandbox.life_time = SandboxLifeTime_Chease.PERSISTENT
+    chease_actor.initialize(code_parameters=code_parameters, runtime_settings=runtime_settings)
 
     equilibrium_out = chease_actor.run(equilibrium_in)
 
@@ -323,7 +331,9 @@ def helena_actor_wf_wrapper(
     code_parameters = helena_actor.get_code_parameters()
     config_file_path = modify_xml(config_file_path)
     code_parameters.parameters_path = config_file_path
-    helena_actor.initialize(code_parameters=code_parameters)
+    runtime_settings = helena_actor.get_runtime_settings()
+    runtime_settings.sandbox.life_time = SandboxLifeTime_Helena.PERSISTENT
+    helena_actor.initialize(code_parameters=code_parameters, runtime_settings=runtime_settings)
 
     equilibrium_out = helena_actor.run(equilibrium_in)
 
@@ -345,7 +355,9 @@ def hagis1_actor_wf_wrapper(
     code_parameters = hagis1_actor.get_code_parameters()
     config_file_path = modify_xml(config_file_path)
     code_parameters.parameters_path = config_file_path
-    hagis1_actor.initialize(code_parameters=code_parameters)
+    runtime_settings = hagis1_actor.get_runtime_settings()
+    runtime_settings.sandbox.life_time = SandboxLifeTime_Hagis1.PERSISTENT
+    hagis1_actor.initialize(code_parameters=code_parameters, runtime_settings=runtime_settings)
 
     equilibrium_out, mhd_linear_out = hagis1_actor(
         equilibrium_in, mhd_linear_in
@@ -375,6 +387,7 @@ def hagis2_actor_wf_wrapper(
     runtime_settings.mpi.mpi_processes = mpi_ranks
     # runtime_settings.mpi.mpi_runner = 'mpirun'
     # runtime_settings.mpi.mpi_options = '-tv'
+    runtime_settings.sandbox.life_time = SandboxLifeTime_Hagis2.PERSISTENT
     hagis2_actor.initialize(code_parameters=code_parameters, runtime_settings=runtime_settings)
 
     
@@ -407,6 +420,7 @@ def ligka_actor_wf_wrapper(
     runtime_settings.mpi.mpi_processes = mpi_ranks
     # runtime_settings.mpi.mpi_runner = 'mpirun'
     # runtime_settings.mpi.mpi_options = '-tv'
+    runtime_settings.sandbox.life_time = SandboxLifeTime_Ligka.PERSISTENT
     ligka_actor.initialize(code_parameters=code_parameters, runtime_settings=runtime_settings)
 
     mhd_linear_out = ligka_actor.run(
@@ -439,6 +453,7 @@ def finder_actor_wf_wrapper(
     runtime_settings.mpi.mpi_processes = mpi_ranks
     # runtime_settings.mpi.mpi_runner = 'mpirun'
     # runtime_settings.mpi.mpi_options = '-tv'
+    runtime_settings.sandbox.life_time = SandboxLifeTime_Finder9.PERSISTENT
     finder9_actor.initialize(code_parameters=code_parameters, runtime_settings=runtime_settings)
 
     
