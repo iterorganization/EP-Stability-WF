@@ -1,7 +1,9 @@
 from tkinter import *
 from tkinter import filedialog, ttk
+import numpy as np
 from lxml import etree
 import ep_stability_wf.interface.colour_definitions as col
+from ep_stability_wf.workflow.functions_wf import parameters_workflow
 from ep_stability_wf.interface.create_workflow_param import (
     create_workflow_param_from_file,
     create_xml_param_from_file,
@@ -11,6 +13,15 @@ from ep_stability_wf.interface.create_workflow_param import (
     save_xml_param_to_file_multiple,
 )
 
+from ep_stability_wf.interface.rw_for import (
+    wr_for,
+    ssplit,
+)
+from ep_stability_wf.interface.ufiles import (
+    split_uname,
+    UFILE,
+)
+import ep_stability_wf.interface.ufiles 
 # from ep_stability_wf.workflow.analysis_modes import Plot, export_data
 from ep_stability_wf.workflow.functions_wf import parameters_workflow
 import os
@@ -20,7 +31,14 @@ import glob
 import yaml
 from shutil import copy2
 from stat import *
-
+from ep_stability_wf.workflow.functions_wf import (
+    read_timestep,
+    actor_settings,
+    imports_check,
+    scenario_mod,
+    time_construction,
+    profiles_get,
+)
 
 class ToolTip(object):
     def __init__(self, widget):
@@ -595,6 +613,28 @@ def species_window(species_ref, wf_param_folder):
 #     # button_analysis.grid(row = 4, column = 3, padx = 5, pady = 5, sticky = 'ew')
 #     # button_analysis.configure(command = lambda: mode_analysis_ligka(5))
 
+
+def write_zf_udb(params):
+    print('now write UDB file for ASTRA')
+    print(params)
+    core_profiles_in = chease_actor.run(equilibrium_in)
+    uf = UFILE()
+    
+    uf.pre = 'EREP'
+    uf.ext = 'EREPR'
+    core_profiles_in.profiles_1d[0].ion[i].density = (
+        np.array(core_profiles_in.profiles_1d[0].ion[i].density))
+    dens=core_profiles_in.profiles_1d[0].ion[i].density   
+    #uf.shot = equ.shot
+    
+    
+    #uf.X = {'label': 'rho_tor'      , 'data': equ.rho_tor_n[0, :] }
+    #uf.f = {'label': 'radial electric field from EPs', 'data': np.abs(equ.q[0, :]) }
+
+    #uf.comment  = 'time=%8.4f s\n' %equ.time[0]
+    #uf.comment += ' exp=%s\n diag=%s\n ed=%d' %(equ.exp, equ.diag, equ.ed)
+    uf.write(udir=udir)
+    print('written UDB file for ASTRA')
 
 def scenario_window(wf_param_folder):
     shots_runs = []

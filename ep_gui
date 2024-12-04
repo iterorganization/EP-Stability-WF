@@ -5,7 +5,9 @@ from ep_stability_wf.interface.extra_functions import (
     scenario_window,
     load,
     save,
+    write_zf_udb,
 )
+
 from ep_stability_wf.interface.extra_functions import CreateToolTip
 from ep_stability_wf.interface.analysis_interface import analysis_window
 import ep_stability_wf.interface.colour_definitions as col
@@ -378,6 +380,13 @@ def open_gui(wf_param_folder):
         command=lambda: ids_window(ids_merge_ref, wf_param_folder)
     )
 
+    button_saveconfig = Button(fr_as, text="Create UDB file ZS", bg=col.c2)
+    button_saveconfig.grid(row=61, column=0, padx=5, pady=5, sticky="ew")
+    button_saveconfig.configure(
+        command=lambda: write_zf_udb(workflow_param)
+    )
+
+    
     ## FUNCTIONS - SAVING & UPDATING
 
     def save_workflow_param_to_file(filepath):
