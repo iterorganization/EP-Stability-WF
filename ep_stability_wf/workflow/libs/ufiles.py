@@ -15,7 +15,7 @@ __date__    = '16.02.2022'
 
 import datetime, os, sys, shutil, logging
 import numpy as np
-import ep_stability_wf.interface.rw_for
+import ep_stability_wf.workflow.libs.rw_for
 
 fmt = logging.Formatter('%(asctime)s | %(name)s | %(levelname)s: %(message)s', '%H:%M:%S')
 logger = logging.getLogger('ufiles')
