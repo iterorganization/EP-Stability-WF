@@ -36,4 +36,21 @@
 <user_wrap>public</user_wrap>
 <user_out_wrap></user_out_wrap>
 <machine_wrap>TEST</machine_wrap>  
+
+    <cocp>      1   </cocp>
+    <zof>0</zof>
+    <guess_start>0.0d0</guess_start>
+    <guess_end>0.0d0</guess_end>
+    <antenna_rad_drive>0.0d0</antenna_rad_drive>
+    <kin_mode>0</kin_mode>
+    <kintype_1>-1</kintype_1>
+    <kintype_2>-1</kintype_2>
+    <kintype_3>-1</kintype_3>
+    <kintype_4>-1</kintype_4>
+    <kintype_5>-1</kintype_5>
+    <kintype_6>-1</kintype_6>
+    <kintype_7>-1</kintype_7>
+    <startkinrad>1</startkinrad>
+    <endkinrad>126</endkinrad>
+
 </parameter>

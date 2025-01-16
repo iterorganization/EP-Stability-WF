@@ -1,12 +1,12 @@
 <root>
   <workflow_parameters display="WORKFLOW PARAMETERS">
     <user display="User in which the initial data is stored.">public</user>
-    <machine display="Name of the database in which the initial data is stored.">TEST</machine>
+    <machine display="Name of the database in which the initial data is stored.">ITER</machine>
     <shot_nr display="Pulse/Shot number of the initial DB.">130012</shot_nr>
-    <run_in display="Run number of the initial DB.">10</run_in>
+    <run_in display="Run number of the initial DB.">2</run_in>
     <machine_out display="Name of the output DB.">ci_test_DB</machine_out>
     <run_out display="Run number of the output DB.">20</run_out>
-    <itime display="Time Index">0</itime>
+    <itime display="Time Index">15</itime>
   </workflow_parameters>
 
   <further_settings display="FURTHER SETTINGS">
