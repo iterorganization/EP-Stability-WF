@@ -8,8 +8,6 @@ module use /work/imas/etc/modules/all
 
 module purge
 
-set -e
-
 module load \
 lxml/4.9.3-GCCcore-13.2.0 \
 Tkinter/3.11.5-GCCcore-13.2.0 \
