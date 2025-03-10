@@ -49,6 +49,11 @@ try:
     from finder9.common.runtime_settings import SandboxLifeTime as SandboxLifeTime_Finder9
 except ImportError:
     no_actor["Finder"] = True
+try:
+    from falcon_wf import falcon_actor
+except ImportError:
+    no_actor["Falcon"] = True
+
 if len(list(no_actor.keys())) > 0:
     print("Cannot import:")
     for key in no_actor:
@@ -491,6 +496,54 @@ def finder_actor_wf_wrapper(
     finder9_actor.finalize()
     return None, None, None, distributions_out
 
+# Different because non Iwrap actor (python actor)
+def falcon_actor_wf_wrapper_full(equilibrium_in,
+    core_profiles_in,
+    mhd_linear_in,
+    distributions_in_1,
+    distributions_in_2,
+    config_file_path,
+    mpi_ranks):
+
+    mhd_linear_out = falcon_actor(
+        equilibrium_in, core_profiles_in, config_file_path)
+    return None, mhd_linear_out, None, None
+
+def falcon_actor_wf_wrapper_slow(equilibrium_in,
+    core_profiles_in,
+    mhd_linear_in,
+    distributions_in_1,
+    distributions_in_2,
+    config_file_path,
+    mpi_ranks):
+
+    mhd_linear_out = falcon_actor(
+        equilibrium_in, core_profiles_in, config_file_path, slow=True)
+    return None, mhd_linear_out, None, None
+
+def falcon_actor_wf_wrapper_daeps(equilibrium_in,
+    core_profiles_in,
+    mhd_linear_in,
+    distributions_in_1,
+    distributions_in_2,
+    config_file_path,
+    mpi_ranks):
+
+    mhd_linear_out = falcon_actor(
+        equilibrium_in, core_profiles_in, config_file_path, daeps=True)
+    return None, mhd_linear_out, None, None
+
+def falcon_actor_wf_wrapper_daeps_eigen(equilibrium_in,
+    core_profiles_in,
+    mhd_linear_in,
+    distributions_in_1,
+    distributions_in_2,
+    config_file_path,
+    mpi_ranks):
+
+    mhd_linear_out = falcon_actor(
+        equilibrium_in, core_profiles_in, config_file_path, eigen=True)
+    return None, mhd_linear_out, None, None
 
 def actor_settings(actor):
     actor_params = {}
@@ -597,6 +650,30 @@ def actor_settings(actor):
             "distributions": 1,
         }
         output_ids = {"distributions": 1}
+    if actor == "Falcon_full":
+        actor_params["entrypoint_actor"] = False
+        actor_params["wrapper"] = falcon_actor_wf_wrapper_full
+        actor_params["config_file_name"] = "falcon.xml"
+        input_ids = {"equilibrium": 2, "core_profiles": 0}
+        output_ids = {"mhd_linear": 8}
+    if actor == "Falcon_slow":
+        actor_params["entrypoint_actor"] = False
+        actor_params["wrapper"] = falcon_actor_wf_wrapper_slow
+        actor_params["config_file_name"] = "falcon.xml"
+        input_ids = {"equilibrium": 2, "core_profiles": 0}
+        output_ids = {"mhd_linear": 9}
+    if actor == "DAEPS":
+        actor_params["entrypoint_actor"] = False
+        actor_params["wrapper"] = falcon_actor_wf_wrapper_daeps
+        actor_params["config_file_name"] = "falcon.xml"
+        input_ids = {"equilibrium": 2, "core_profiles": 0}
+        output_ids = {"mhd_linear": 10}
+    if actor == "DAEPS_eigen":
+        actor_params["entrypoint_actor"] = False
+        actor_params["wrapper"] = falcon_actor_wf_wrapper_daeps_eigen
+        actor_params["config_file_name"] = "falcon.xml"
+        input_ids = {"equilibrium": 2, "core_profiles": 0}
+        output_ids = {"mhd_linear": 11}
 
     actor_params["input_ids"] = input_ids
     actor_params["output_ids"] = output_ids

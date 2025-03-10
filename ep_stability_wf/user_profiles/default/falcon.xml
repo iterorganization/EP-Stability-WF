@@ -1,0 +1,37 @@
+<parameters display="Falcon Settings">
+  <ntor>10</ntor>
+
+  <omegamax>1.0</omegamax>
+  <omegamin>0</omegamin>
+  <omegastep>2000</omegastep>
+
+  <thtstep>200</thtstep>
+
+  <npsisurf>1000</npsisurf>
+
+  <Nrgrid>1000</Nrgrid>
+  <ptdens>500</ptdens>
+
+  <normalizedfilteredwindowsize>0.15</normalizedfilteredwindowsize>
+
+  <rho_start>0.1</rho_start>
+  <rho_end>0.95</rho_end>
+  <rho_step>1</rho_step>
+
+  <kinetic_approx>0</kinetic_approx>
+  <incompressible>0</incompressible>
+
+  <q_normalized_omega>1</q_normalized_omega>
+  <debug>1</debug>
+
+  <serial>1</serial>
+  <imas>1</imas>
+  <shot>134173</shot>
+  <run>106</run>
+  <run_density>106</run_density>
+  <time_density>90.0</time_density>
+  <device>test_DB</device>
+  <user>g2apopa</user>
+  <time>90.0</time>
+
+</parameters>

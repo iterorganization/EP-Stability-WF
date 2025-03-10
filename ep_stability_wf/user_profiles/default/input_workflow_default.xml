@@ -32,6 +32,7 @@
     <Distributions_2 display="Either to use or not Hagis 2 for non linear physics.">0</Distributions_2> <!-- 0:NONE, 1:HAGIS2-->
     <Orbit_Finder display="Either to use or not the finder together with hagis 2.">0</Orbit_Finder> <!-- 0:NONE, 1:Finder-->
     <Stability_code display="Which mode of LIGKA one wants to use.">Ligka_m5</Stability_code> <!-- 0:NONE, 1:Ligka mode 5, 2: LIGKA mode 4, 3: LIGKA mode 1-->
+    <Extra_codes display="If one wants to use Falcon or not.">0</Extra_codes> <!--0:NONE, 1:Falcon_slow, 2:Falcon_full, 3:DAEPS, 4:DAEPS_eigen-->
   </actor_selection>
 
 </root>
