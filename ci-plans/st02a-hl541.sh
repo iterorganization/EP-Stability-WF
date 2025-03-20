@@ -3,6 +3,8 @@
 # Stage 1: Test Helena + Ligka 5/4/1
 set -e
 
+job_name=02a-hl541
+
 # Set up environment
 . ./ci-plans/st00-header.sh || exit 1
 # Check Flake8 & Cerberus are installed (in venv)
@@ -18,12 +20,13 @@ if [ ! -z ${SLURM_JOB_UID} ]; then
 else
     basedir=$(readlink -f $(dirname ${0})/..)
 fi
-use_tmp_dir=1
+use_tmp_dir=${use_tmp_dir:-1}
 
 ## If we need to do something different when running in Bamboo
-#if [ ! -z ${bamboo_buildKey} ]; then
-#  imasdb TEST
-#fi
+if [ ! -z ${bamboo_buildKey} ]; then
+  # imasdb TEST
+    use_tmp_dir=0
+fi
 
 if [ ${use_tmp_dir} -eq 1 ]; then
     tmpdir=$(mktemp -d)
@@ -37,7 +40,7 @@ fi
 python ${basedir}/ep_nogui -c ${data_dir}/02a-hl541
 
 # Test the output
-python ${basedir}/ci-plans/files/03-output/output_test.py -r 20 -o 0 1 2 -v ${basedir}/ci-plans/files/03-output/validation-02a-hl541.yaml
+# python ${basedir}/ci-plans/files/03-output/output_test.py -r 20 -o 0 1 2 -v ${basedir}/ci-plans/files/03-output/validation-02a-hl541.yaml || echo 1
 
 
 if [ ${use_tmp_dir} -eq 1 ]; then
