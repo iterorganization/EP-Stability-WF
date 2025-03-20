@@ -1,22 +1,29 @@
 <root>
   <workflow_parameters display="WORKFLOW PARAMETERS">
-    <user display="User in which the initial data is stored.">public</user>
-    <machine display="Name of the database in which the initial data is stored.">ITER</machine>
-    <shot_nr display="Pulse/Shot number of the initial DB.">130012</shot_nr>
-    <run_in display="Run number of the initial DB.">2</run_in>
-    <machine_out display="Name of the output DB.">test_DB</machine_out>
-    <run_out display="Run number of the output DB.">10</run_out>
-    <itime display="Time Index">15-17,19</itime>
-  </workflow_parameters>
-
-  <further_settings display="FURTHER SETTINGS">
-    <ligka_541 display="Automated way of executing HELENA+L 5/4/1.">0</ligka_541>
-    <ligka_5412 display="Automated way of executing HELENA+L 5/4/1/2.">0</ligka_5412>
-    <pulse_list display="This option enables multiple shots/runs as input.">0</pulse_list>
-    <fast_particles display="Tick this box to take into account the energetic particles.">0</fast_particles>
-    <hdf5 display="If checkend, runs HDF5 backend.">0</hdf5>
-    <mpi_processes display="How many MPI processes to use for the MPI actors.">8</mpi_processes>
-  </further_settings>
+    <input_parameters display="Input Parameters">
+      <user display="User in which the initial data is stored.">public</user>
+      <machine_in display="Name of the database in which the initial data is stored.">ITER</machine_in>
+      <run_in display="Run number of the initial DB.">2</run_in>
+      <uri_in display="Complete URI for input or path to the DB."></uri_in>
+      <itime display="Time Index">15-17,19</itime>
+    </input_parameters>
+    <output_parameters display="Output Parameters">
+      <machine_out display="Name of the output DB.">test_DB</machine_out>
+      <run_out display="Run number of the output DB.">10</run_out>
+      <uri_out display="Complete URI for output or path to the DB"></uri_out>
+    </output_parameters>
+    <general_parameters display="General Parameters">
+    <shot display="Pulse/Shot number of the initial DB.">130012</shot>
+    </general_parameters>
+    <further_settings display="Further Settings">
+      <ligka_541 display="Automated way of executing HELENA+L 5/4/1.">0</ligka_541>
+      <ligka_5412 display="Automated way of executing HELENA+L 5/4/1/2.">0</ligka_5412>
+      <!-- <pulse_list display="This option enables multiple shots/runs as input.">0</pulse_list> -->
+      <fast_particles display="Tick this box to take into account the energetic particles.">0</fast_particles>
+      <hdf5 display="If checkend, runs HDF5 backend.">0</hdf5>
+      <mpi_processes display="How many MPI processes to use for the MPI actors.">8</mpi_processes>
+    </further_settings>
+</workflow_parameters>
 
   <actor_selection display="ACTOR SELECTION">
     <Equilibrium_code_chease display="Select if chease is used or not">0</Equilibrium_code_chease>

@@ -39,16 +39,18 @@ def actor_call(
     input_ids = actor_params["input_ids"]
     output_ids = actor_params["output_ids"]
 
-    database = None
-    run = None
-    user = None
-    shot_no = system_params["shot_nr"]
+    # database = None
+    # run = None
+    # user = None
+    # shot_no = system_params["shot_nr"]
+    uri_in = None
+    uri_out = None
     config_file = os.path.join(config_folder_path, actor_params["config_file_name"])
 
-    if system_params["hdf5"] == 1:
-        backend = imas.imasdef.HDF5_BACKEND
-    else:
-        backend = imas.imasdef.MDSPLUS_BACKEND
+    # if system_params["hdf5"] == 1:
+    #     backend = imas.imasdef.HDF5_BACKEND
+    # else:
+    #     backend = imas.imasdef.MDSPLUS_BACKEND
     if actor_name == "Ligka_m5":
         mpi_processes = 1
     else:
@@ -63,43 +65,45 @@ def actor_call(
             del output_ids["core_profiles"]
 
     if actor_params["entrypoint_actor"]:
-        database = system_params["machine"]
-        database_out = system_params["machine_out"]
-        run = system_params["run_in"]
-        run_out = system_params["run_out"]
-        user = system_params["user"]
+        # database = system_params["machine"]
+        # database_out = system_params["machine_out"]
+        # run = system_params["run_in"]
+        # run_out = system_params["run_out"]
+        # user = system_params["user"]
+        uri_in = system_params["uri_in"]
+        uri_out = system_params["uri_out"]
         time_index_list, _ = time_construction(system_params["itime"])
     else:
-        database = system_params["machine_out"]
-        run = system_params["run_out"]
-        user = os.getenv("USER")
+        # database = system_params["machine_out"]
+        # run = system_params["run_out"]
+        # user = os.getenv("USER")
+        uri_in = system_params["uri_out"]
+        uri_out = system_params["uri_out"]
         _, time_index_list = time_construction(system_params["itime"])
 
     # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
     # AND READ FULL TIME VECTOR OF EQUILIBRIUM IDS TO GET THE TIME BASE
     time, ntime = read_timestep(
-        user=user,
-        database=database,
-        run=run,
-        current_config_folder=config_folder_path,
-        backend=backend,
+        uri_in,
         occurrence=input_ids["equilibrium"],
     )
 
     # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
-    input = imas.DBEntry(backend, database, shot_no, run, user)
-    status, _ = input.open()
-    if status != 0:
+    try:
+        input = imas.DBEntry(uri_in, "r")
+    except:
         print("Can't open the selected dataset!", file=sys.stderr)
         sys.exit(1)
 
     if actor_params["entrypoint_actor"]:
         # OPEN OUTPUT OBJECT, IN VIEW OF SAVING RESULTS TO LOCAL DB
         print("=> Create output datafile")
-        output = imas.DBEntry(
-            backend, database_out, shot_no, run_out, os.getenv("USER")
-        )
-        output.create()
+        try:
+            output = imas.DBEntry(uri_out, "w")
+        except:
+            print("Can't create the dataset!", file=sys.stderr)
+            sys.exit(1)
+        # output.create()
     else:
         output = input
         if actor_name != "Helena":
@@ -144,7 +148,6 @@ def actor_call(
                         occurrence=ids_occ,
                     )
                     mhd_linear_in.ids_properties.homogeneous_time = 1
-                    # print('Read the IDS')
                     mhd_linear_occ = ids_occ
                 except:
                     print(

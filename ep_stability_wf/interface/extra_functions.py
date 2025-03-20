@@ -10,6 +10,7 @@ from ep_stability_wf.interface.create_workflow_param import (
     update_xml_param,
     update_xml_param_wf,
     save_xml_param_to_file_multiple,
+    create_xml_from_workflow_param
 )
 # from ep_stability_wf.workflow.analysis_modes import Plot, export_data
 import os
@@ -96,15 +97,19 @@ def copy_workflow_param_to_file(
     copy2(
         wf_param_folder_default + "/input_workflow_default.xml", current_wf_param_folder
     )
+    # Create XML tree from workflow parameters
+    root = create_xml_from_workflow_param(workflow_param)
 
-    tree = etree.parse(current_wf_param_folder + "/input_workflow_default.xml")
-    root = tree.getroot()
-    rl = [wfp_ref, fur_ref, act_ref]
-    for iroot in range(3):
-        for elem in root[iroot].iter():
-            if elem.tag is not etree.Comment and len(elem) == 0:
-                elem.text = workflow_param[rl[iroot]][elem.tag][0]
-    tree.write(current_wf_param_folder + "/input_workflow_default.xml")
+    # Format the XML with proper indentation
+    tree = etree.ElementTree(root)
+
+    # Configure the serialization options for pretty printing
+    tree.write(
+        current_wf_param_folder + "/input_workflow_default.xml",
+        pretty_print=True,
+        encoding='utf-8',
+        xml_declaration=False
+    )
 
     # Copy the actors xml files into the current dir
     # Only in case of saveAs, because the individual .xml of the actors are saved separately

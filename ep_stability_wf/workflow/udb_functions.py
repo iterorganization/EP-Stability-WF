@@ -1,7 +1,7 @@
 import numpy as np
 import imas
 import sys
-from ep_stability_wf.workflow.functions_wf import parameters_workflow
+from ep_stability_wf.workflow.functions_wf import parameters_workflow, uri_from_params
 from ep_stability_wf.interface.create_workflow_param import create_xml_param_from_file
 from ep_stability_wf.workflow.libs.rw_for import (
     wr_for,
@@ -27,29 +27,18 @@ from ep_stability_wf.workflow.functions_wf import (
 def write_zf_udb(current_config_folder):
     print('Now write UDB file for ASTRA')
     params = parameters_workflow(current_config_folder + "/input_workflow_default.xml")
+    params = uri_from_params(params)
     
-    if params["hdf5"] == 1:
-        backend = imas.imasdef.HDF5_BACKEND
-    else:
-        backend = imas.imasdef.MDSPLUS_BACKEND
-    database_out = params["machine_out"]
-    shot_no = params["shot_nr"]
-    run_out = params["run_out"]
-    user = params["user"]
+    uri_out = params["uri_out"]
     time_index_list, _ = time_construction(params["itime"])
     itime = time_index_list[0]
     time, ntime = read_timestep(
-        user=user,
-        database=database_out,
-        run=run_out,
-        current_config_folder=current_config_folder,
-        backend=backend,
+        uri_out,
         occurrence=2,
     )
-    
-    input = imas.DBEntry(backend, database_out, shot_no, run_out, user)
-    status, _ = input.open()
-    if status != 0:
+    try:
+        input = imas.DBEntry(uri_out, "r")
+    except:
         print("Can't open the selected dataset!", file=sys.stderr)
         sys.exit(1)
     

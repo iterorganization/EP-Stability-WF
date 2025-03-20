@@ -7,6 +7,7 @@ import copy
 from lxml import etree
 import xml.etree.ElementTree as ET
 import numpy as np
+import re
 from ep_stability_wf.workflow.select_ligka_species import select_species_by_density
 
 no_actor = {}
@@ -54,6 +55,36 @@ if len(list(no_actor.keys())) > 0:
         print("    {}".format(key))
     print("Continuing without the above actors")
 
+def uri_from_params(param):
+    user = os.getenv("USER")
+    if param["hdf5"] == 1:
+        backend = "hdf5"
+    else:
+        backend = "mdsplus"
+    # First with inputs
+    if param["uri_in"] in [None, ""]:
+        # Using legacy
+        uri_in = f'imas:{backend}?user={param["user"]};shot={param["shot"]};run={param["run_in"]};database={param["machine_in"]};version=3'
+    else:
+        # Assume uri is complete!
+        if re.match(r'^imas', param["uri_in"]):
+            uri_in = param["uri_in"]
+        else:
+            uri_in = f'imas:{backend}?path={param["uri_in"]}'
+    param["uri_in"] = uri_in
+
+    # Outputs
+    if param["uri_out"] in [None, ""]:
+        # Using legacy
+        uri_out = f'imas:{backend}?user={user};shot={param["shot"]};run={param["run_out"]};database={param["machine_out"]};version=3'
+    else:
+        # Assume uri is complete!
+        if re.match(r'^imas', param["uri_out"]):
+            uri_out = param["uri_out"]
+        else:
+            uri_out = f'imas:{backend}?path={param["uri_out"]}'
+    param["uri_out"] = uri_out
+    return param
 
 # IMPORT PARAMETERS FROM WORKFLOW AND LIGKA XML --------------------------------------
 def parameters_workflow(input_file):
@@ -99,23 +130,16 @@ def time_construction(time_input):
     return time_list, list(range(len(time_list)))
 
 
-def read_timestep(user, database, run, current_config_folder, backend, occurrence):
-    param = parameters_workflow(
-        os.path.join(current_config_folder, "input_workflow_default.xml")
-    )
+def read_timestep(uri_in, occurrence):
     print(
-        "=> Open input datafile and read total equilibrium IDS for timesteps.",
-        backend,
-        database,
-        param["shot_nr"],
-        run,
-        user,
+        "=> Open input datafile and read total equilibrium IDS for timesteps."
     )
-    input = imas.DBEntry(backend, database, param["shot_nr"], run, user)
-    status, _ = input.open()
-    if status != 0:
+    try:
+        input = imas.DBEntry(uri_in, "r")
+    except:
         print("Can't open the selected dataset!", file=sys.stderr)
         sys.exit(1)
+
     time = input.partial_get("equilibrium", "time", occurrence=occurrence)
     ntime = len(time)
     input.close()
