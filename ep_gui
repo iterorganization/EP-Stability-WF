@@ -95,8 +95,11 @@ def open_gui(wf_param_folder):
 
     # abbreviations for the keys - makes it easier to change them in the xml file
     wfp_ref = list(workflow_param.keys())[0]
-    fur_ref = list(workflow_param.keys())[1]
-    act_ref = list(workflow_param.keys())[2]
+    input_ref = list(workflow_param[wfp_ref].keys())[0]
+    output_ref = list(workflow_param[wfp_ref].keys())[1]
+    gen_ref = list(workflow_param[wfp_ref].keys())[2]
+    fur_ref = list(workflow_param[wfp_ref].keys())[3]
+    act_ref = list(workflow_param.keys())[1]
     wfp_ref_chease = list(chease_param.keys())
     wfp_ref_hel = list(helena_param.keys())
     wfp_ref_l = list(ligka_param.keys())
@@ -180,13 +183,16 @@ def open_gui(wf_param_folder):
 
     # LEFT - CONFIGURING THE WORKFLOW PARAMETERS
     irow = 0
-    for ref in [wfp_ref, fur_ref]:
+    Label(fr_wfp, text=wfp_ref, bg=col.c3, font="15").grid(
+            row=irow, column=0, columnspan=3, pady=10, padx=5, sticky="we"
+        )
+    irow = 1
+    for ref in [input_ref, output_ref, gen_ref, fur_ref]:
         Label(fr_wfp, text=ref, bg=col.c3, font="15").grid(
             row=irow, column=0, columnspan=3, pady=10, padx=5, sticky="we"
         )
         irow += 1
-
-        for elem in workflow_param[ref]:
+        for elem in workflow_param[wfp_ref][ref]:
             Label(fr_wfp, text=elem, bg=col.c3).grid(
                 row=irow, column=0, padx=3, pady=2, sticky="w"
             )
@@ -198,29 +204,29 @@ def open_gui(wf_param_folder):
                 "hdf5",
             ]:
                 entrystring = StringVar()
-                entrystring.set(workflow_param[ref][elem][0])
+                entrystring.set(workflow_param[wfp_ref][ref][elem][0])
                 c = Checkbutton(fr_wfp, variable=entrystring)
                 c.grid(row=irow, column=1, padx=3, pady=2, sticky="e")
-                CreateToolTip(c, text=workflow_param[ref][elem][1])
+                CreateToolTip(c, text=workflow_param[wfp_ref][ref][elem][1])
                 entrystring.trace(
                     "w",
-                    lambda name, index, mode, elem=elem, entrystring=entrystring, ref=ref: update_xml_param_wf(
-                        workflow_param, ref, elem, entrystring.get()
+                    lambda name, index, mode, elem=elem, entrystring=entrystring, ref=ref, parent=wfp_ref: update_xml_param_wf(
+                        workflow_param, ref, elem, entrystring.get(), parent=wfp_ref
                     ),
                 )
             else:
                 entrystring = StringVar()
-                entrystring.set(workflow_param[ref][elem][0])
+                entrystring.set(workflow_param[wfp_ref][ref][elem][0])
                 # if an entry is changed, the new values should immediately be changed in the workflow_param dictionary
                 entrystring.trace(
                     "w",
-                    lambda name, index, mode, elem=elem, entrystring=entrystring, ref=ref: update_xml_param_wf(
-                        workflow_param, ref, elem, entrystring.get()
+                    lambda name, index, mode, elem=elem, entrystring=entrystring, ref=ref, parent=wfp_ref: update_xml_param_wf(
+                        workflow_param, ref, elem, entrystring.get(), parent=wfp_ref
                     ),
                 )
                 x = Entry(fr_wfp, textvariable=entrystring, bg=col.c1)
                 x.grid(row=irow, column=1, padx=3, pady=2, sticky="e")
-                CreateToolTip(x, text=workflow_param[ref][elem][1])
+                CreateToolTip(x, text=workflow_param[wfp_ref][ref][elem][1])
             irow += 1
 
     # RIGHT - CONFIGURING WF ACTOR LIST AND THEIR PARAMETERS
@@ -317,9 +323,9 @@ def open_gui(wf_param_folder):
     # button_analysis.configure(command=lambda: analysis_window(
     #     ana_ref, analysis_param, wf_param_folder))
 
-    button_scenario = Button(fr_wfp, text="Scenario Summary Choice", bg="light grey")
-    button_scenario.grid(row=54, column=1, padx=5, pady=5, sticky="w")
-    button_scenario.configure(command=lambda: scenario_window(wf_param_folder))
+    # button_scenario = Button(fr_wfp, text="Scenario Summary Choice", bg="light grey")
+    # button_scenario.grid(row=54, column=1, padx=5, pady=5, sticky="w")
+    # button_scenario.configure(command=lambda: scenario_window(wf_param_folder))
 
     button_exit = Button(fr_wfp, text="Exit", bg="light grey")
     button_exit.grid(row=55, column=0, padx=5, pady=5, sticky="w")

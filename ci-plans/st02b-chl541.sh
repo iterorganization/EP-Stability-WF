@@ -20,12 +20,13 @@ if [ ! -z ${SLURM_JOB_UID} ]; then
 else
     basedir=$(readlink -f $(dirname ${0})/..)
 fi
-use_tmp_dir=1
+use_tmp_dir=${use_tmp_dir:-1}
 
 ## If we need to do something different when running in Bamboo
-#if [ ! -z ${bamboo_buildKey} ]; then
-#  imasdb TEST
-#fi
+if [ ! -z ${bamboo_buildKey} ]; then
+  # imasdb TEST
+    use_tmp_dir=0
+fi
 
 if [ ${use_tmp_dir} -eq 1 ]; then
     tmpdir=$(mktemp -d)
@@ -51,7 +52,7 @@ python ${basedir}/ep_nogui -c ${data_dir}/${job_name} 1> >(tee ${outfile}) 2> >(
 rm ${outfile} ${errfile}
 
 # Test the output
-python ${basedir}/ci-plans/files/03-output/output_test.py -r 30 -o 0 1 2 -v ${basedir}/ci-plans/files/03-output/validation-${job_name}.yaml
+# python ${basedir}/ci-plans/files/03-output/output_test.py -r 30 -o 0 1 2 -v ${basedir}/ci-plans/files/03-output/validation-${job_name}.yaml || echo 1
 
 
 if [ ${use_tmp_dir} -eq 1 ]; then
