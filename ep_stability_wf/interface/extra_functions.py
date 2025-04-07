@@ -91,6 +91,7 @@ def copy_workflow_param_to_file(
         "scenario.xml",
         "ids_merge.xml",
         "chease_input_choices.xml",
+        "falcon.xml"
     ]
     # Copy the default workflow parameter file into the current one
 
@@ -164,6 +165,7 @@ def load(chosen_folder, open_gui):
         "scenario.xml",
         "ids_merge.xml",
         "chease_input_choices.xml",
+        "falcon.xml"
     ]:
         if not os.path.exists(chosen_folder + "/" + ep_file):
             print(
@@ -265,6 +267,11 @@ def actor_window(wfp_ref_l, wf_param_folder, l):
         window_a.title("CHEASE PARAMETERS")
         ligka_param = create_xml_param_from_file(
             wf_param_folder + "/chease_input_choices.xml"
+        )
+    elif l == 8:
+        window_a.title("FALCON PARAMETERS")
+        ligka_param = create_xml_param_from_file(
+            wf_param_folder + "/falcon.xml"
         )
 
     window_a.configure(bg=col.c1)
@@ -395,7 +402,14 @@ def actor_window(wfp_ref_l, wf_param_folder, l):
                 ligka_param, wf_param_folder + "/chease_input_choices.xml"
             )
         )
-
+    elif l == 8:
+        button_saveconfig = Button(fr_l, text="Save FALCON Configuration", bg=col.c2)
+        button_saveconfig.grid(row=53, column=0, padx=5, pady=5, sticky="ew")
+        button_saveconfig.configure(
+            command=lambda: save_xml_param_to_file(
+                ligka_param, wf_param_folder + "/falcon.xml"
+            )
+        )
 
 def species_window(species_ref, wf_param_folder):
     def update_scrollregion(event):

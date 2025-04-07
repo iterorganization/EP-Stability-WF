@@ -72,6 +72,7 @@ def open_gui(wf_param_folder):
     hagis1_param = create_xml_param_from_file(wf_param_folder + "/hagis1.xml")
     hagis2_param = create_xml_param_from_file(wf_param_folder + "/hagis2.xml")
     finder_param = create_xml_param_from_file(wf_param_folder + "/finder_input.xml")
+    falcon_param = create_xml_param_from_file(wf_param_folder + "/falcon.xml")
     analysis_param = create_xml_param_from_file(wf_param_folder + "/analysis.xml")
     species_param = create_workflow_param_from_file(
         wf_param_folder + "/actor_settings.xml"
@@ -106,6 +107,7 @@ def open_gui(wf_param_folder):
     wfp_ref_h = list(hagis1_param.keys())
     wfp_ref_h2 = list(hagis2_param.keys())
     wfp_ref_f = list(finder_param.keys())
+    wfp_ref_fa = list(falcon_param.keys())
     ana_ref = list(analysis_param.keys())[0]
     species_ref = [x for x in species_param.keys()]
     scen_ref = list(scenario_param.keys())
@@ -268,6 +270,8 @@ def open_gui(wf_param_folder):
                         "Ligka_m3",
                     )
                 )
+            elif elem == 'Extra_codes':
+                combobox.config(values=('0', 'Falcon_slow', 'Falcon_full', 'DAEPS', 'DAEPS_eigen'))
             else:
                 combobox.config(values=("0", workflow_param[ref][elem][0]))
             entrystring.trace(
@@ -367,27 +371,31 @@ def open_gui(wf_param_folder):
     button_saveconfig.configure(
         command=lambda: actor_window(wfp_ref_f, wf_param_folder, 4)
     )
+    button_saveconfig = Button(fr_as, text='FALCON Parameters', bg=col.c2)
+    button_saveconfig.grid(row=58, column=0, padx=5, pady=5, sticky='ew')
+    button_saveconfig.configure(
+        command=lambda: actor_window(wfp_ref_fa, wf_param_folder, 8))
 
     button_saveconfig = Button(fr_as, text="Species Settings", bg=col.c2)
-    button_saveconfig.grid(row=58, column=0, padx=5, pady=5, sticky="ew")
+    button_saveconfig.grid(row=59, column=0, padx=5, pady=5, sticky="ew")
     button_saveconfig.configure(
         command=lambda: species_window(species_ref, wf_param_folder)
     )
 
     button_saveconfig = Button(fr_as, text="SCENARIO Parameters", bg=col.c2)
-    button_saveconfig.grid(row=59, column=0, padx=5, pady=5, sticky="ew")
+    button_saveconfig.grid(row=60, column=0, padx=5, pady=5, sticky="ew")
     button_saveconfig.configure(
         command=lambda: actor_window(scen_ref, wf_param_folder, 6)
     )
 
     button_saveconfig = Button(fr_as, text="IDS Merge", bg=col.c2)
-    button_saveconfig.grid(row=60, column=0, padx=5, pady=5, sticky="ew")
+    button_saveconfig.grid(row=61, column=0, padx=5, pady=5, sticky="ew")
     button_saveconfig.configure(
         command=lambda: ids_window(ids_merge_ref, wf_param_folder)
     )
 
     button_saveconfig = Button(fr_as, text="Create UDB file ZS", bg=col.c2)
-    button_saveconfig.grid(row=61, column=0, padx=5, pady=5, sticky="ew")
+    button_saveconfig.grid(row=62, column=0, padx=5, pady=5, sticky="ew")
     button_saveconfig.configure(
         command=lambda: write_zf_udb(wf_param_folder)
     )
