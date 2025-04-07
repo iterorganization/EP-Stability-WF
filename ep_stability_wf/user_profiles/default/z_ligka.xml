@@ -20,7 +20,7 @@
     <offset_d>0.0d0</offset_d>
     <guess_start>0.0d0</guess_start>
     <guess_end>0.0d0</guess_end>
-    <dguess>0.0d0</dguess>
+    <d_guess>0.0d0</d_guess>
     <refine>0</refine>
     <ref_pos1>0.0d0</ref_pos1>
     <ref_peak1>0.0d0</ref_peak1>
