@@ -17,7 +17,7 @@
     <tu display="Tu">0.02</tu>
     <ar display="Ar">0.02</ar>
   </species_impurities>
-  
+
   <species_fast display="Fast Ions">
     <fh display="H">0.001</fh>
     <fd display="D">0.001</fd>

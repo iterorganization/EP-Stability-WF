@@ -25,7 +25,7 @@
     <ref_pos1>0.0d0</ref_pos1>
     <ref_peak1>0.0d0</ref_peak1>
     <antenna_rad_drive>0.0d0</antenna_rad_drive>
-    
+
     <nspec>2</nspec>
     <spec_str>eldd</spec_str>
     <nback>2</nback>
@@ -42,7 +42,7 @@
     <endkinrad>126</endkinrad>
     <mass_ratio>-1.0d0</mass_ratio>
     <writeout>0</writeout>
-    
+
     <shot_number_wrap>130015</shot_number_wrap>
     <run_wrap>1</run_wrap>
     <itime_wrap>40</itime_wrap>

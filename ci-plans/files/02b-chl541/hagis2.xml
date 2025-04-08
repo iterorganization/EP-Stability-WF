@@ -1,6 +1,6 @@
 <parameter display="HAGIS 2 PARAMETERS">
 
-                                                                                                                                                                                                                                                
+
 
     <mamu>4</mamu>
     <qc>2</qc>
@@ -9,19 +9,19 @@
     <fracH>0.0</fracH>
     <fracD>0.5</fracD>
     <fracT>0.5</fracT>
-    
+
     <orbit_properties_compute>false</orbit_properties_compute>
     <orbit_propertie_norbits>2</orbit_propertie_norbits>
     <wradloc>false</wradloc>
     <findtpb>false</findtpb>
-    
+
     <time_option>4</time_option>
     <tmaxi>3.0d-3</tmaxi>
     <tmini>0.0</tmini>
     <dt_interm>1.0d-5</dt_interm>
     <dt_integ_1>1.0d-7</dt_integ_1>
     <dt_integ_2>1.0d-7</dt_integ_2>
-    
+
     <num_periods> 150   </num_periods>
     <n_interm > 50  </n_interm >
     <n_integ_1>  300  </n_integ_1>
@@ -34,7 +34,7 @@
     <wintprog>TRUE</wintprog>
     <restart_option> 2    </restart_option>
     <restart_freq>   12.0d0 </restart_freq>
-    
+
     <start0>   1 </start0>
     <nmrkrs>  200000  </nmrkrs>
     <ltrap>false</ltrap>
@@ -42,25 +42,25 @@
     <s_load_max>  0.95d0   </s_load_max>
     <ensmin>3.0d4</ensmin>
     <ensmax>4.4d6</ensmax>
-    
+
     <tstpar>  0  </tstpar>
-    
+
     <lpert>true</lpert>
     <lmodev>true</lmodev>
     <lphslk>false</lphslk>
     <nomods>  1  </nomods>
     <forward_wave>true</forward_wave>
-    
+
     <spcpet>  15  </spcpet>
     <spcfrq>  1  </spcfrq>
     <force_mode_evol> 0   </force_mode_evol>
     <lsel>false</lsel>
     <spcgrth>  1  </spcgrth>
-    
-    
-    
-    
-    <ldeltf>true</ldeltf>     
+
+
+
+
+    <ldeltf>true</ldeltf>
     <dfmethod>  0  </dfmethod>
     <f0meth>  0  </f0meth>
     <rflag >    4 </rflag>
@@ -74,9 +74,9 @@
     <ezero>  3.5d06  </ezero>
     <lcnstc>  2  </lcnstc>
     <nmag0>  0.801117563495d21  </nmag0>
-    
-    
-    
+
+
+
     <wphasemix>false</wphasemix>
     <wlost>true</wlost>
     <wdistfn>true</wdistfn>
@@ -84,17 +84,17 @@
     <enrmax>  5.0d6  </enrmax>
     <bnumen> 50   </bnumen>
     <bnumss> 50   </bnumss>
-    
+
     <wallmarkers_timetrace>  0  </wallmarkers_timetrace>
     <cpel_inter>  1   </cpel_inter>
-    
-    
+
+
     <shot_number> 130012  </shot_number>
      <run> 13 </run>
      <itime> 15  </itime>
      <ids_time> 68.0 </ids_time>
     <user>lauberp</user>
      <machine>helena_test</machine>
-    
+
 
 </parameter>

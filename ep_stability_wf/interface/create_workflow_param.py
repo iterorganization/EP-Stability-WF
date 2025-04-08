@@ -116,7 +116,7 @@ def save_xml_param_to_file_multiple(ligka_param, filepath):
         for elem in level.iter():
             if len(elem) == 0 and elem.tag is not etree.Comment:
                 elem.text = ligka_param[name][elem.tag][0]
-                
+
     tree.write(filepath)
     file_name = filepath.split("/")[-1]
     print(f"Saved settings to {file_name}!")

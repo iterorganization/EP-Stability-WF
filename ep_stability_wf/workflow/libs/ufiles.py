@@ -1,11 +1,11 @@
-""" 
+"""
 Write/Read data in UFILES format (version 0.2)
 
 UFILES is an ASCII format defined in the manual:
   http://w3.pppl.gov/~pshare/help/ufiles_manual.html
 
 How to use ufiles.py:
-  
+
   import ufiles as uf
 """
 

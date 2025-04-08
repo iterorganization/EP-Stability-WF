@@ -41,13 +41,13 @@
     <nomods>  0  </nomods>
 
     <n_prop_min>10</n_prop_min>
-    <n_prop_max>10 </n_prop_max>	
-    <m_min_prop>8</m_min_prop>	
-    <m_max_prop>12</m_max_prop>	  		
+    <n_prop_max>10 </n_prop_max>
+    <m_min_prop>8</m_min_prop>
+    <m_max_prop>12</m_max_prop>
     <k_prop>5</k_prop>
     <num_kin_rad>128</num_kin_rad>
     <num_kin_lam>20</num_kin_lam>
-    <num_kin_en>10</num_kin_en>	
+    <num_kin_en>10</num_kin_en>
 
     <shot_number> 130012  </shot_number>
     <run> 13 </run>
@@ -55,6 +55,6 @@
     <ids_time> 68.0 </ids_time>
     <user>lauberp</user>
     <machine>helena_test</machine>
-    
+
 
 </parameter>

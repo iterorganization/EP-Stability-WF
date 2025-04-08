@@ -8,13 +8,13 @@ SOURCES:
 
 MODULES: [ppplib, libcerf]
 
-BUILDS: 
+BUILDS:
   - DIR: helena
     CMD: gmake all
 
-ACTORS: 
+ACTORS:
   - DIR: helena
     XML: helena_imas_0.1.xml
 
-#COMMENTS:  
+#COMMENTS:
 ...

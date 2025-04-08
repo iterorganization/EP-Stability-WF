@@ -8,13 +8,13 @@ SOURCES:
 
 MODULES: [libcerf, netCDF-Fortran/4.4.4-intel-2018a, PSPLINE/20181008-intel-2018a, MUMPS/5.1.2-intel-2018a-metis/, NAG, SLATEC/4.1-iccifort-2018.1.163-GCC-6.4.0-2.28, XMLlib/3.2.0-intel-2018a]
 
-BUILDS: 
+BUILDS:
   - DIR: ligka
     CMD: gmake LIGKA_WF OPTS=IMAS,WF,MPI,MUMPS
 
-ACTORS: 
+ACTORS:
   - DIR: ligka
     XML: ligka_WF-PY.xml
 
-#COMMENTS:  
+#COMMENTS:
 ...

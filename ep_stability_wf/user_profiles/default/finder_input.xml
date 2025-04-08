@@ -91,7 +91,7 @@
   <k_prop>3</k_prop>
   <num_kin_rad>128</num_kin_rad>
   <num_kin_lam>20</num_kin_lam>
-  <num_kin_en> 10 </num_kin_en> 
+  <num_kin_en> 10 </num_kin_en>
 
   <shot_number>100015</shot_number>
   <run>62</run>
@@ -101,17 +101,17 @@
   <ids_time>150</ids_time>
   <user>lauberp</user>
   <machine>helena_test</machine>
-  <basedir>./</basedir> 
+  <basedir>./</basedir>
   <hagisdir>../bin/Linux_MPI_64/</hagisdir>
 
   <nenergy>10</nenergy>
   <nrad>128</nrad>
-  <nrad_start>1</nrad_start> 
+  <nrad_start>1</nrad_start>
   <nrad_end>128</nrad_end>
   <nzeta>1</nzeta>
 
   <nspec>2</nspec>
-  <spec_str>eldd</spec_str>  
+  <spec_str>eldd</spec_str>
   <temp_birth>30000.0E0</temp_birth>
   <el_mass_ratio>0.0E0</el_mass_ratio>
   <hot>false</hot>

@@ -400,7 +400,7 @@ def open_gui(wf_param_folder):
         command=lambda: write_zf_udb(wf_param_folder)
     )
 
-    
+
     ## FUNCTIONS - SAVING & UPDATING
 
     def save_workflow_param_to_file(filepath):

@@ -307,7 +307,7 @@ def imports_check(actor_name):
     if actor_name in no_actor:
         print(actor_name + " is not imported, cannot continue.")
         return 0
-    
+
 def modify_xml(xml_file):
     # Load the XML file
     tree = ET.parse(xml_file)
@@ -318,7 +318,7 @@ def modify_xml(xml_file):
         del root.attrib['display']
 
     output_file_path = xml_file.split('.')[0]+'_run.xml'
-    
+
     # Save the updated XML back to the file or keep it in memory
     tree.write(output_file_path, encoding='utf-8', xml_declaration=True)
     return output_file_path
@@ -393,7 +393,7 @@ def hagis1_actor_wf_wrapper(
     )
 
     hagis1_actor.finalize()
-    
+
 
     return equilibrium_out, mhd_linear_out, None, None
 
@@ -419,7 +419,7 @@ def hagis2_actor_wf_wrapper(
     runtime_settings.sandbox.life_time = SandboxLifeTime_Hagis2.PERSISTENT
     hagis2_actor.initialize(code_parameters=code_parameters, runtime_settings=runtime_settings)
 
-    
+
     mhd_linear_out, distributions_out = hagis2_actor(
         equilibrium_in,
         mhd_linear_in,
@@ -439,7 +439,7 @@ def ligka_actor_wf_wrapper(
     config_file_path,
     mpi_ranks,
 ):
-    
+
     ligka_actor = ligka()
     code_parameters = ligka_actor.get_code_parameters()
     config_file_path = modify_xml(config_file_path)
@@ -485,7 +485,7 @@ def finder_actor_wf_wrapper(
     runtime_settings.sandbox.life_time = SandboxLifeTime_Finder9.PERSISTENT
     finder9_actor.initialize(code_parameters=code_parameters, runtime_settings=runtime_settings)
 
-    
+
     distributions_out = finder9_actor(
         equilibrium_in,
         core_profiles_in,

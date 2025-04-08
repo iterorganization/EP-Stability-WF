@@ -11,7 +11,7 @@ from ep_stability_wf.workflow.libs.ufiles import (
     split_uname,
     UFILE,
 )
-import ep_stability_wf.workflow.libs.ufiles 
+import ep_stability_wf.workflow.libs.ufiles
 from ep_stability_wf.workflow.functions_wf import (
     read_timestep,
     actor_settings,
@@ -23,12 +23,12 @@ from ep_stability_wf.workflow.functions_wf import (
 
 # If one wants to read hdf5 files the tick needs to be present in the general wf settings.
 # The "input" for this program is taken from the "*_out" parameters of the wf, and the first time index is taken even if a list is put in the itime (only 1 time point is possible)
-# To run this one needs to have the USER, SHOT_NR, MACHINE_OUT, RUN_OUT, ITIME fields filled accordingly in the general wf interface 
+# To run this one needs to have the USER, SHOT_NR, MACHINE_OUT, RUN_OUT, ITIME fields filled accordingly in the general wf interface
 def write_zf_udb(current_config_folder):
     print('Now write UDB file for ASTRA')
     params = parameters_workflow(current_config_folder + "/input_workflow_default.xml")
     params = uri_from_params(params)
-    
+
     uri_out = params["uri_out"]
     time_index_list, _ = time_construction(params["itime"])
     itime = time_index_list[0]
@@ -41,11 +41,11 @@ def write_zf_udb(current_config_folder):
     except:
         print("Can't open the selected dataset!", file=sys.stderr)
         sys.exit(1)
-    
+
     ids_name = 'equilibrium'
     occurrence_eq = 2
     equilibrium_in = input.get_slice(ids_name, time[itime], imas.imasdef.PREVIOUS_SAMPLE, occurrence=occurrence_eq)
-    
+
     # EQUILIBRIUM PART
     rho_tor_norm_eq = equilibrium_in.time_slice[0].profiles_1d.rho_tor_norm
     psi_eq = equilibrium_in.time_slice[0].profiles_1d.psi
@@ -56,8 +56,8 @@ def write_zf_udb(current_config_folder):
         j = np.sqrt(j)
         psi.append(j)
     print(psi)
-    
-    
+
+
     ids_name = 'mhd_linear'
     occurrence_mhd = 6
     mhd_linear_in = input.get_slice(ids_name, time[itime], imas.imasdef.PREVIOUS_SAMPLE, occurrence=occurrence_mhd)
@@ -68,13 +68,13 @@ def write_zf_udb(current_config_folder):
             phi_pot = mode.plasma.phi_potential_perturbed.real
             rho_pol_mhd_dim1 = mode.plasma.grid.dim1
             rho_pol_mhd_dim2 = mode.plasma.grid.dim2
-    
+
             # uf = UFILE()
-            
+
             # uf.pre = 'EREP'
-            # uf.ext = 'EREPR'  
+            # uf.ext = 'EREPR'
             # #uf.shot = equ.shot
-            
+
             # #uf.X = {'label': 'rho_tor'      , 'data': equ.rho_tor_n[0, :] }
             # #uf.f = {'label': 'radial electric field from EPs', 'data': np.abs(equ.q[0, :]) }
 

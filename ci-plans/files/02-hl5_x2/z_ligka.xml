@@ -1,5 +1,5 @@
 <parameter display="LIGKA PARAMETERS">
-<modus>     5 </modus> 
+<modus>     5 </modus>
 <min_n_tor> 25</min_n_tor>
 <max_n_tor> 25  </max_n_tor>
 <min_m>    26 </min_m>
@@ -35,7 +35,7 @@
 <time_wrap>  220 </time_wrap>
 <user_wrap>public</user_wrap>
 <user_out_wrap></user_out_wrap>
-<machine_wrap>TEST</machine_wrap> 
+<machine_wrap>TEST</machine_wrap>
 
     <cocp>      1   </cocp>
     <zof>0</zof>
