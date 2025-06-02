@@ -69,30 +69,38 @@ def get_density_thermal_fast(species_obj: object, modify_ids: bool = False):
     density_fast[density_fast < 0] = 0.0
 
     if (density_fast < 0.0).any() or (density_thermal < 0.0).any():
-        print(
-            f"""negative density. debug info:
-            (z,a): ({species_obj.element[0].z_n}, {species_obj.element[0].a})
-            {density_thermal=}
-            {density_fast=}
-            {species_obj.density[0]=}
-            {species_obj.density_thermal[0]=}
-            {species_obj.density_fast[0]=}
-        """
-        )
+        try:
+            print(
+                f"""negative density. debug info:
+                (z,a): ({species_obj.element[0].z_n}, {species_obj.element[0].a})
+                {density_thermal=}
+                {density_fast=}
+                {species_obj.density[0]=}
+                {species_obj.density_thermal[0]=}
+                {species_obj.density_fast[0]=}
+            """
+            )
+        except AttributeError as e:
+            print("Ignoring Error:")
+            print(e)
 
-    # For debugging a single species
-    if (species_obj.element[0].z_n, species_obj.element[0].a) == (10, 20) and False:
-        print(
-            f"""
-            (z,a): ({species_obj.element[0].z_n}, {species_obj.element[0].a})
-            {species_obj.density=}
-            {species_obj.density_thermal=}
-            {species_obj.density_fast=}
+    try:
+        # For debugging a single species
+        if (species_obj.element[0].z_n, species_obj.element[0].a) == (10, 20) and False:
+            print(
+                f"""
+                (z,a): ({species_obj.element[0].z_n}, {species_obj.element[0].a})
+                {species_obj.density=}
+                {species_obj.density_thermal=}
+                {species_obj.density_fast=}
 
-            {density_thermal=}
-            {density_fast=}
-        """
-        )
+                {density_thermal=}
+                {density_fast=}
+            """
+            )
+    except AttributeError as e:
+        print("Ignoring Error:")
+        print(e)
 
     return density_thermal, density_fast
 
@@ -142,8 +150,17 @@ def select_species_by_density(
     for iisp, (isp, thermal_density_val, fast_density_val) in enumerate(species_list):
         species_obj = core_profiles.profiles_1d[0].ion[isp]
 
-        z_sp = za_func(species_obj.element[0].z_n)
-        a_sp = za_func(species_obj.element[0].a)
+        try:
+            z_sp = za_func(species_obj.element[0].z_n)
+            a_sp = za_func(species_obj.element[0].a)
+        except AttributeError as e:
+            print(e)
+            print("Continuing anyway")
+            z_sp = za_func(species_obj.z_ion)
+            a_sp = None
+            print(f"{z_sp=}")
+            print(f"{a_sp=}")
+
         ligka_string = LIGKA_ZA_STRINGS.get((z_sp, a_sp), None)
         if ligka_string is None:
             ligka_string = LIGKA_ZA_STRINGS.get((z_sp, None), None)
