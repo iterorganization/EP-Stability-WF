@@ -195,18 +195,7 @@ def save(
     act_ref,
     saveAs,
 ):
-    from datetime import datetime
-
-    # Define the current folder (either chosen by the system with 'save'
-    # or by the user with 'save as')
-    if current_config_folder is None:
-        first_save = 1
-        current_config_folder = os.path.join(
-            os.getcwd(), "user_profiles/run_" + datetime.now().strftime("%y%m%d_%H%M%S")
-        )
-    else:
-        first_save = 0
-
+    
     # When operation is cancelled from the interface
     if current_config_folder == () or current_config_folder == "":
         print("Save_as cancelled.", file=sys.stderr)
@@ -234,12 +223,41 @@ def save(
 
     return current_config_folder
 
+# Dictionary to keep track of active actor windows
+active_actor_windows = {}
 
 def actor_window(wfp_ref_l, wf_param_folder, l):
+    global active_actor_windows
+    
+    # If a window of this type is already open, bring it to front and return
+    if l in active_actor_windows:
+        try:
+            if active_actor_windows[l].winfo_exists():
+                active_actor_windows[l].lift()
+                active_actor_windows[l].focus_force()
+                return
+            else:
+                del active_actor_windows[l]
+        except Exception as e:
+            print(f"Error checking window {l}: {e}")
+            if l in active_actor_windows:
+                del active_actor_windows[l]
+    
     def update_scrollregion(event):
         canvas.configure(scrollregion=canvas.bbox("all"))
 
     window_a = Toplevel()
+    
+    # Store the window reference before any other operations
+    active_actor_windows[l] = window_a
+    
+    # When window is closed, remove it from active windows
+    def on_closing():
+        if l in active_actor_windows:
+            del active_actor_windows[l]
+        window_a.destroy()
+    
+    window_a.protocol("WM_DELETE_WINDOW", on_closing)
     if l == 0:
         window_a.title("LIGKA PARAMETERS")
         ligka_param = create_xml_param_from_file(wf_param_folder + "/z_ligka.xml")
@@ -273,7 +291,7 @@ def actor_window(wfp_ref_l, wf_param_folder, l):
         ligka_param = create_xml_param_from_file(
             wf_param_folder + "/falcon.xml"
         )
-
+    
     window_a.configure(bg=col.c1)
 
     try:
@@ -412,10 +430,37 @@ def actor_window(wfp_ref_l, wf_param_folder, l):
         )
 
 def species_window(species_ref, wf_param_folder):
+    global active_actor_windows
+    
+    # If a species window is already open, bring it to front and return
+    if 'species' in active_actor_windows:
+        try:
+            if active_actor_windows['species'].winfo_exists():
+                active_actor_windows['species'].lift()
+                active_actor_windows['species'].focus_force()
+                return
+            else:
+                del active_actor_windows['species']
+        except Exception as e:
+            print(f"Error checking species window: {e}")
+            if 'species' in active_actor_windows:
+                del active_actor_windows['species']
+
     def update_scrollregion(event):
         canvas.configure(scrollregion=canvas.bbox("all"))
 
     window_a = Toplevel()
+        
+    # Store the window reference before any other operations
+    active_actor_windows['species'] = window_a
+    
+    # When window is closed, remove it from active windows
+    def on_closing():
+        if 'species' in active_actor_windows:
+            del active_actor_windows['species']
+        window_a.destroy()
+    
+    window_a.protocol("WM_DELETE_WINDOW", on_closing)
 
     window_a.title("SPECIES SETTINGS")
     species_param = create_workflow_param_from_file(

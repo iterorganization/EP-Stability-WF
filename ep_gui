@@ -7,7 +7,7 @@ from ep_stability_wf.interface.extra_functions import (
     save,
 )
 from ep_stability_wf.workflow.udb_functions import write_zf_udb
-
+from ep_stability_wf.interface.saved_folder import saved_folder_name
 from ep_stability_wf.interface.extra_functions import CreateToolTip
 from ep_stability_wf.interface.analysis_interface import analysis_window
 import ep_stability_wf.interface.colour_definitions as col
@@ -31,6 +31,7 @@ from tkinter import (
     Entry,
     Checkbutton,
     Button,
+    messagebox,
 )
 import os
 import sys
@@ -112,68 +113,6 @@ def open_gui(wf_param_folder):
     species_ref = [x for x in species_param.keys()]
     scen_ref = list(scenario_param.keys())
     ids_merge_ref = list(ids_merge_param.keys())
-
-    # Class to not re-generate a new folder name between two 'save' statements
-
-    class saved_folder_name(object):
-        def __init__(self):
-            self.value = None
-
-        def NoAction(self):
-            self.value = self.value
-
-        def Save(self, chosen_folder, init_folder):
-            previous_folder = init_folder
-            if chosen_folder == init_folder:  # Very first SAVE, or SAVE after a SAVE_AS
-                self.value = save(
-                    self.value,
-                    previous_folder,
-                    wf_param_folder_default,
-                    workflow_param,
-                    wfp_ref,
-                    fur_ref,
-                    act_ref,
-                    1,
-                )
-            else:
-                if chosen_folder is None:
-                    if self.value is None:  # 1st SAVE after a LOAD
-                        self.value = save(
-                            init_folder,
-                            previous_folder,
-                            wf_param_folder_default,
-                            workflow_param,
-                            wfp_ref,
-                            fur_ref,
-                            act_ref,
-                            0,
-                        )
-                    else:  # Next SAVEs after a LOAD; SAVE after a SAVE AS which is after a LOAD;
-                        self.value = save(
-                            self.value,
-                            previous_folder,
-                            wf_param_folder_default,
-                            workflow_param,
-                            wfp_ref,
-                            fur_ref,
-                            act_ref,
-                            0,
-                        )
-                else:  # SAVE AS
-                    if_cancelled = self.value
-                    self.value = save(
-                        chosen_folder,
-                        previous_folder,
-                        wf_param_folder_default,
-                        workflow_param,
-                        wfp_ref,
-                        fur_ref,
-                        act_ref,
-                        1,
-                    )
-                    if self.value is None:
-                        self.value = if_cancelled
-            return self.value
 
     saved_folder = saved_folder_name()
 
@@ -287,23 +226,49 @@ def open_gui(wf_param_folder):
     # left:
     button_saveconfig = Button(fr_wfp, text="Save Configuration", bg=col.c2)
     button_saveconfig.grid(row=51, column=0, padx=5, pady=5, sticky="ew")
-    button_saveconfig.configure(command=lambda: saved_folder.Save(None, init_folder))
+    button_saveconfig.configure(command=lambda: handle_save())
+
+    def handle_save():
+        if init_folder is None:
+            handle_save_as()
+        else:
+            saved_folder.Save(init_folder, None, wf_param_folder_default, workflow_param, wfp_ref, fur_ref, act_ref)
+
+    def handle_save_as():
+        # Check if we have write access to current directory
+        for try_dir in [".", os.path.expanduser("~"), "/"]:
+            try:
+                test_filename = os.path.join(try_dir, ".write_test")
+                with open(test_filename, "w") as fileobj:
+                    fileobj.write("test")
+                os.remove(test_filename)
+                break
+            except (IOError, OSError):
+                continue
+        initial_dir = try_dir
+            
+        result = filedialog.askdirectory(initialdir=initial_dir)
+        if result:  # If user selected a directory
+            saved_folder.Save(
+                result,
+                init_folder,
+                wf_param_folder_default,
+                workflow_param,
+                wfp_ref,
+                fur_ref,
+                act_ref
+            )
+            # Automatically load the newly created configuration
+            load(result, open_gui)
 
     button_saveconfig = Button(fr_wfp, text="Save Configuration as", bg=col.c2)
     button_saveconfig.grid(row=52, column=0, padx=5, pady=5, sticky="ew")
-    button_saveconfig.configure(
-        command=lambda: saved_folder.Save(
-            filedialog.askdirectory(
-                initialdir=os.path.join(os.getcwd(), "user_profiles")
-            ),
-            init_folder,
-        )
-    )
+    button_saveconfig.configure(command=handle_save_as)
 
     button_run_nosave = Button(fr_wfp, text="Save and Run", bg=col.c2)
     button_run_nosave.grid(row=51, column=1, padx=5, pady=5, sticky="ew")
     button_run_nosave.configure(
-        command=lambda: run(saved_folder.Save(None, init_folder))
+        command=lambda: run(saved_folder.Save(None, init_folder, wf_param_folder_default, workflow_param, wfp_ref, fur_ref, act_ref))
     )
 
     button_restore_def = Button(fr_wfp, text="Restore Default", bg=col.c2)
@@ -315,7 +280,7 @@ def open_gui(wf_param_folder):
     button_analysis.configure(
         command=lambda: load(
             filedialog.askdirectory(
-                initialdir=os.path.join(os.getcwd(), "user_profiles")
+                initialdir=os.path.join(os.getcwd())
             ),
             open_gui,
         )
@@ -400,9 +365,57 @@ def open_gui(wf_param_folder):
         command=lambda: write_zf_udb(wf_param_folder)
     )
 
-
     ## FUNCTIONS - SAVING & UPDATING
 
+    # Trigger Save As dialog when GUI opens only if no configuration is loaded
+    if init_folder is None:
+        # Check if we have write access to current directory
+        for try_dir in [".", os.path.expanduser("~"), "/"]:
+            try:
+                test_filename = os.path.join(try_dir, ".write_test")
+                with open(test_filename, "w") as fileobj:
+                    fileobj.write("test")
+                os.remove(test_filename)
+                break
+            except (IOError, OSError):
+                continue
+        initial_dir = try_dir
+            
+        def handle_initial_save_as():
+            # Show warning first
+            response = messagebox.askquestion(
+                "Configuration Required",
+                "Before running the workflow, you need to either create a new configuration or load an existing one.\n\n"
+                "Would you like to create a new configuration or load an existing one?",
+                icon='warning'
+            )
+            
+            if response == 'yes':
+                # User chose to create new configuration
+                result = filedialog.askdirectory(initialdir=initial_dir, title="Select a folder to create the initial configuration")
+                if result:  # If user selected a directory
+                    saved_folder.Save(
+                        result,
+                        init_folder,
+                        wf_param_folder_default,
+                        workflow_param,
+                        wfp_ref,
+                        fur_ref,
+                        act_ref
+                    )
+                    # Automatically load the newly created configuration
+                    load(result, open_gui)
+            else:
+                # User chose to load existing configuration
+                load(
+                    filedialog.askdirectory(
+                        initialdir=os.path.join(os.getcwd())
+                    ),
+                    open_gui,
+                )
+        
+        window.after(100, handle_initial_save_as)
+    
     def save_workflow_param_to_file(filepath):
         tree = etree.parse(filepath)
         root = tree.getroot()
@@ -417,7 +430,7 @@ def open_gui(wf_param_folder):
         tree.write(filepath)
 
     def run(current_config_folder):
-        saved_folder.Save(None, init_folder)
+        saved_folder.Save(None, init_folder, wf_param_folder_default, workflow_param, wfp_ref, fur_ref, act_ref)
         if current_config_folder is not None:
             workflow_EP(current_config_folder)
         else:
