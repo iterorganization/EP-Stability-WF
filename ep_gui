@@ -370,7 +370,7 @@ def open_gui(wf_param_folder):
     # Trigger Save As dialog when GUI opens only if no configuration is loaded
     if init_folder is None:
         # Check if we have write access to current directory
-        for try_dir in [".", os.path.expanduser("~"), "/"]:
+        for try_dir in [".", os.path.expanduser("~")]:
             try:
                 test_filename = os.path.join(try_dir, ".write_test")
                 with open(test_filename, "w") as fileobj:
