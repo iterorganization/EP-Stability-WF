@@ -260,31 +260,31 @@ def actor_window(wfp_ref_l, wf_param_folder, l):
     window_a.protocol("WM_DELETE_WINDOW", on_closing)
     if l == 0:
         window_a.title("LIGKA PARAMETERS")
-        ligka_param = create_xml_param_from_file(wf_param_folder + "/z_ligka.xml")
+        param = create_xml_param_from_file(wf_param_folder + "/z_ligka.xml")
     elif l == 1:
         window_a.title("HAGIS 1 PARAMETERS")
-        ligka_param = create_xml_param_from_file(wf_param_folder + "/hagis1.xml")
+        param = create_xml_param_from_file(wf_param_folder + "/hagis1.xml")
     elif l == 2:
         window_a.title("HAGIS 2 PARAMETERS")
-        ligka_param = create_xml_param_from_file(wf_param_folder + "/hagis2.xml")
+        param = create_xml_param_from_file(wf_param_folder + "/hagis2.xml")
     elif l == 3:
         window_a.title("HELENA PARAMETERS")
-        ligka_param = create_xml_param_from_file(wf_param_folder + "/helena.xml")
+        param = create_xml_param_from_file(wf_param_folder + "/helena.xml")
     elif l == 4:
         window_a.title("FINDER PARAMETERS")
-        ligka_param = create_xml_param_from_file(wf_param_folder + "/finder_input.xml")
+        param = create_xml_param_from_file(wf_param_folder + "/finder_input.xml")
     elif l == 5:
         window_a.title("SPECIES SETTINGS")
-        ligka_param = create_xml_param_from_file(wf_param_folder + "/actor_settings.xml")
+        param = create_xml_param_from_file(wf_param_folder + "/actor_settings.xml")
     elif l == 6:
         window_a.title("SCENARIO PARAMETERS")
-        ligka_param = create_xml_param_from_file(wf_param_folder + "/scenario.xml")
+        param = create_xml_param_from_file(wf_param_folder + "/scenario.xml")
     elif l == 7:
         window_a.title("CHEASE PARAMETERS")
-        ligka_param = create_xml_param_from_file(wf_param_folder + "/chease_input_choices.xml")
+        param = create_xml_param_from_file(wf_param_folder + "/chease_input_choices.xml")
     elif l == 8:
         window_a.title("FALCON PARAMETERS")
-        ligka_param = create_xml_param_from_file(wf_param_folder + "/falcon.xml")
+        param = create_xml_param_from_file(wf_param_folder + "/falcon.xml")
 
     window_a.configure(bg=col.c1)
 
@@ -313,29 +313,29 @@ def actor_window(wfp_ref_l, wf_param_folder, l):
         )
         irow += 1
 
-        for elem in ligka_param[ref]:
+        for elem in param[ref]:
             Label(canvasFrame, text=elem, bg=col.c3).grid(
                 row=irow, column=0, padx=3, pady=2, sticky="w"
             )
             if elem == "DT":
                 entrystring = StringVar()
-                entrystring.set(ligka_param[ref][elem])
+                entrystring.set(param[ref][elem])
                 c = Checkbutton(canvasFrame, variable=entrystring)
                 c.grid(row=irow, column=1, padx=3, pady=2, sticky="e")
                 entrystring.trace(
                     "w",
                     lambda name, index, mode, elem=elem, entrystring=entrystring, ref=ref: update_xml_param(
-                        ligka_param, ref, elem, entrystring.get()
+                        param, ref, elem, entrystring.get()
                     ),
                 )
 
             else:
                 entrystring = StringVar()
-                entrystring.set(ligka_param[ref][elem])
+                entrystring.set(param[ref][elem])
                 entrystring.trace(
                     "w",
                     lambda name, index, mode, elem=elem, entrystring=entrystring, ref=ref: update_xml_param(
-                        ligka_param, ref, elem, entrystring.get()
+                        param, ref, elem, entrystring.get()
                     ),
                 )
                 Entry(canvasFrame, textvariable=entrystring, bg=col.c1).grid(
@@ -355,7 +355,7 @@ def actor_window(wfp_ref_l, wf_param_folder, l):
         button_saveconfig.grid(row=52, column=0, padx=5, pady=5, sticky="ew")
         button_saveconfig.configure(
             command=lambda: save_xml_param_to_file(
-                ligka_param, wf_param_folder + "/z_ligka.xml"
+                param, wf_param_folder + "/z_ligka.xml"
             )
         )
     elif l == 1:
@@ -363,7 +363,7 @@ def actor_window(wfp_ref_l, wf_param_folder, l):
         button_saveconfig.grid(row=52, column=0, padx=5, pady=5, sticky="ew")
         button_saveconfig.configure(
             command=lambda: save_xml_param_to_file(
-                ligka_param, wf_param_folder + "/hagis1.xml"
+                param, wf_param_folder + "/hagis1.xml"
             )
         )
     elif l == 2:
@@ -371,7 +371,7 @@ def actor_window(wfp_ref_l, wf_param_folder, l):
         button_saveconfig.grid(row=52, column=0, padx=5, pady=5, sticky="ew")
         button_saveconfig.configure(
             command=lambda: save_xml_param_to_file(
-                ligka_param, wf_param_folder + "/hagis2.xml"
+                param, wf_param_folder + "/hagis2.xml"
             )
         )
     elif l == 3:
@@ -379,7 +379,7 @@ def actor_window(wfp_ref_l, wf_param_folder, l):
         button_saveconfig.grid(row=52, column=0, padx=5, pady=5, sticky="ew")
         button_saveconfig.configure(
             command=lambda: save_xml_param_to_file(
-                ligka_param, wf_param_folder + "/helena.xml"
+                param, wf_param_folder + "/helena.xml"
             )
         )
     elif l == 4:
@@ -387,7 +387,7 @@ def actor_window(wfp_ref_l, wf_param_folder, l):
         button_saveconfig.grid(row=52, column=0, padx=5, pady=5, sticky="ew")
         button_saveconfig.configure(
             command=lambda: save_xml_param_to_file(
-                ligka_param, wf_param_folder + "/finder_input.xml"
+                param, wf_param_folder + "/finder_input.xml"
             )
         )
     elif l == 5:
@@ -395,7 +395,7 @@ def actor_window(wfp_ref_l, wf_param_folder, l):
         button_saveconfig.grid(row=52, column=0, padx=5, pady=5, sticky="ew")
         button_saveconfig.configure(
             command=lambda: save_xml_param_to_file(
-                ligka_param, wf_param_folder + "/actor_settings.xml"
+                param, wf_param_folder + "/actor_settings.xml"
             )
         )
     elif l == 6:
@@ -403,7 +403,7 @@ def actor_window(wfp_ref_l, wf_param_folder, l):
         button_saveconfig.grid(row=52, column=0, padx=5, pady=5, sticky="ew")
         button_saveconfig.configure(
             command=lambda: save_xml_param_to_file(
-                ligka_param, wf_param_folder + "/scenario.xml"
+                param, wf_param_folder + "/scenario.xml"
             )
         )
     elif l == 7:
@@ -411,7 +411,7 @@ def actor_window(wfp_ref_l, wf_param_folder, l):
         button_saveconfig.grid(row=53, column=0, padx=5, pady=5, sticky="ew")
         button_saveconfig.configure(
             command=lambda: save_xml_param_to_file(
-                ligka_param, wf_param_folder + "/chease_input_choices.xml"
+                param, wf_param_folder + "/chease_input_choices.xml"
             )
         )
     elif l == 8:
@@ -419,7 +419,7 @@ def actor_window(wfp_ref_l, wf_param_folder, l):
         button_saveconfig.grid(row=53, column=0, padx=5, pady=5, sticky="ew")
         button_saveconfig.configure(
             command=lambda: save_xml_param_to_file(
-                ligka_param, wf_param_folder + "/falcon.xml"
+                param, wf_param_folder + "/falcon.xml"
             )
         )
 
