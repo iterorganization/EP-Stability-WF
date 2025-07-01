@@ -306,31 +306,26 @@ def open_gui(wf_param_folder):
     button_saveconfig.configure(
         command=lambda: actor_window(wfp_ref_chease, wf_param_folder, 7)
     )
-
     button_saveconfig = Button(fr_as, text="HELENA Parameters", bg=col.c2)
     button_saveconfig.grid(row=53, column=0, padx=5, pady=5, sticky="ew")
     button_saveconfig.configure(
         command=lambda: actor_window(wfp_ref_hel, wf_param_folder, 3)
     )
-
     button_saveconfig = Button(fr_as, text="LIGKA Parameters", bg=col.c2)
     button_saveconfig.grid(row=54, column=0, padx=5, pady=5, sticky="ew")
     button_saveconfig.configure(
         command=lambda: actor_window(wfp_ref_l, wf_param_folder, 0)
     )
-
     button_saveconfig = Button(fr_as, text="HAGIS 1 Parameters", bg=col.c2)
     button_saveconfig.grid(row=55, column=0, padx=5, pady=5, sticky="ew")
     button_saveconfig.configure(
         command=lambda: actor_window(wfp_ref_h, wf_param_folder, 1)
     )
-
     button_saveconfig = Button(fr_as, text="HAGIS 2 Parameters", bg=col.c2)
     button_saveconfig.grid(row=56, column=0, padx=5, pady=5, sticky="ew")
     button_saveconfig.configure(
         command=lambda: actor_window(wfp_ref_h2, wf_param_folder, 2)
     )
-
     button_saveconfig = Button(fr_as, text="FINDER Parameters", bg=col.c2)
     button_saveconfig.grid(row=57, column=0, padx=5, pady=5, sticky="ew")
     button_saveconfig.configure(
@@ -339,26 +334,23 @@ def open_gui(wf_param_folder):
     button_saveconfig = Button(fr_as, text='FALCON Parameters', bg=col.c2)
     button_saveconfig.grid(row=58, column=0, padx=5, pady=5, sticky='ew')
     button_saveconfig.configure(
-        command=lambda: actor_window(wfp_ref_fa, wf_param_folder, 8))
-
+        command=lambda: actor_window(wfp_ref_fa, wf_param_folder, 8)
+    )
     button_saveconfig = Button(fr_as, text="Species Settings", bg=col.c2)
     button_saveconfig.grid(row=59, column=0, padx=5, pady=5, sticky="ew")
     button_saveconfig.configure(
         command=lambda: species_window(species_ref, wf_param_folder)
     )
-
     button_saveconfig = Button(fr_as, text="SCENARIO Parameters", bg=col.c2)
     button_saveconfig.grid(row=60, column=0, padx=5, pady=5, sticky="ew")
     button_saveconfig.configure(
         command=lambda: actor_window(scen_ref, wf_param_folder, 6)
     )
-
     button_saveconfig = Button(fr_as, text="IDS Merge", bg=col.c2)
     button_saveconfig.grid(row=61, column=0, padx=5, pady=5, sticky="ew")
     button_saveconfig.configure(
         command=lambda: ids_window(ids_merge_ref, wf_param_folder)
     )
-
     button_saveconfig = Button(fr_as, text="Create UDB file ZS", bg=col.c2)
     button_saveconfig.grid(row=62, column=0, padx=5, pady=5, sticky="ew")
     button_saveconfig.configure(

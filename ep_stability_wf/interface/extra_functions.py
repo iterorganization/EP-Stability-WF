@@ -275,23 +275,17 @@ def actor_window(wfp_ref_l, wf_param_folder, l):
         ligka_param = create_xml_param_from_file(wf_param_folder + "/finder_input.xml")
     elif l == 5:
         window_a.title("SPECIES SETTINGS")
-        ligka_param = create_xml_param_from_file(
-            wf_param_folder + "/actor_settings.xml"
-        )
+        ligka_param = create_xml_param_from_file(wf_param_folder + "/actor_settings.xml")
     elif l == 6:
         window_a.title("SCENARIO PARAMETERS")
         ligka_param = create_xml_param_from_file(wf_param_folder + "/scenario.xml")
     elif l == 7:
         window_a.title("CHEASE PARAMETERS")
-        ligka_param = create_xml_param_from_file(
-            wf_param_folder + "/chease_input_choices.xml"
-        )
+        ligka_param = create_xml_param_from_file(wf_param_folder + "/chease_input_choices.xml")
     elif l == 8:
         window_a.title("FALCON PARAMETERS")
-        ligka_param = create_xml_param_from_file(
-            wf_param_folder + "/falcon.xml"
-        )
-    
+        ligka_param = create_xml_param_from_file(wf_param_folder + "/falcon.xml")
+
     window_a.configure(bg=col.c1)
 
     try:
