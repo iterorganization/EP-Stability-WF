@@ -195,7 +195,7 @@ def save(
     act_ref,
     saveAs,
 ):
-    
+
     # When operation is cancelled from the interface
     if current_config_folder == () or current_config_folder == "":
         print("Save_as cancelled.", file=sys.stderr)
@@ -228,7 +228,7 @@ active_actor_windows = {}
 
 def actor_window(wfp_ref_l, wf_param_folder, l):
     global active_actor_windows
-    
+
     # If a window of this type is already open, bring it to front and return
     if l in active_actor_windows:
         try:
@@ -242,21 +242,21 @@ def actor_window(wfp_ref_l, wf_param_folder, l):
             print(f"Error checking window {l}: {e}")
             if l in active_actor_windows:
                 del active_actor_windows[l]
-    
+
     def update_scrollregion(event):
         canvas.configure(scrollregion=canvas.bbox("all"))
 
     window_a = Toplevel()
-    
+
     # Store the window reference before any other operations
     active_actor_windows[l] = window_a
-    
+
     # When window is closed, remove it from active windows
     def on_closing():
         if l in active_actor_windows:
             del active_actor_windows[l]
         window_a.destroy()
-    
+
     window_a.protocol("WM_DELETE_WINDOW", on_closing)
     if l == 0:
         window_a.title("LIGKA PARAMETERS")
@@ -425,7 +425,7 @@ def actor_window(wfp_ref_l, wf_param_folder, l):
 
 def species_window(species_ref, wf_param_folder):
     global active_actor_windows
-    
+
     # If a species window is already open, bring it to front and return
     if 'species' in active_actor_windows:
         try:
@@ -444,16 +444,16 @@ def species_window(species_ref, wf_param_folder):
         canvas.configure(scrollregion=canvas.bbox("all"))
 
     window_a = Toplevel()
-        
+
     # Store the window reference before any other operations
     active_actor_windows['species'] = window_a
-    
+
     # When window is closed, remove it from active windows
     def on_closing():
         if 'species' in active_actor_windows:
             del active_actor_windows['species']
         window_a.destroy()
-    
+
     window_a.protocol("WM_DELETE_WINDOW", on_closing)
 
     window_a.title("SPECIES SETTINGS")

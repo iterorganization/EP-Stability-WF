@@ -9,7 +9,7 @@ class saved_folder_name(object):
 
     def Save(self, chosen_folder, init_folder, wf_param_folder_default, workflow_param, wfp_ref, fur_ref, act_ref):
         previous_folder = init_folder
-        
+
         # If chosen_folder is the same as current folder, treat it as a regular save
         if chosen_folder is not None and self.value is not None:
             if chosen_folder == self.value:
@@ -25,7 +25,7 @@ class saved_folder_name(object):
                     0,  # Use 0 to indicate regular save
                 )
                 return self.value
-        
+
         if chosen_folder == init_folder:  # Very first SAVE, or SAVE after a SAVE_AS
             self.value = save(
                 self.value,

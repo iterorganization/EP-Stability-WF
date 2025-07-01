@@ -246,7 +246,7 @@ def open_gui(wf_param_folder):
             except (IOError, OSError):
                 continue
         initial_dir = try_dir
-            
+
         result = filedialog.askdirectory(initialdir=initial_dir)
         if result:  # If user selected a directory
             saved_folder.Save(
@@ -372,7 +372,7 @@ def open_gui(wf_param_folder):
             except (IOError, OSError):
                 continue
         initial_dir = try_dir
-            
+
         def handle_initial_save_as():
             # Show warning first
             response = messagebox.askquestion(
@@ -381,7 +381,7 @@ def open_gui(wf_param_folder):
                 "Would you like to create a new configuration or load an existing one?",
                 icon='warning'
             )
-            
+
             if response == 'yes':
                 # User chose to create new configuration
                 result = filedialog.askdirectory(initialdir=initial_dir, title="Select a folder to create the initial configuration")
@@ -405,9 +405,9 @@ def open_gui(wf_param_folder):
                     ),
                     open_gui,
                 )
-        
+
         window.after(100, handle_initial_save_as)
-    
+
     def save_workflow_param_to_file(filepath):
         tree = etree.parse(filepath)
         root = tree.getroot()
