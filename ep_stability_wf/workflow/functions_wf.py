@@ -8,6 +8,7 @@ from lxml import etree
 import xml.etree.ElementTree as ET
 import numpy as np
 import re
+import datetime
 from ep_stability_wf.workflow.select_ligka_species import select_species_by_density
 
 no_actor = {}
@@ -323,6 +324,16 @@ def modify_xml(xml_file):
     tree.write(output_file_path, encoding='utf-8', xml_declaration=True)
     return output_file_path
 
+def actor_sandbox_folder(actor_name, path, itime = None):
+    date = datetime.datetime.now()
+    if itime == None:
+        dirname = f'{actor_name}_{date.strftime("%Y_%m_%d_%H_%M_%S")}'
+    else:
+        # dirname = f'{actor_name}_{itime}_{date.strftime("%Y_%m_%d_%H_%M_%S")}'
+        dirname = f'itime_{itime}'
+    os.makedirs(f'{path}/{dirname}')
+    return os.path.abspath(f'{path}/{dirname}')
+
 def chease_actor_wf_wrapper(
     equilibrium_in,
     core_profiles_in,
@@ -331,13 +342,20 @@ def chease_actor_wf_wrapper(
     distributions_in_2,
     config_file_path,
     mpi_ranks,
+    actor_sandbox_options,
 ):
-    chease_actor = chease()
+    chease_actor = chease() 
     code_parameters = chease_actor.get_code_parameters()
     config_file_path = modify_xml(config_file_path)
     code_parameters.parameters_path = config_file_path
     runtime_settings = chease_actor.get_runtime_settings()
+    runtime_settings.sandbox.mode = 'MANUAL'
     runtime_settings.sandbox.life_time = SandboxLifeTime_Chease.PERSISTENT
+    sandbox_dir = actor_sandbox_folder('chease', actor_sandbox_options[0], itime=actor_sandbox_options[1])
+    runtime_settings.sandbox.path = sandbox_dir
+    # runtime_settings.sandbox.path = '/home/ITER/popaa/develop/develop_wf/ep-stability-wf/user_profiles/run_250730_213902/Chease_2025_07_30_21_39_02/chease_15_2025_07_30_21_39_02'
+    # runtime_settings.sandbox.path = '/home/ITER/popaa/develop/develop_wf/ep-stability-wf/user_profiles/run_250730_213902/Chease_2025_07_30_21_39_02'
+    
     chease_actor.initialize(code_parameters=code_parameters, runtime_settings=runtime_settings)
 
     equilibrium_out = chease_actor.run(equilibrium_in)
@@ -355,13 +373,17 @@ def helena_actor_wf_wrapper(
     distributions_in_2,
     config_file_path,
     mpi_ranks,
+    actor_sandbox_options,
 ):
     helena_actor = helena()
     code_parameters = helena_actor.get_code_parameters()
     config_file_path = modify_xml(config_file_path)
     code_parameters.parameters_path = config_file_path
     runtime_settings = helena_actor.get_runtime_settings()
+    runtime_settings.sandbox.mode = 'MANUAL'
     runtime_settings.sandbox.life_time = SandboxLifeTime_Helena.PERSISTENT
+    sandbox_dir = actor_sandbox_folder('helena', actor_sandbox_options[0], itime=actor_sandbox_options[1])
+    runtime_settings.sandbox.path = sandbox_dir
     helena_actor.initialize(code_parameters=code_parameters, runtime_settings=runtime_settings)
 
     equilibrium_out = helena_actor.run(equilibrium_in)
@@ -379,13 +401,18 @@ def hagis1_actor_wf_wrapper(
     distributions_in_2,
     config_file_path,
     mpi_ranks,
+    actor_sandbox_options,
 ):
     hagis1_actor = hagis1()
     code_parameters = hagis1_actor.get_code_parameters()
     config_file_path = modify_xml(config_file_path)
     code_parameters.parameters_path = config_file_path
     runtime_settings = hagis1_actor.get_runtime_settings()
+    runtime_settings.sandbox.mode = 'MANUAL'
     runtime_settings.sandbox.life_time = SandboxLifeTime_Hagis1.PERSISTENT
+    sandbox_dir = actor_sandbox_folder('hagis1', actor_sandbox_options[0], itime=actor_sandbox_options[1])
+    runtime_settings.sandbox.path = sandbox_dir
+
     hagis1_actor.initialize(code_parameters=code_parameters, runtime_settings=runtime_settings)
 
     equilibrium_out, mhd_linear_out = hagis1_actor(
@@ -406,6 +433,7 @@ def hagis2_actor_wf_wrapper(
     distributions_in_2,
     config_file_path,
     mpi_ranks,
+    actor_sandbox_options,
 ):
     hagis2_actor = hagis2()
     code_parameters = hagis2_actor.get_code_parameters()
@@ -416,7 +444,10 @@ def hagis2_actor_wf_wrapper(
     runtime_settings.mpi.mpi_processes = mpi_ranks
     # runtime_settings.mpi.mpi_runner = 'mpirun'
     # runtime_settings.mpi.mpi_options = '-tv'
+    runtime_settings.sandbox.mode = 'MANUAL'
     runtime_settings.sandbox.life_time = SandboxLifeTime_Hagis2.PERSISTENT
+    sandbox_dir = actor_sandbox_folder('hagis2', actor_sandbox_options[0], itime=actor_sandbox_options[1])
+    runtime_settings.sandbox.path = sandbox_dir
     hagis2_actor.initialize(code_parameters=code_parameters, runtime_settings=runtime_settings)
 
 
@@ -438,18 +469,23 @@ def ligka_actor_wf_wrapper(
     distributions_in_2,
     config_file_path,
     mpi_ranks,
+    actor_sandbox_options,
 ):
 
     ligka_actor = ligka()
     code_parameters = ligka_actor.get_code_parameters()
     config_file_path = modify_xml(config_file_path)
     code_parameters.parameters_path = config_file_path
+    modus = code_parameters.get_parameter('parameter/modus')
     runtime_settings = ligka_actor.get_runtime_settings()
+    sandbox_dir = actor_sandbox_folder(f'ligka_m{modus}', actor_sandbox_options[0], itime=actor_sandbox_options[1])
     #configures runtime settings
     runtime_settings.mpi.mpi_processes = mpi_ranks
     # runtime_settings.mpi.mpi_runner = 'mpirun'
-    # runtime_settings.mpi.mpi_options = '-tv'
+    runtime_settings.mpi.mpi_options = f'-wdir {sandbox_dir}'
+    runtime_settings.sandbox.mode = 'MANUAL'
     runtime_settings.sandbox.life_time = SandboxLifeTime_Ligka.PERSISTENT
+    runtime_settings.sandbox.path = sandbox_dir
     ligka_actor.initialize(code_parameters=code_parameters, runtime_settings=runtime_settings)
 
     mhd_linear_out = ligka_actor.run(
@@ -472,6 +508,7 @@ def finder_actor_wf_wrapper(
     distributions_in_2,
     config_file_path,
     mpi_ranks,
+    actor_sandbox_options,
 ):
     finder9_actor = finder9()
     code_parameters = finder9_actor.get_code_parameters()
@@ -482,7 +519,10 @@ def finder_actor_wf_wrapper(
     runtime_settings.mpi.mpi_processes = mpi_ranks
     # runtime_settings.mpi.mpi_runner = 'mpirun'
     # runtime_settings.mpi.mpi_options = '-tv'
+    runtime_settings.sandbox.mode = 'MANUAL'
     runtime_settings.sandbox.life_time = SandboxLifeTime_Finder9.PERSISTENT
+    sandbox_dir = actor_sandbox_folder('finder9', actor_sandbox_options[0], itime=actor_sandbox_options[1])
+    runtime_settings.sandbox.path = sandbox_dir
     finder9_actor.initialize(code_parameters=code_parameters, runtime_settings=runtime_settings)
 
 
@@ -503,7 +543,9 @@ def falcon_actor_wf_wrapper_full(equilibrium_in,
     distributions_in_1,
     distributions_in_2,
     config_file_path,
-    mpi_ranks):
+    mpi_ranks,
+    actor_sandbox_options,
+):
 
     mhd_linear_out = falcon_actor(
         equilibrium_in, core_profiles_in, config_file_path)
@@ -515,7 +557,9 @@ def falcon_actor_wf_wrapper_slow(equilibrium_in,
     distributions_in_1,
     distributions_in_2,
     config_file_path,
-    mpi_ranks):
+    mpi_ranks,
+    actor_sandbox_options
+):
 
     mhd_linear_out = falcon_actor(
         equilibrium_in, core_profiles_in, config_file_path, slow=True)
@@ -527,7 +571,9 @@ def falcon_actor_wf_wrapper_daeps(equilibrium_in,
     distributions_in_1,
     distributions_in_2,
     config_file_path,
-    mpi_ranks):
+    mpi_ranks,
+    actor_sandbox_options,
+):
 
     mhd_linear_out = falcon_actor(
         equilibrium_in, core_profiles_in, config_file_path, daeps=True)
@@ -539,7 +585,9 @@ def falcon_actor_wf_wrapper_daeps_eigen(equilibrium_in,
     distributions_in_1,
     distributions_in_2,
     config_file_path,
-    mpi_ranks):
+    mpi_ranks,
+    actor_sandbox_options,
+):
 
     mhd_linear_out = falcon_actor(
         equilibrium_in, core_profiles_in, config_file_path, eigen=True)

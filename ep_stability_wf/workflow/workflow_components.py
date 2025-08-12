@@ -9,6 +9,7 @@ from ep_stability_wf.workflow.functions_wf import (
     scenario_mod,
     time_construction,
     profiles_get,
+    actor_sandbox_folder
 )
 from ep_stability_wf.interface.create_workflow_param import (
     save_xml_param_multiple_to_file_on_run,
@@ -46,7 +47,9 @@ def actor_call(
     uri_in = None
     uri_out = None
     config_file = os.path.join(config_folder_path, actor_params["config_file_name"])
-
+    actor_sandbox = []
+    sandbox_folder = actor_sandbox_folder(actor_name, config_folder_path)
+    actor_sandbox_options = [sandbox_folder, None]
     # if system_params["hdf5"] == 1:
     #     backend = imas.imasdef.HDF5_BACKEND
     # else:
@@ -115,7 +118,7 @@ def actor_call(
         print(
             f"Time = {time[itime]} s, itime = {itime}/{ntime-1}, slice number ={i}/{len(time_index_list)}"
         )
-
+        actor_sandbox_options[1] = time[itime]
         equilibrium_in = imas.equilibrium()
         equilibrium_occ = 0
         core_profiles_in = None
@@ -216,7 +219,8 @@ def actor_call(
             distributions_in_1,
             distributions_in_2,
             config_file,
-            mpi_ranks=mpi_processes,
+            mpi_processes,
+            actor_sandbox_options,
         )
 
         if equilibrium_out:
