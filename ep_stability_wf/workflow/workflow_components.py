@@ -2,6 +2,10 @@ import os
 import imas
 import sys
 
+from ep_stability_wf.interface.workflow_timer import (
+    ActorTimer
+) 
+
 from ep_stability_wf.workflow.functions_wf import (
     read_timestep,
     actor_settings,
@@ -26,6 +30,9 @@ def actor_call(
       config_folder_path: str - path to the general config folder
       system_params: Dict - I/O system configuration
     """
+
+    timer = ActorTimer(actor_name)
+    timer.start_total()
 
     # Check if the actor exists (properly imported):
     if imports_check(actor_name) == 0:
@@ -70,6 +77,7 @@ def actor_call(
 
     # OPEN INPUT DATAFILE TO GET DATA FROM IMAS SCENARIO DATABASE
     # AND READ FULL TIME VECTOR OF EQUILIBRIUM IDS TO GET THE TIME BASE
+    timer.start_phase("data_initialization")
     time, ntime = read_timestep(
         uri_in,
         occurrence=input_ids["equilibrium"],
@@ -96,11 +104,16 @@ def actor_call(
             for ids_name, ids_occ in output_ids.items():
                 input.delete_data(ids_name, occurrence=ids_occ)
 
+    timer.end_phase("data_initialization")
+
     for i, itime in enumerate(time_index_list):
         # EXECUTE PHYSICS CODE
         print(
             f"Time = {time[itime]} s, itime = {itime}/{ntime-1}, slice number ={i}/{len(time_index_list)}"
         )
+
+        timer.start_phase("data_reading")
+
         actor_sandbox_options[1] = time[itime]
         equilibrium_in = imas.equilibrium()
         equilibrium_occ = 0
@@ -189,7 +202,8 @@ def actor_call(
                         ["spec_str", "nspec", "nback", "nhot"],
                         [str(curr_str), str(nspec), str(nback), str(nhot)],
                     )
-
+        timer.end_phase("data_reading")
+        timer.start_phase("actor_execution")
         (
             equilibrium_out,
             mhd_linear_out,
@@ -205,6 +219,8 @@ def actor_call(
             mpi_processes,
             actor_sandbox_options,
         )
+        timer.end_phase("actor_execution")
+        timer.start_phase("data_writing")
 
         if equilibrium_out:
             if itime == 0:
@@ -284,6 +300,11 @@ def actor_call(
                     + str(output_ids["distributions"])
                 )
                 print("*************************************")
-
+        timer.end_phase("data_writing")
     input.close()
     output.close()
+
+    summary = timer.end_total()
+    timer.print_summary(summary)
+    
+    return summary
