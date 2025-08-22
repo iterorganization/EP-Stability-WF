@@ -20,7 +20,6 @@ def print_cond(verbose, *args, **kwargs):
 
 
 def workflow_EP(current_config_folder, verbose=True):
-
     workflow_timer = WorkflowTimer()
     workflow_timer.start_workflow()
 

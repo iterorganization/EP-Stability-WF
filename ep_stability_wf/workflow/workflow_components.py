@@ -4,7 +4,7 @@ import sys
 
 from ep_stability_wf.interface.workflow_timer import (
     ActorTimer
-) 
+)
 
 from ep_stability_wf.workflow.functions_wf import (
     read_timestep,
@@ -52,7 +52,7 @@ def actor_call(
     config_file = os.path.join(config_folder_path, actor_params["config_file_name"])
     sandbox_folder = actor_sandbox_folder(actor_name, config_folder_path)
     actor_sandbox_options = [sandbox_folder, None]
- 
+
     if actor_name == "Ligka_m5":
         mpi_processes = 1
     else:
@@ -103,7 +103,6 @@ def actor_call(
         if actor_name != "Helena":
             for ids_name, ids_occ in output_ids.items():
                 input.delete_data(ids_name, occurrence=ids_occ)
-
     timer.end_phase("data_initialization")
 
     for i, itime in enumerate(time_index_list):
@@ -306,5 +305,5 @@ def actor_call(
 
     summary = timer.end_total()
     timer.print_summary(summary)
-    
+
     return summary

@@ -351,7 +351,7 @@ def chease_actor_wf_wrapper(
     runtime_settings = chease_actor.get_runtime_settings()
     runtime_settings.sandbox.mode = 'MANUAL'
     runtime_settings.sandbox.life_time = SandboxLifeTime_Chease.PERSISTENT
-    sandbox_dir = actor_sandbox_folder('chease', actor_sandbox_options[0], itime=actor_sandbox_options[1])
+    sandbox_dir = actor_sandbox_folder('chease', actor_sandbox_options[0], time=actor_sandbox_options[1])
     runtime_settings.sandbox.path = sandbox_dir
     # runtime_settings.sandbox.path = '/home/ITER/popaa/develop/develop_wf/ep-stability-wf/user_profiles/run_250730_213902/Chease_2025_07_30_21_39_02/chease_15_2025_07_30_21_39_02'
     # runtime_settings.sandbox.path = '/home/ITER/popaa/develop/develop_wf/ep-stability-wf/user_profiles/run_250730_213902/Chease_2025_07_30_21_39_02'
@@ -382,7 +382,7 @@ def helena_actor_wf_wrapper(
     runtime_settings = helena_actor.get_runtime_settings()
     runtime_settings.sandbox.mode = 'MANUAL'
     runtime_settings.sandbox.life_time = SandboxLifeTime_Helena.PERSISTENT
-    sandbox_dir = actor_sandbox_folder('helena', actor_sandbox_options[0], itime=actor_sandbox_options[1])
+    sandbox_dir = actor_sandbox_folder('helena', actor_sandbox_options[0], time=actor_sandbox_options[1])
     runtime_settings.sandbox.path = sandbox_dir
     helena_actor.initialize(code_parameters=code_parameters, runtime_settings=runtime_settings)
 
@@ -410,7 +410,7 @@ def hagis1_actor_wf_wrapper(
     runtime_settings = hagis1_actor.get_runtime_settings()
     runtime_settings.sandbox.mode = 'MANUAL'
     runtime_settings.sandbox.life_time = SandboxLifeTime_Hagis1.PERSISTENT
-    sandbox_dir = actor_sandbox_folder('hagis1', actor_sandbox_options[0], itime=actor_sandbox_options[1])
+    sandbox_dir = actor_sandbox_folder('hagis1', actor_sandbox_options[0], time=actor_sandbox_options[1])
     runtime_settings.sandbox.path = sandbox_dir
 
     hagis1_actor.initialize(code_parameters=code_parameters, runtime_settings=runtime_settings)
@@ -446,7 +446,7 @@ def hagis2_actor_wf_wrapper(
     # runtime_settings.mpi.mpi_options = '-tv'
     runtime_settings.sandbox.mode = 'MANUAL'
     runtime_settings.sandbox.life_time = SandboxLifeTime_Hagis2.PERSISTENT
-    sandbox_dir = actor_sandbox_folder('hagis2', actor_sandbox_options[0], itime=actor_sandbox_options[1])
+    sandbox_dir = actor_sandbox_folder('hagis2', actor_sandbox_options[0], time=actor_sandbox_options[1])
     runtime_settings.sandbox.path = sandbox_dir
     hagis2_actor.initialize(code_parameters=code_parameters, runtime_settings=runtime_settings)
 
@@ -478,7 +478,7 @@ def ligka_actor_wf_wrapper(
     code_parameters.parameters_path = config_file_path
     modus = code_parameters.get_parameter('parameter/modus')
     runtime_settings = ligka_actor.get_runtime_settings()
-    sandbox_dir = actor_sandbox_folder(f'ligka_m{modus}', actor_sandbox_options[0], itime=actor_sandbox_options[1])
+    sandbox_dir = actor_sandbox_folder(f'ligka_m{modus}', actor_sandbox_options[0], time=actor_sandbox_options[1])
     #configures runtime settings
     runtime_settings.mpi.mpi_processes = mpi_ranks
     # runtime_settings.mpi.mpi_runner = 'mpirun'
@@ -521,7 +521,7 @@ def finder_actor_wf_wrapper(
     # runtime_settings.mpi.mpi_options = '-tv'
     runtime_settings.sandbox.mode = 'MANUAL'
     runtime_settings.sandbox.life_time = SandboxLifeTime_Finder9.PERSISTENT
-    sandbox_dir = actor_sandbox_folder('finder9', actor_sandbox_options[0], itime=actor_sandbox_options[1])
+    sandbox_dir = actor_sandbox_folder('finder9', actor_sandbox_options[0], time=actor_sandbox_options[1])
     runtime_settings.sandbox.path = sandbox_dir
     finder9_actor.initialize(code_parameters=code_parameters, runtime_settings=runtime_settings)
 
