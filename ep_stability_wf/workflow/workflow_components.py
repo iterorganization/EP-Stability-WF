@@ -282,7 +282,7 @@ def actor_call(
                 print(
                     "Saved "
                     + actor_name
-                    + " mhd_linear under occurrence "
+                    + " distributions under occurrence "
                     + str(output_ids["distributions"])
                 )
                 print("*************************************")

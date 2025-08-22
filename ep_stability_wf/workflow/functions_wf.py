@@ -441,6 +441,7 @@ def hagis2_actor_wf_wrapper(
     code_parameters.parameters_path = config_file_path
     runtime_settings = hagis2_actor.get_runtime_settings()
     #configures runtime settings
+    runtime_settings.ids_storage.persistent_backend = imas.imasdef.HDF5_BACKEND
     runtime_settings.mpi.mpi_processes = mpi_ranks
     # runtime_settings.mpi.mpi_runner = 'mpirun'
     # runtime_settings.mpi.mpi_options = '-tv'
@@ -480,6 +481,7 @@ def ligka_actor_wf_wrapper(
     runtime_settings = ligka_actor.get_runtime_settings()
     sandbox_dir = actor_sandbox_folder(f'ligka_m{modus}', actor_sandbox_options[0], time=actor_sandbox_options[1])
     #configures runtime settings
+    runtime_settings.ids_storage.persistent_backend = imas.imasdef.HDF5_BACKEND
     runtime_settings.mpi.mpi_processes = mpi_ranks
     # runtime_settings.mpi.mpi_runner = 'mpirun'
     runtime_settings.mpi.mpi_options = f'-wdir {sandbox_dir}'
@@ -516,6 +518,7 @@ def finder_actor_wf_wrapper(
     code_parameters.parameters_path = config_file_path
     runtime_settings = finder9_actor.get_runtime_settings()
     #configures runtime settings
+    runtime_settings.ids_storage.persistent_backend = imas.imasdef.HDF5_BACKEND
     runtime_settings.mpi.mpi_processes = mpi_ranks
     # runtime_settings.mpi.mpi_runner = 'mpirun'
     # runtime_settings.mpi.mpi_options = '-tv'
