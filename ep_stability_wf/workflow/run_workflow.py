@@ -388,7 +388,7 @@ def workflow_EP(current_config_folder, verbose=True):
 
             summary = actor_call("Finder", current_config_folder, param, species_input)
             workflow_timer.record_actor_timing("Finder", summary)
-        if param["Extra_codes"] in ["Falcon_full", "Falcon_slow", "DAEPS", "DAEPS_eigen"]:
+        if param.get("Extra_codes", "None") in ["Falcon_full", "Falcon_slow", "DAEPS", "DAEPS_eigen"]:
             summary = actor_call(param["Extra_codes"], current_config_folder, param, species_input)
             workflow_timer.record_actor_timing(param["Extra_codes"], summary)
     print_cond(verbose, "Workflow Finished.")
