@@ -344,7 +344,7 @@ def chease_actor_wf_wrapper(
     mpi_ranks,
     actor_sandbox_options,
 ):
-    chease_actor = chease() 
+    chease_actor = chease()
     code_parameters = chease_actor.get_code_parameters()
     config_file_path = modify_xml(config_file_path)
     code_parameters.parameters_path = config_file_path
@@ -355,7 +355,7 @@ def chease_actor_wf_wrapper(
     runtime_settings.sandbox.path = sandbox_dir
     # runtime_settings.sandbox.path = '/home/ITER/popaa/develop/develop_wf/ep-stability-wf/user_profiles/run_250730_213902/Chease_2025_07_30_21_39_02/chease_15_2025_07_30_21_39_02'
     # runtime_settings.sandbox.path = '/home/ITER/popaa/develop/develop_wf/ep-stability-wf/user_profiles/run_250730_213902/Chease_2025_07_30_21_39_02'
-    
+
     chease_actor.initialize(code_parameters=code_parameters, runtime_settings=runtime_settings)
 
     equilibrium_out = chease_actor.run(equilibrium_in)
