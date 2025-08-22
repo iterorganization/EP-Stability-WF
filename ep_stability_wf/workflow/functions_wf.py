@@ -324,15 +324,15 @@ def modify_xml(xml_file):
     tree.write(output_file_path, encoding='utf-8', xml_declaration=True)
     return output_file_path
 
-def actor_sandbox_folder(actor_name, path, itime = None):
+def actor_sandbox_folder(actor_name, path, time=None):
     date = datetime.datetime.now()
-    if itime == None:
+    if time is None:
         dirname = f'{actor_name}_{date.strftime("%Y_%m_%d_%H_%M_%S")}'
     else:
-        # dirname = f'{actor_name}_{itime}_{date.strftime("%Y_%m_%d_%H_%M_%S")}'
-        dirname = f'itime_{itime}'
-    os.makedirs(f'{path}/{dirname}')
-    return os.path.abspath(f'{path}/{dirname}')
+        dirname = f'itime_{time}'
+    full_path = f'{path}/{dirname}'
+    os.makedirs(full_path)
+    return os.path.abspath(full_path)
 
 def chease_actor_wf_wrapper(
     equilibrium_in,

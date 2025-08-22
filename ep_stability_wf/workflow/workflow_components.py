@@ -40,20 +40,12 @@ def actor_call(
     input_ids = actor_params["input_ids"]
     output_ids = actor_params["output_ids"]
 
-    # database = None
-    # run = None
-    # user = None
-    # shot_no = system_params["shot_nr"]
     uri_in = None
     uri_out = None
     config_file = os.path.join(config_folder_path, actor_params["config_file_name"])
-    actor_sandbox = []
     sandbox_folder = actor_sandbox_folder(actor_name, config_folder_path)
     actor_sandbox_options = [sandbox_folder, None]
-    # if system_params["hdf5"] == 1:
-    #     backend = imas.imasdef.HDF5_BACKEND
-    # else:
-    #     backend = imas.imasdef.MDSPLUS_BACKEND
+ 
     if actor_name == "Ligka_m5":
         mpi_processes = 1
     else:
@@ -68,18 +60,10 @@ def actor_call(
             del output_ids["core_profiles"]
 
     if actor_params["entrypoint_actor"]:
-        # database = system_params["machine"]
-        # database_out = system_params["machine_out"]
-        # run = system_params["run_in"]
-        # run_out = system_params["run_out"]
-        # user = system_params["user"]
         uri_in = system_params["uri_in"]
         uri_out = system_params["uri_out"]
         time_index_list, _ = time_construction(system_params["itime"])
     else:
-        # database = system_params["machine_out"]
-        # run = system_params["run_out"]
-        # user = os.getenv("USER")
         uri_in = system_params["uri_out"]
         uri_out = system_params["uri_out"]
         _, time_index_list = time_construction(system_params["itime"])
@@ -106,7 +90,6 @@ def actor_call(
         except:
             print("Can't create the dataset!", file=sys.stderr)
             sys.exit(1)
-        # output.create()
     else:
         output = input
         if actor_name != "Helena":
