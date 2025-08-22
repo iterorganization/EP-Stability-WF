@@ -329,8 +329,8 @@ def actor_sandbox_folder(actor_name, path, time=None):
     if time is None:
         dirname = f'{actor_name}_{date.strftime("%Y_%m_%d_%H_%M_%S")}'
     else:
-        dirname = f'itime_{time}'
-    full_path = f'{path}/{dirname}'
+        dirname = f'time_{time}'
+    full_path = os.path.join(path, dirname)
     os.makedirs(full_path)
     return os.path.abspath(full_path)
 
