@@ -232,7 +232,7 @@ def open_gui(wf_param_folder):
         if init_folder is None:
             handle_save_as()
         else:
-            saved_folder.Save(init_folder, None, wf_param_folder_default, workflow_param, wfp_ref, fur_ref, act_ref)
+            saved_folder.Save(None, init_folder, wf_param_folder_default, workflow_param, wfp_ref, fur_ref, act_ref)
 
     def handle_save_as():
         # Check if we have write access to current directory
@@ -378,7 +378,7 @@ def open_gui(wf_param_folder):
             response = messagebox.askquestion(
                 "Configuration Required",
                 "Before running the workflow, you need to either create a new configuration or load an existing one.\n\n"
-                "Would you like to create a new configuration or load an existing one?",
+                "Would you like to create a new configuration? Otherwise you will be propmped to load an existing one.",
                 icon='warning'
             )
 
