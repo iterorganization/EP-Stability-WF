@@ -377,14 +377,19 @@ def open_gui(wf_param_folder):
             # Show warning first
             response = messagebox.askquestion(
                 "Configuration Required",
-                "Before running the workflow, you need to either create a new configuration or load an existing one.\n\n"
-                "Would you like to create a new configuration? Otherwise you will be propmped to load an existing one.",
+                "Before running the workflow, you need to either create "
+                "a new configuration or load an existing one.\n\n"
+                "Would you like to create a new configuration? "
+                "Otherwise you will be prompted to load an existing one.",
                 icon='warning'
             )
 
             if response == 'yes':
                 # User chose to create new configuration
-                result = filedialog.askdirectory(initialdir=initial_dir, title="Select a folder to create the initial configuration")
+                result = filedialog.askdirectory(
+                    initialdir=initial_dir,
+                    title="Select a folder to create the initial configuration"
+                )
                 if result:  # If user selected a directory
                     saved_folder.Save(
                         result,
