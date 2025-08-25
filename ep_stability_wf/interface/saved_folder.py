@@ -21,17 +21,6 @@ class saved_folder_name(object):
                     act_ref,
                     0,
                 )
-            else:
-                 self.value = save(
-                    self.value,
-                    previous_folder,
-                    wf_param_folder_default,
-                    workflow_param,
-                    wfp_ref,
-                    fur_ref,
-                    act_ref,
-                    1,
-                )
         else:
             if chosen_folder is None:
                 if self.value is None:  # 1st SAVE after a LOAD
