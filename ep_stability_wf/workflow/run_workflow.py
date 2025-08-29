@@ -20,6 +20,13 @@ def print_cond(verbose, *args, **kwargs):
 
 
 def workflow_EP(current_config_folder, verbose=True):
+    # Must disable validation because LIGKA misuses
+    # plasma/velocity_perturbed/coordinate1/coefficients_real(:,:,:) for internal usage
+    #
+    # We set this environment variable inside this script instead of in
+    # the module to avoid poluting the global IMAS space
+    os.environ["IMAS_AL_DISABLE_VALIDATE"] = "1"
+
     workflow_timer = WorkflowTimer()
     workflow_timer.start_workflow()
 
