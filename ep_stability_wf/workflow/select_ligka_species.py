@@ -10,6 +10,7 @@ LIGKA_ZA_STRINGS = {
     (1, 1): "hh",
     (1, 2): "dd",
     (1, 3): "tt",
+    (1, 2.5): "dt",
     # (2, 3): "h3",
     (2, 3): None,
     (2, 4): "he",
@@ -146,7 +147,12 @@ def select_species_by_density(
     curr_str_fast = []
 
     # Round A and Z to integers? What about 2.5
-    za_func = lambda x: round(x)
+    def za_func(x):
+        if np.abs(x - 2.5) < 1e-3:
+            return 2.5
+        else:
+            return round(x)
+
     for iisp, (isp, thermal_density_val, fast_density_val) in enumerate(species_list):
         species_obj = core_profiles.profiles_1d[0].ion[isp]
 
