@@ -15,6 +15,7 @@ no_actor = {}
 try:
     from chease.actor import chease
     from chease.common.runtime_settings import SandboxLifeTime as SandboxLifeTime_Chease
+    from chease.common.runtime_settings import RunMode
 except ImportError:
     no_actor["Chease"] = True
 try:
@@ -115,7 +116,6 @@ def parameters_workflow(input_file):
 
 
 # WF RUNNING FUNCTIONS
-
 
 def time_str_to_list(input_string):
     """
@@ -348,13 +348,13 @@ def chease_actor_wf_wrapper(
     code_parameters = chease_actor.get_code_parameters()
     config_file_path = modify_xml(config_file_path)
     code_parameters.parameters_path = config_file_path
+
     runtime_settings = chease_actor.get_runtime_settings()
+    runtime_settings.run_mode = RunMode.STANDALONE
     runtime_settings.sandbox.mode = 'MANUAL'
     runtime_settings.sandbox.life_time = SandboxLifeTime_Chease.PERSISTENT
     sandbox_dir = actor_sandbox_folder('chease', actor_sandbox_options[0], time=actor_sandbox_options[1])
     runtime_settings.sandbox.path = sandbox_dir
-    # runtime_settings.sandbox.path = '/home/ITER/popaa/develop/develop_wf/ep-stability-wf/user_profiles/run_250730_213902/Chease_2025_07_30_21_39_02/chease_15_2025_07_30_21_39_02'
-    # runtime_settings.sandbox.path = '/home/ITER/popaa/develop/develop_wf/ep-stability-wf/user_profiles/run_250730_213902/Chease_2025_07_30_21_39_02'
 
     chease_actor.initialize(code_parameters=code_parameters, runtime_settings=runtime_settings)
 
