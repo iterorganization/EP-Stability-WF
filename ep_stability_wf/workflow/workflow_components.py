@@ -50,7 +50,7 @@ def actor_call(
     uri_in = None
     uri_out = None
     config_file = os.path.join(config_folder_path, actor_params["config_file_name"])
-    sandbox_folder = actor_sandbox_folder(actor_name, config_folder_path)
+    sandbox_folder = actor_sandbox_folder(actor_name, config_folder_path, system_params=system_params)
     actor_sandbox_options = [sandbox_folder, None]
 
     if actor_name == "Ligka_m5":

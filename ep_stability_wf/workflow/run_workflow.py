@@ -38,55 +38,6 @@ def workflow_EP(current_config_folder, verbose=True):
     scenario_params = parameters_workflow(current_config_folder + "/scenario.xml")
 
     curr_str = None  # for avioding error
-    # CHECK FOR EXISTING DB
-    # output_folder = (
-    #     os.getenv("HOME") + "/public/imasdb/" + param["machine_out"] + "/" + str(param['shot_nr']) + "/" + str(param['run_out'])
-    # )
-    # if os.path.isdir(output_folder) == False:
-    #     print_cond(verbose, "-- Create local database for output file " + output_folder)
-    #     try:
-    #         os.makedirs(output_folder)
-    #     except FileExistsError:
-    #         # Calling twice in parallel can give this error. Ignore
-    #         pass
-
-    # if int(param["pulse_list"]):
-    #     with open("shots.dat") as f:
-    #         pulse_list = eval(f.read())
-    # else:
-    #     pulse_list = [(param["shot_nr"], param["run_in"])]
-
-    # for i in pulse_list:
-    #     if len(pulse_list) == 1:
-    #         print_cond(
-    #             verbose,
-    #             "The workflow will now run with one shot/run as input: ",
-    #             pulse_list,
-    #         )
-    #     else:
-    #         print_cond(
-    #             verbose,
-    #             (
-    #                 "The workflow will run with the same settings (and update the"
-    #                 "required ones) for all selected shots/runs as input: "
-    #             ),
-    #             pulse_list,
-    #         )
-    #         update_xml_param_on_run(param, "shot_nr", i[0])
-    #         save_xml_param_to_file_on_run(
-    #             current_config_folder + "/input_workflow_default.xml",
-    #             "shot_nr",
-    #             str(i[0]),
-    #         )
-    #         update_xml_param_on_run(param, "run_in", i[1])
-    #         save_xml_param_to_file_on_run(
-    #             current_config_folder + "/input_workflow_default.xml",
-    #             "run_in",
-    #             str(i[1]),
-    #         )
-    #         param = parameters_workflow(
-    #             current_config_folder + "/input_workflow_default.xml"
-    #         )
 
     if int(param["ligka_541"]) or int(param["ligka_5412"]):
         if param["Equilibrium_code_chease"] == "Chease":

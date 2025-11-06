@@ -9,6 +9,8 @@ import xml.etree.ElementTree as ET
 import numpy as np
 import re
 import datetime
+import shutil
+from pathlib import Path
 from ep_stability_wf.workflow.select_ligka_species import select_species_by_density
 
 no_actor = {}
@@ -318,19 +320,20 @@ def modify_xml(xml_file):
     if 'display' in root.attrib:
         del root.attrib['display']
 
-    output_file_path = xml_file.split('.')[0]+'_run.xml'
+    output_file_path = os.path.splitext(xml_file)[0] + "_run.xml"
 
     # Save the updated XML back to the file or keep it in memory
     tree.write(output_file_path, encoding='utf-8', xml_declaration=True)
     return output_file_path
 
-def actor_sandbox_folder(actor_name, path, time=None):
-    date = datetime.datetime.now()
+def actor_sandbox_folder(actor_name, path, system_params=None, time=None):
     if time is None:
-        dirname = f'{actor_name}_{date.strftime("%Y_%m_%d_%H_%M_%S")}'
+        dirname = f'{actor_name}_i{system_params["run_in"]}_o{system_params["run_out"]}'
     else:
-        dirname = f'time_{time}'
+        dirname = f't{time}'
     full_path = os.path.join(path, dirname)
+    if os.path.exists(full_path):
+        shutil.rmtree(full_path)
     os.makedirs(full_path)
     return os.path.abspath(full_path)
 
@@ -355,6 +358,7 @@ def chease_actor_wf_wrapper(
     runtime_settings.sandbox.life_time = SandboxLifeTime_Chease.PERSISTENT
     sandbox_dir = actor_sandbox_folder('chease', actor_sandbox_options[0], time=actor_sandbox_options[1])
     runtime_settings.sandbox.path = sandbox_dir
+    shutil.copy2(config_file_path, f'{sandbox_dir}/{Path(config_file_path).name}')
 
     chease_actor.initialize(code_parameters=code_parameters, runtime_settings=runtime_settings)
 
@@ -384,6 +388,7 @@ def helena_actor_wf_wrapper(
     runtime_settings.sandbox.life_time = SandboxLifeTime_Helena.PERSISTENT
     sandbox_dir = actor_sandbox_folder('helena', actor_sandbox_options[0], time=actor_sandbox_options[1])
     runtime_settings.sandbox.path = sandbox_dir
+    shutil.copy2(config_file_path, f'{sandbox_dir}/{Path(config_file_path).name}')
     helena_actor.initialize(code_parameters=code_parameters, runtime_settings=runtime_settings)
 
     equilibrium_out = helena_actor.run(equilibrium_in)
@@ -412,7 +417,7 @@ def hagis1_actor_wf_wrapper(
     runtime_settings.sandbox.life_time = SandboxLifeTime_Hagis1.PERSISTENT
     sandbox_dir = actor_sandbox_folder('hagis1', actor_sandbox_options[0], time=actor_sandbox_options[1])
     runtime_settings.sandbox.path = sandbox_dir
-
+    shutil.copy2(config_file_path, f'{sandbox_dir}/{Path(config_file_path).name}')
     hagis1_actor.initialize(code_parameters=code_parameters, runtime_settings=runtime_settings)
 
     equilibrium_out, mhd_linear_out = hagis1_actor(
@@ -449,6 +454,7 @@ def hagis2_actor_wf_wrapper(
     runtime_settings.sandbox.life_time = SandboxLifeTime_Hagis2.PERSISTENT
     sandbox_dir = actor_sandbox_folder('hagis2', actor_sandbox_options[0], time=actor_sandbox_options[1])
     runtime_settings.sandbox.path = sandbox_dir
+    shutil.copy2(config_file_path, f'{sandbox_dir}/{Path(config_file_path).name}')
     hagis2_actor.initialize(code_parameters=code_parameters, runtime_settings=runtime_settings)
 
 
@@ -488,6 +494,7 @@ def ligka_actor_wf_wrapper(
     runtime_settings.sandbox.mode = 'MANUAL'
     runtime_settings.sandbox.life_time = SandboxLifeTime_Ligka.PERSISTENT
     runtime_settings.sandbox.path = sandbox_dir
+    shutil.copy2(config_file_path, f'{sandbox_dir}/{Path(config_file_path).name}')
     ligka_actor.initialize(code_parameters=code_parameters, runtime_settings=runtime_settings)
 
     mhd_linear_out = ligka_actor.run(
@@ -526,6 +533,7 @@ def finder_actor_wf_wrapper(
     runtime_settings.sandbox.life_time = SandboxLifeTime_Finder9.PERSISTENT
     sandbox_dir = actor_sandbox_folder('finder9', actor_sandbox_options[0], time=actor_sandbox_options[1])
     runtime_settings.sandbox.path = sandbox_dir
+    shutil.copy2(config_file_path, f'{sandbox_dir}/{Path(config_file_path).name}')
     finder9_actor.initialize(code_parameters=code_parameters, runtime_settings=runtime_settings)
 
 
