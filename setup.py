@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="EP-Stability-WF",
-    version="2.0.2",
+    version="2.1.0",
     author="Alin Popa, Thomas Hayward-Schneider, Philipp Lauber",
     author_email="alin.popa@ipp.mpg.de",
     description="Energetic Particle workflow for stability analysis.",
